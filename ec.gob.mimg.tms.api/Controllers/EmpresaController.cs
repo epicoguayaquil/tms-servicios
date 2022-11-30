@@ -117,7 +117,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 empresa.UsuarioModificacion = "admin@mail.com";
 
 
-                bool isSaved = await _empresaService.UpdateAsync(empresa)
+                bool isSaved = await _empresaService.UpdateAsync(empresa);
                     
                 if (isSaved)
                 {
