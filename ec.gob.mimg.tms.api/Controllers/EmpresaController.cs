@@ -13,6 +13,7 @@ using AutoMapper;
 using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
+using ec.gob.mimg.tms.api.DTOs;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -36,16 +37,26 @@ namespace ec.gob.mimg.tms.api.Controllers
 
         // GET: api/Empresas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmpresaResponse>>> GetAll()
+        public async Task<ActionResult<IEnumerable<GenericResponse>>> GetAll()
         {
+            GenericResponse response = new GenericResponse();
+            response.Cod = "200";
+            response.Msg = "OK";
+
             var empresaList = await _empresaService.GetAllAsync();
-            return Ok(empresaList.Select(x => _mapper.Map<EmpresaResponse>(x)));
+            response.Data = empresaList.Select(x => _mapper.Map<EmpresaResponse>(x));
+
+            return Ok(response);
         }
 
         // GET: api/Empresas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<EmpresaResponse>> GetById(int id)
+        public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
+            GenericResponse response = new GenericResponse();
+            response.Cod = "200";
+            response.Msg = "OK";
+
             var empresa = await _empresaService.GetFirstOrDefaultAsync(x => x.IdEmpresa == id);
 
             if (empresa == null)
@@ -54,7 +65,8 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
             else
             {
-                return Ok(_mapper.Map<EmpresaResponse>(empresa));
+                response.Data = _mapper.Map<EmpresaResponse>(empresa);
+                return Ok(response);
             }
         }
 
