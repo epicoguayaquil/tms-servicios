@@ -11,6 +11,7 @@ using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.api.Services;
 using AutoMapper;
 using ec.gob.mimg.tms.api.DTOs.Request;
+using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
 
 namespace ec.gob.mimg.tms.api.Controllers
@@ -21,6 +22,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     {
         private readonly TmsDbContext _dbContext;
         private readonly EmpresaService _empresaService;
+        private readonly EstablecimientoService _establecimientoService;
 
         private readonly IMapper _mapper;
 
@@ -29,6 +31,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _mapper = mapper;
             _dbContext = dbContext;
             _empresaService = new EmpresaService(_dbContext);
+            _establecimientoService = new EstablecimientoService(_dbContext);
         }
 
         // GET: api/Empresas
@@ -53,6 +56,30 @@ namespace ec.gob.mimg.tms.api.Controllers
             {
                 return Ok(_mapper.Map<EmpresaResponse>(empresa));
             }
+        }
+
+        // GET: api/Empresas/byRuc/5
+        [HttpGet("byRuc/{ruc}")]
+        public async Task<ActionResult<EmpresaResponse>> GetByRuc(string ruc)
+        {
+            var empresa = await _empresaService.GetByRucAsync(ruc);
+
+            if (empresa == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(_mapper.Map<EmpresaResponse>(empresa));
+            }
+        }
+
+        // GET: api/Empresas/5/establecimientos
+        [HttpGet("{id}/establecimientos")]
+        public async Task<ActionResult<IEnumerable<EstablecimientoResponse>>> GetEstablecimientosById(int id)
+        {
+            var establecimientoList = await _establecimientoService.GetAllAsync(x => x.EmpresaId == id);
+            return Ok(establecimientoList.Select(x => _mapper.Map<EstablecimientoResponse>(x)));
         }
 
         // POST: api/Empresas

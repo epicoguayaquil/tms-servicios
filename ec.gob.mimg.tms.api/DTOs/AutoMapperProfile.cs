@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ec.gob.mimg.tms.api.DTOs.Request;
+using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Models;
 
 namespace ec.gob.mimg.tms.api.DTOs
@@ -12,6 +13,8 @@ namespace ec.gob.mimg.tms.api.DTOs
             CreateMap<EmpresaResponse, TmsEmpresa>();
             CreateMap<TmsEmpresa, EmpresaRequest>();
             CreateMap<EmpresaRequest, TmsEmpresa>();
+            CreateMap<TmsEstablecimiento, EstablecimientoResponse>();
+            CreateMap<EstablecimientoResponse, TmsEstablecimiento>();
         }
     }
 }
