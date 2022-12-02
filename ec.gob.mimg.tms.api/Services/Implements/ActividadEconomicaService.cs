@@ -12,7 +12,7 @@ namespace ec.gob.mimg.tms.api.Services.Implements
            
         }
 
-        public ICollection<TmsActividadEconomica> GetByNivelAsync(int nivel)
+        public  ICollection<TmsActividadEconomica> GetByNivelAsync(int nivel)
         {
             return Get(x=> x.Nivel==nivel);
         }

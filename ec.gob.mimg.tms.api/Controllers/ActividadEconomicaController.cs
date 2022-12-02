@@ -36,18 +36,64 @@ namespace ec.gob.mimg.tms.api.Controllers
 
         // GET: api/Actividades
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GenericResponse>>> GetAll()
+        public async Task<ActionResult<GenericResponse>> GetAll()
         {
-            GenericResponse response = new GenericResponse();
-            response.Cod = "200";
-            response.Msg = "OK";
-
             var actividadList = _actividadEconomicaService.GetByNivelAsync(7);
 
-            response.Data = actividadList.Select(x => _mapper.Map<ActividadEconomicaResponse>(x));
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = actividadList.Select(x => _mapper.Map<ActividadEconomicaResponse>(x))
+            };
 
             return Ok(response);
         
         }
+
+        // GET: api/Actividades/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GenericResponse>> GetById(int id)
+        {
+            var actividad = await _actividadEconomicaService.GetFirstOrDefaultAsync(x => x.IdActividadEconomica == id);
+
+            if (actividad == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = _mapper.Map<ActividadEconomicaResponse>(actividad)
+                };
+                return Ok(response);
+            }
+        }
+
+        // DELETE: api/Actividades/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var actividad = await _actividadEconomicaService.GetFirstOrDefaultAsync(x => x.IdActividadEconomica == id);
+
+            if (actividad == null)
+            {
+                return NotFound();
+            }
+
+            await _actividadEconomicaService.DeleteAsync(actividad);
+
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = "Eliminado"
+            };
+            return Ok(response);
+        }
+
     }
 }

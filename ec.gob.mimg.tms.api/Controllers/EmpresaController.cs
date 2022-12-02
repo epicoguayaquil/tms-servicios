@@ -37,11 +37,13 @@ namespace ec.gob.mimg.tms.api.Controllers
 
         // GET: api/Empresas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GenericResponse>>> GetAll()
+        public async Task<ActionResult<GenericResponse>> GetAll()
         {
-            GenericResponse response = new GenericResponse();
-            response.Cod = "200";
-            response.Msg = "OK";
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK"
+            };
 
             var empresaList = await _empresaService.GetAllAsync();
             response.Data = empresaList.Select(x => _mapper.Map<EmpresaResponse>(x));
@@ -53,10 +55,6 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            GenericResponse response = new GenericResponse();
-            response.Cod = "200";
-            response.Msg = "OK";
-
             var empresa = await _empresaService.GetFirstOrDefaultAsync(x => x.IdEmpresa == id);
 
             if (empresa == null)
@@ -65,14 +63,19 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
             else
             {
-                response.Data = _mapper.Map<EmpresaResponse>(empresa);
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = _mapper.Map<EmpresaResponse>(empresa)
+                };
                 return Ok(response);
             }
         }
 
         // GET: api/Empresas/byRuc/5
         [HttpGet("byRuc/{ruc}")]
-        public async Task<ActionResult<EmpresaResponse>> GetByRuc(string ruc)
+        public async Task<ActionResult<GenericResponse>> GetByRuc(string ruc)
         {
             var empresa = await _empresaService.GetByRucAsync(ruc);
 
@@ -82,21 +85,33 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
             else
             {
-                return Ok(_mapper.Map<EmpresaResponse>(empresa));
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = _mapper.Map<EmpresaResponse>(empresa)
+                };
+                return Ok(response);
             }
         }
 
         // GET: api/Empresas/5/establecimientos
         [HttpGet("{id}/establecimientos")]
-        public async Task<ActionResult<IEnumerable<EstablecimientoResponse>>> GetEstablecimientosById(int id)
+        public async Task<ActionResult<GenericResponse>> GetEstablecimientosById(int id)
         {
-            var establecimientoList = await _establecimientoService.GetAllAsync(x => x.EmpresaId == id);
-            return Ok(establecimientoList.Select(x => _mapper.Map<EstablecimientoResponse>(x)));
+            var establecimientoList = await _establecimientoService.GetAsync(x => x.EmpresaId == id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = establecimientoList.Select(x => _mapper.Map<EstablecimientoResponse>(x))
+            };
+            return Ok(response);
         }
 
         // POST: api/Empresas
         [HttpPost]
-        public async Task<ActionResult<EmpresaResponse>> Create(EmpresaRequest empresaRequest)
+        public async Task<ActionResult<GenericResponse>> Create(EmpresaRequest empresaRequest)
         {
             try
             {
@@ -110,7 +125,13 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 if (isSaved)
                 {
-                    return Ok(_mapper.Map<EmpresaResponse>(empresa));
+                    GenericResponse response = new()
+                    {
+                        Cod = "200",
+                        Msg = "OK",
+                        Data = _mapper.Map<EmpresaResponse>(empresa)
+                    };
+                    return Ok(response);
                 }
                 else
                 {
@@ -137,7 +158,13 @@ namespace ec.gob.mimg.tms.api.Controllers
 
             await _empresaService.DeleteAsync(empresa);
 
-            return Ok("Eliminado");
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = "Eliminado"
+            };
+            return Ok(response);
         }
 
         // PUT: api/TmsEmpresas/5
@@ -160,7 +187,13 @@ namespace ec.gob.mimg.tms.api.Controllers
                     
                 if (isSaved)
                 {
-                    return Ok(_mapper.Map<EmpresaResponse>(empresa));
+                    GenericResponse response = new()
+                    {
+                        Cod = "200",
+                        Msg = "OK",
+                        Data = _mapper.Map<EmpresaResponse>(empresa)
+                    };
+                    return Ok(response);
                 }
                 else
                 {
@@ -170,7 +203,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString);
+                Console.WriteLine(ex.ToString());
                 return BadRequest();
             }
         }
