@@ -23,6 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+    <ProjectReference Include="..\ec.gob.mimg.tms.model\ec.gob.mimg.tms.model.csproj" />
   </ItemGroup>
 </Project>

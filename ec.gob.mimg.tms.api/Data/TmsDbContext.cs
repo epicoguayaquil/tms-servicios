@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ec.gob.mimg.tms.api.Models;
+using ec.gob.mimg.tms.model.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ec.gob.mimg.tms.api.Data;
@@ -61,9 +61,9 @@ public partial class TmsDbContext : DbContext
 
     public virtual DbSet<TmsUsuario> TmsUsuarios { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        
-    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=db.cloudtek.ec;Database=TMS_DB;uid=sa;pwd=DeveloperDB1.;MultipleActiveResultSets=True;App=EntityFramework;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -158,7 +158,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsActividadEconomica>(entity =>
         {
-            entity.HasKey(e => e.IdActividadEconomica).HasName("PK__TmsActiv__A3040710A7FF8334");
+            entity.HasKey(e => e.IdActividadEconomica).HasName("PK__TmsActiv__A30407107F74EE53");
 
             entity.ToTable("TmsActividadEconomica");
 
@@ -166,16 +166,13 @@ public partial class TmsDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Descripcion)
-                .HasMaxLength(255)
+                .HasMaxLength(2048)
                 .IsUnicode(false);
             entity.Property(e => e.Estado)
                 .HasMaxLength(32)
                 .IsUnicode(false);
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
-            entity.Property(e => e.Nombre)
-                .HasMaxLength(255)
-                .IsUnicode(false);
             entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -186,7 +183,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsActividadObligacion>(entity =>
         {
-            entity.HasKey(e => e.IdActividadObligacion).HasName("PK__TmsActiv__F9048FEFF141484B");
+            entity.HasKey(e => e.IdActividadObligacion).HasName("PK__TmsActiv__F9048FEF70F719F8");
 
             entity.ToTable("TmsActividadObligacion");
 
@@ -346,7 +343,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsFormularioActividad>(entity =>
         {
-            entity.HasKey(e => e.IdActividadFormulario).HasName("PK__TmsFormu__D52002B949DB303A");
+            entity.HasKey(e => e.IdActividadFormulario).HasName("PK__TmsFormu__D52002B9D3BA9F41");
 
             entity.ToTable("TmsFormularioActividad");
 

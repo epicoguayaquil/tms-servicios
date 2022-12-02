@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ec.gob.mimg.tms.api.Models;
+namespace ec.gob.mimg.tms.model.Models;
 
-public partial class ConfiguracionObligacion
+public partial class TmsPermiso
 {
-    public long Secuencial { get; set; }
+    public int IdPermiso { get; set; }
 
-    public long? IdActividadComercial { get; set; }
+    public string? Nombre { get; set; }
 
-    public long? IdObligacion { get; set; }
+    public string? Descripcion { get; set; }
 
     public string? Estado { get; set; }
 
@@ -20,4 +20,6 @@ public partial class ConfiguracionObligacion
     public DateTime? FechaModificacion { get; set; }
 
     public string? UsuarioModificacion { get; set; }
+
+    public virtual ICollection<TmsRol> TmsRols { get; } = new List<TmsRol>();
 }

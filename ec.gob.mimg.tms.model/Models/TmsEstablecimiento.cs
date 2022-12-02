@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ec.gob.mimg.tms.api.Models;
+namespace ec.gob.mimg.tms.model.Models;
 
 public partial class TmsEstablecimiento
 {
