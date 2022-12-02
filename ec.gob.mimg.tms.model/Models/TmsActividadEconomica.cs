@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ec.gob.mimg.tms.api.Models;
+namespace ec.gob.mimg.tms.model.Models;
 
 public partial class TmsActividadEconomica
 {
     public int IdActividadEconomica { get; set; }
 
-    public string? Nombre { get; set; }
+    public string? Codigo { get; set; }
+
+    public string? Descripcion { get; set; }
+
+    public int? Nivel { get; set; }
 
     public string? Estado { get; set; }
 
@@ -18,12 +22,6 @@ public partial class TmsActividadEconomica
     public DateTime? FechaModificacion { get; set; }
 
     public string? UsuarioModificacion { get; set; }
-
-    public string? Codigo { get; set; }
-
-    public string? Descripcion { get; set; }
-
-    public int? Nivel { get; set; }
 
     public virtual ICollection<TmsActividadObligacion> TmsActividadObligacions { get; } = new List<TmsActividadObligacion>();
 

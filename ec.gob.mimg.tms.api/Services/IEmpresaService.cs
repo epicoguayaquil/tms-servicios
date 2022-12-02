@@ -1,4 +1,4 @@
-﻿using ec.gob.mimg.tms.api.Models;
+﻿using ec.gob.mimg.tms.model.Models;
 using EF.Core.Repository.Interface.Manager;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 

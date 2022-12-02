@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
-using ec.gob.mimg.tms.api.Models;
+using ec.gob.mimg.tms.model.Models;
 
 namespace ec.gob.mimg.tms.api.DTOs
 {
