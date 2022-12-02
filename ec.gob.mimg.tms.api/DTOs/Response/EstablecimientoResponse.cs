@@ -3,17 +3,23 @@ using ec.gob.mimg.tms.api.Data;
 
 namespace ec.gob.mimg.tms.api.DTOs.Response
 {
-    public class EmpresaResponse
+    public class EstablecimientoResponse
     {
-        public int IdEmpresa { get; set; }
+        public int IdEstablecimiento { get; set; }
+   
+        public int? EmpresaId { get; set; }
 
-        public string Ruc { get; set; } = null!;
-
-        public string? NombreComercial { get; set; }
+        public string? Nombre { get; set; }
 
         public string? Direccion { get; set; }
 
         public string? Telefono { get; set; }
+
+        public string? Email { get; set; }
+
+        public string? Lat { get; set; }
+
+        public string? Lon { get; set; }
 
         public string? Estado { get; set; }
 
