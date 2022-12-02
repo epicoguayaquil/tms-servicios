@@ -9,12 +9,22 @@ namespace ec.gob.mimg.tms.api.DTOs
     {
         public AutoMapperProfile()
         {
+            // Actividad Economica
+            CreateMap<TmsActividadEconomica, ActividadEconomicaResponse>();
+            CreateMap<ActividadEconomicaResponse, TmsActividadEconomica>();
+
+            // Empresa
             CreateMap<TmsEmpresa, EmpresaResponse>();
             CreateMap<EmpresaResponse, TmsEmpresa>();
+
             CreateMap<TmsEmpresa, EmpresaRequest>();
             CreateMap<EmpresaRequest, TmsEmpresa>();
+
+            // Establecimiento
             CreateMap<TmsEstablecimiento, EstablecimientoResponse>();
             CreateMap<EstablecimientoResponse, TmsEstablecimiento>();
+
+
         }
     }
 }
