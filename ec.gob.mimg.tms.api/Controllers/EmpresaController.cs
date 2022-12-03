@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ec.gob.mimg.tms.model.Models;
-using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.api.Services.Implements;
-using ec.gob.mimg.tms.api.Services;
 using AutoMapper;
 using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
@@ -174,10 +172,16 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                TmsEmpresa empresa = new TmsEmpresa();
-                empresa = await _empresaService.GetByRucAsync(empresaRequest.Ruc);
+                var empresaActual = await _empresaService.GetByRucAsync(empresaRequest.Ruc);
 
-                if (empresa == null) { return NotFound(); }
+                if (empresaActual == null) { return NotFound(); }
+
+                TmsEmpresa empresa = _mapper.Map<TmsEmpresa>(empresaRequest);
+                empresa.IdEmpresa = empresaActual.IdEmpresa;
+
+                empresa.FechaRegistro = empresaActual.FechaRegistro;
+                empresa.UsuarioRegistro = empresaActual.UsuarioRegistro;
+                empresa.Estado = empresaActual.Estado;
 
                 empresa.FechaModificacion = DateTime.Now;
                 empresa.UsuarioModificacion = "admin@mail.com";
