@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ec.gob.mimg.tms.api.Data;
+using ec.gob.mimg.tms.model.Models;
 
 namespace ec.gob.mimg.tms.api.DTOs.Request
 {

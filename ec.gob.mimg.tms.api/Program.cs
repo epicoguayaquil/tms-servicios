@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ec.gob.mimg.tms.api.Data;
+using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.api.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 
