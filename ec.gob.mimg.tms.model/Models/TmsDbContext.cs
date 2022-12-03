@@ -323,6 +323,9 @@ public partial class TmsDbContext : DbContext
             entity.ToTable("TmsFormulario");
 
             entity.Property(e => e.IdFormulario).ValueGeneratedNever();
+            entity.Property(e => e.Estado)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
             entity.Property(e => e.UsuarioModificacion)

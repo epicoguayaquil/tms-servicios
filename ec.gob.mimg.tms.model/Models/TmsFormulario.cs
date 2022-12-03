@@ -17,6 +17,10 @@ public partial class TmsFormulario
 
     public int EstablecimientoId { get; set; }
 
+    public string? Estado { get; set; }
+
+    public int? PasoCreacionActual { get; set; }
+
     public virtual TmsEstablecimiento Establecimiento { get; set; } = null!;
 
     public virtual ICollection<FormularioDetalle> FormularioDetalles { get; } = new List<FormularioDetalle>();
