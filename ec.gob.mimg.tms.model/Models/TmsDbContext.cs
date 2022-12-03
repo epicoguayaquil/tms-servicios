@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using ec.gob.mimg.tms.model.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ec.gob.mimg.tms.api.Data;
+namespace ec.gob.mimg.tms.model.Models;
 
 public partial class TmsDbContext : DbContext
 {
-    private static TmsDbContext tmsDbContext = null;
-
     public TmsDbContext()
     {
     }
@@ -16,15 +13,6 @@ public partial class TmsDbContext : DbContext
     public TmsDbContext(DbContextOptions<TmsDbContext> options)
         : base(options)
     {
-    }
-
-    public static TmsDbContext Create()
-    {
-        if (tmsDbContext == null)
-        {
-            tmsDbContext = new TmsDbContext();
-        }
-        return tmsDbContext;
     }
 
     public virtual DbSet<ConfiguracionObligacion> ConfiguracionObligacions { get; set; }
@@ -295,15 +283,24 @@ public partial class TmsDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
+            entity.Property(e => e.Jurisdiccion)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Lat)
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Lon)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.Nombre)
+            entity.Property(e => e.NombreComercial)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.SrifechaActualizacion)
+                .HasColumnType("datetime")
+                .HasColumnName("SRIFechaActualizacion");
+            entity.Property(e => e.SrifechaRegistro)
+                .HasColumnType("datetime")
+                .HasColumnName("SRIFechaRegistro");
             entity.Property(e => e.Telefono)
                 .HasMaxLength(255)
                 .IsUnicode(false);
