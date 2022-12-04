@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ec.gob.mimg.tms.model.Models;
 
-namespace ec.gob.mimg.tms.api.DTOs.Response
+namespace ec.gob.mimg.tms.api.DTOs.Request
 {
-    public class EstablecimientoResponse
+    public class EstablecimientoRequest
     {
         public int IdEstablecimiento { get; set; }
-   
+
         public int? EmpresaId { get; set; }
 
         public string? Nombre { get; set; }
@@ -21,8 +21,6 @@ namespace ec.gob.mimg.tms.api.DTOs.Response
 
         public string? Lon { get; set; }
 
-        public string? Estado { get; set; }
-
         public string? NombreComercial { get; set; }
 
         public string? Jurisdiccion { get; set; }
@@ -32,10 +30,6 @@ namespace ec.gob.mimg.tms.api.DTOs.Response
         public DateTime? SrifechaActualizacion { get; set; }
 
         public int? NumeroEstablecimiento { get; set; }
-
-        public string? UsuarioRegistro { get; set; }
-
-        public DateTime? FechaRegistro { get; set; }
 
     }
 }

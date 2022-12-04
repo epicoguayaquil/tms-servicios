@@ -16,6 +16,5 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
 
         public string? Telefono { get; set; }
 
-
     }
 }

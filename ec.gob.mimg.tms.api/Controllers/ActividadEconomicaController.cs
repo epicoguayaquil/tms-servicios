@@ -22,7 +22,6 @@ namespace ec.gob.mimg.tms.api.Controllers
     {
         private readonly TmsDbContext _dbContext;
         private readonly ActividadEconomicaService _actividadEconomicaService;
-        
 
         private readonly IMapper _mapper;
 
@@ -33,7 +32,6 @@ namespace ec.gob.mimg.tms.api.Controllers
             _actividadEconomicaService = new ActividadEconomicaService(_dbContext);
         }
 
-        // GET: api/Actividades
         [HttpGet]
         public async Task<ActionResult<GenericResponse>> GetAll()
         {
@@ -47,10 +45,9 @@ namespace ec.gob.mimg.tms.api.Controllers
             };
 
             return Ok(response);
-        
+
         }
 
-        // GET: api/Actividades/5
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
@@ -72,7 +69,27 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
-        // DELETE: api/Actividades/5
+        [HttpGet("[action]/{codigo}")]
+        public async Task<ActionResult<GenericResponse>> ByCodigo(string codigo)
+        {
+            var actividad = await _actividadEconomicaService.GetFirstOrDefaultAsync(x => x.Codigo == codigo);
+
+            if (actividad == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = _mapper.Map<ActividadEconomicaResponse>(actividad)
+                };
+                return Ok(response);
+            }
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
