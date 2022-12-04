@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ec.gob.mimg.tms.model.Models;
-using ec.gob.mimg.tms.api.Services.Implements;
-using AutoMapper;
+﻿using AutoMapper;
+using ec.gob.mimg.tms.api.DTOs;
 using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
-using ec.gob.mimg.tms.api.DTOs;
+using ec.gob.mimg.tms.api.Services.Implements;
+using ec.gob.mimg.tms.model.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {

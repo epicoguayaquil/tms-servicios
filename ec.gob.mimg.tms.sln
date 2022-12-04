@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.api", "ec.g
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.model", "ec.gob.mimg.tms.model\ec.gob.mimg.tms.model.csproj", "{24904DC1-B8CE-4139-9B01-BA825CFE7909}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ec.gob.mimg.tms.srv.sri", "ec.gob.mimg.tms.srv.sri\ec.gob.mimg.tms.srv.sri.csproj", "{22535DBE-A429-479A-B922-5DB0A0DB22DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{24904DC1-B8CE-4139-9B01-BA825CFE7909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24904DC1-B8CE-4139-9B01-BA825CFE7909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24904DC1-B8CE-4139-9B01-BA825CFE7909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22535DBE-A429-479A-B922-5DB0A0DB22DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22535DBE-A429-479A-B922-5DB0A0DB22DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22535DBE-A429-479A-B922-5DB0A0DB22DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22535DBE-A429-479A-B922-5DB0A0DB22DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

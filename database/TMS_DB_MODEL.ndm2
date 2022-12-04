@@ -6281,7 +6281,7 @@
           "schemaName": "dbo",
           "tableName": "TmsFormularioActividad",
           "x": 1300,
-          "y": 700,
+          "y": 690,
           "width": 280,
           "height": 230,
           "isBold": false,
@@ -6680,11 +6680,11 @@
           "vertices": [
             {
               "x": 1285,
-              "y": 820
+              "y": 810
             },
             {
               "x": 1215,
-              "y": 820
+              "y": 810
             },
             {
               "x": 1215,
@@ -6697,7 +6697,7 @@
           ],
           "label": {
             "x": 922,
-            "y": 782,
+            "y": 772,
             "width": 373,
             "height": 30,
             "fontName": "Arial Unicode MS",
@@ -6722,11 +6722,11 @@
           "vertices": [
             {
               "x": 1595,
-              "y": 820
+              "y": 810
             },
             {
               "x": 1750,
-              "y": 820
+              "y": 810
             },
             {
               "x": 1750,
@@ -6735,7 +6735,7 @@
           ],
           "label": {
             "x": 1585,
-            "y": 782,
+            "y": 772,
             "width": 309,
             "height": 30,
             "fontName": "Arial Unicode MS",
