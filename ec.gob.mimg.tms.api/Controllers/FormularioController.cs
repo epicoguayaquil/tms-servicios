@@ -36,7 +36,6 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet]
         public async Task<ActionResult<GenericResponse>> GetAll()
         {
-
             var formularioList = await _formularioService.GetAllAsync();
             GenericResponse response = new()
             {
