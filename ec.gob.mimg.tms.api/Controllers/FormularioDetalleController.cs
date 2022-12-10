@@ -35,12 +35,12 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet]
         public async Task<ActionResult<GenericResponse>> GetAll()
         {
-            var formularioList = await _formularioDetalleService.GetAllAsync();
+            var formularioDetalleList = await _formularioDetalleService.GetAllAsync();
             GenericResponse response = new()
             {
                 Cod = "200",
                 Msg = "OK",
-                Data = formularioList.Select(x => _mapper.Map<FormularioDetalleResponse>(x))
+                Data = formularioDetalleList.Select(x => _mapper.Map<FormularioDetalleResponse>(x))
             };
 
             return Ok(response);
