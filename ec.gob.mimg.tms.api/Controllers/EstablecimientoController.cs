@@ -174,6 +174,45 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
+        // PUT: api/Establecimiento/NombreComercial
+        [HttpPut("NombreComercial")]
+        public async Task<IActionResult> UpdateNombreComercial(EstablecimientoExtraDataRequest establecimientoRequest)
+        {
+            try
+            {
+                var establecimientoActual = await _establecimientoService.GetFirstOrDefaultAsync(x => x.IdEstablecimiento == establecimientoRequest.IdEstablecimiento);
+
+                if (establecimientoActual == null) { return NotFound(); }
+
+                establecimientoActual.NombreComercial = establecimientoRequest.NombreComercial;
+                establecimientoActual.FechaModificacion = DateTime.Now;
+                establecimientoActual.UsuarioModificacion = "admin@mail.com";
+
+                bool isSaved = await _establecimientoService.UpdateAsync(establecimientoActual);
+
+                if (isSaved)
+                {
+                    GenericResponse response = new()
+                    {
+                        Cod = "200",
+                        Msg = "OK",
+                        Data = _mapper.Map<EstablecimientoResponse>(establecimientoActual)
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+        }
+        
         // GET: api/Establecimiento/1/formularios
         [HttpGet("{id}/formularios")]
         public async Task<ActionResult<GenericResponse>> GetAllFormulariosById(int id)
