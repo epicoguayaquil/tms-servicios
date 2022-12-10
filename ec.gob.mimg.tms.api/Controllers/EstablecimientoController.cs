@@ -22,6 +22,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     {
         private readonly TmsDbContext _dbContext;
         private readonly EstablecimientoService _establecimientoService;
+        private readonly FormularioService _formularioService;
 
         private readonly IMapper _mapper;
 
@@ -30,6 +31,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _mapper = mapper;
             _dbContext = dbContext;
             _establecimientoService = new EstablecimientoService(_dbContext);
+            _formularioService = new FormularioService(_dbContext);
         }
 
         // GET: api/Establecimiento
@@ -170,6 +172,37 @@ namespace ec.gob.mimg.tms.api.Controllers
                 Console.WriteLine(ex.ToString());
                 return BadRequest();
             }
+        }
+
+        // GET: api/Establecimiento/1/formularios
+        [HttpGet("{id}/formularios")]
+        public async Task<ActionResult<GenericResponse>> GetAllFormulariosById(int id)
+        {
+            var formularioList = await _formularioService.GetAsync(x => x.EstablecimientoId == id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioList.Select(x => _mapper.Map<FormularioResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
+        // GET: api/Establecimiento/1/formulariosActivos
+        [HttpGet("{id}/formulariosActivos")]
+        public async Task<ActionResult<GenericResponse>> GetAllFormulariosActivosById(int id)
+        {
+            var formularioList = await _formularioService.GetAsync(x => x.EstablecimientoId == id
+                                                    && x.Estado == EstadoEnum.ACTIVO.ToString());
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioList.Select(x => _mapper.Map<FormularioResponse>(x))
+            };
+
+            return Ok(response);
         }
     }
 }
