@@ -75,8 +75,8 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                FormularioDetalle formularioDetalle = new FormularioDetalle();
-                formularioDetalle = _mapper.Map<FormularioDetalle>(formularioDetalleRequest);
+                TmsFormularioDetalle formularioDetalle = new TmsFormularioDetalle();
+                formularioDetalle = _mapper.Map<TmsFormularioDetalle>(formularioDetalleRequest);
                 formularioDetalle.FechaRegistro = DateTime.Now;
                 formularioDetalle.UsuarioRegistro = "admin@mail.com";
                 //formularioDetalle.Estado = EstadoEnum.ACTIVO.ToString();
@@ -136,8 +136,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                 var formularioDetalleActual = await _formularioDetalleService.GetFirstOrDefaultAsync(x => x.IdFormularioDetalle == formularioDetalleRequest.IdFormularioDetalle);
                 if (formularioDetalleActual == null) { return NotFound(); }
 
-                FormularioDetalle formularioDetalle = new FormularioDetalle();
-                formularioDetalle = _mapper.Map<FormularioDetalle>(formularioDetalleRequest);
+                TmsFormularioDetalle formularioDetalle = new TmsFormularioDetalle();
+                formularioDetalle = _mapper.Map<TmsFormularioDetalle>(formularioDetalleRequest);
 
                 formularioDetalle.FechaRegistro = formularioDetalleActual.FechaRegistro;
                 formularioDetalle.UsuarioRegistro = formularioDetalleActual.UsuarioRegistro;

@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.api", "ec.gob.mimg.tms.api\ec.gob.mimg.tms.api.csproj", "{2803569A-3B55-4E77-A4D5-85E36323DA5E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.model", "ec.gob.mimg.tms.model\ec.gob.mimg.tms.model.csproj", "{24904DC1-B8CE-4139-9B01-BA825CFE7909}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ec.gob.mimg.tms.srv.sri", "ec.gob.mimg.tms.srv.sri\ec.gob.mimg.tms.srv.sri.csproj", "{22535DBE-A429-479A-B922-5DB0A0DB22DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.srv.sri", "ec.gob.mimg.tms.srv.sri\ec.gob.mimg.tms.srv.sri.csproj", "{22535DBE-A429-479A-B922-5DB0A0DB22DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.api", "ec.gob.mimg.tms.api\ec.gob.mimg.tms.api.csproj", "{87DEBCFD-C8FD-4300-A44A-0E2FCC4110DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2803569A-3B55-4E77-A4D5-85E36323DA5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2803569A-3B55-4E77-A4D5-85E36323DA5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2803569A-3B55-4E77-A4D5-85E36323DA5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2803569A-3B55-4E77-A4D5-85E36323DA5E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{24904DC1-B8CE-4139-9B01-BA825CFE7909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{24904DC1-B8CE-4139-9B01-BA825CFE7909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24904DC1-B8CE-4139-9B01-BA825CFE7909}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -27,6 +23,10 @@ Global
 		{22535DBE-A429-479A-B922-5DB0A0DB22DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22535DBE-A429-479A-B922-5DB0A0DB22DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22535DBE-A429-479A-B922-5DB0A0DB22DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87DEBCFD-C8FD-4300-A44A-0E2FCC4110DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87DEBCFD-C8FD-4300-A44A-0E2FCC4110DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87DEBCFD-C8FD-4300-A44A-0E2FCC4110DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87DEBCFD-C8FD-4300-A44A-0E2FCC4110DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

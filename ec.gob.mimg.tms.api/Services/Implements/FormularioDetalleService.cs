@@ -4,7 +4,7 @@ using EF.Core.Repository.Manager;
 
 namespace ec.gob.mimg.tms.api.Services.Implements
 {
-    public class FormularioDetalleService : CommonManager<FormularioDetalle>, IFormularioDetalleService
+    public class FormularioDetalleService : CommonManager<TmsFormularioDetalle>, IFormularioDetalleService
     {
         public FormularioDetalleService(TmsDbContext _dbContext) : base(new FormularioDetalleRepository(_dbContext))
         {

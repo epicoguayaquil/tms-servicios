@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ec.gob.mimg.tms.model.Models;
 
-public partial class FormularioObligacion
+public partial class TmsFormularioObligacion
 {
-    public int IdObligacion { get; set; }
+    public int IdFormularioObligacion { get; set; }
 
     public string? Estado { get; set; }
 
