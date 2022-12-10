@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.api.Services.Implements;
 using AutoMapper;

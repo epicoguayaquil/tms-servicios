@@ -23,6 +23,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly TmsDbContext _dbContext;
         private readonly EstablecimientoService _establecimientoService;
         private readonly FormularioService _formularioService;
+        private readonly FormularioActividadService _formularioActividadService;
 
         private readonly IMapper _mapper;
 
@@ -32,6 +33,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _dbContext = dbContext;
             _establecimientoService = new EstablecimientoService(_dbContext);
             _formularioService = new FormularioService(_dbContext);
+            _formularioActividadService = new FormularioActividadService(_dbContext);
         }
 
         // GET: api/Establecimiento
@@ -190,21 +192,41 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 bool isSaved = await _establecimientoService.UpdateAsync(establecimientoActual);
 
-                if (isSaved)
-                {
-                    GenericResponse response = new()
-                    {
-                        Cod = "200",
-                        Msg = "OK",
-                        Data = _mapper.Map<EstablecimientoResponse>(establecimientoActual)
-                    };
-                    return Ok(response);
-                }
-                else
+                if (!isSaved)
                 {
                     return BadRequest();
                 }
 
+                var formularioActivoList = await _formularioService.GetAsync(x => x.EstablecimientoId == establecimientoRequest.IdEstablecimiento
+                                        && x.Estado == EstadoEnum.ACTIVO.ToString());
+                TmsFormulario formulario;
+                if (formularioActivoList.Count == 0) {
+                    formulario = new TmsFormulario
+                    {
+                        EstablecimientoId = establecimientoRequest.IdEstablecimiento,
+                        PasoCreacionActual = 0,
+                        FechaRegistro = DateTime.Now,
+                        UsuarioRegistro = "admin@mail.com",
+                        Estado = EstadoEnum.ACTIVO.ToString()
+                    };
+                    isSaved = await _formularioService.AddAsync(formulario);
+                    if (!isSaved)
+                    {
+                        return BadRequest();
+                    }
+                }
+                else
+                {
+                    formulario = formularioActivoList.First();
+                }
+
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = _mapper.Map<FormularioResponse>(formulario)
+                };
+                return Ok(response);
             }
             catch (Exception ex)
             {
