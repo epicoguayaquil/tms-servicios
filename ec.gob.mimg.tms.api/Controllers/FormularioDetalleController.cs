@@ -12,7 +12,6 @@ using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
-using ec.gob.mimg.tms.api.Services;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
