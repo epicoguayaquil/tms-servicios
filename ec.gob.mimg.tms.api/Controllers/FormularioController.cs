@@ -22,6 +22,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     {
         private readonly TmsDbContext _dbContext;
         private readonly FormularioService _formularioService;
+        private readonly FormularioDetalleService _formularioDetalleService;
 
         private readonly IMapper _mapper;
 
@@ -30,6 +31,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _mapper = mapper;
             _dbContext = dbContext;
             _formularioService = new FormularioService(_dbContext);
+            _formularioDetalleService = new FormularioDetalleService(_dbContext);
         }
 
         // GET: api/Formulario
@@ -67,6 +69,37 @@ namespace ec.gob.mimg.tms.api.Controllers
                 };
                 return Ok(response);
             }
+        }
+
+        // GET: api/Formulario/1/detalles
+        [HttpGet("{id}/detalles")]
+        public async Task<ActionResult<GenericResponse>> GetAllDetallesById(int id)
+        {
+            var formularioDetalleList = await _formularioDetalleService.GetAsync(x => x.FormularioId == id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioDetalleList.Select(x => _mapper.Map<FormularioDetalleResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
+        // GET: api/Formulario/1/detallesNivel/2
+        [HttpGet("{id}/detallesNivel/{pasoCreacion}")]
+        public async Task<ActionResult<GenericResponse>> GetAllDetallesNivelById(int id, int pasoCreacion)
+        {
+            var formularioDetalleList = await _formularioDetalleService.GetAsync(x => (x.FormularioId == id
+                    && x.PasoCreacion == pasoCreacion));
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioDetalleList.Select(x => _mapper.Map<FormularioDetalleResponse>(x))
+            };
+
+            return Ok(response);
         }
 
         // POST: api/Formulario

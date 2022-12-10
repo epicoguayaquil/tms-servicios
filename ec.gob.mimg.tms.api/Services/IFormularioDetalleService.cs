@@ -3,7 +3,7 @@ using EF.Core.Repository.Interface.Manager;
 
 namespace ec.gob.mimg.tms.api.Services
 {
-    public interface IFormularioDetalleService : ICommonManager<FormularioDetalle>
+    public interface IFormularioDetalleService : ICommonManager<TmsFormularioDetalle>
     {
     }
 }

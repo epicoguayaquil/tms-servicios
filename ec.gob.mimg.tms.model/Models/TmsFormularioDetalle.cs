@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ec.gob.mimg.tms.model.Models;
 
-public partial class FormularioDetalle
+public partial class TmsFormularioDetalle
 {
     public int IdFormularioDetalle { get; set; }
 

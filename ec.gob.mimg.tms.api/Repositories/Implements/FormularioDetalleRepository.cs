@@ -3,7 +3,7 @@ using EF.Core.Repository.Repository;
 
 namespace ec.gob.mimg.tms.api.Repositories.Implements
 {
-    public class FormularioDetalleRepository : CommonRepository<FormularioDetalle>, IFormularioDetalleRepository
+    public class FormularioDetalleRepository : CommonRepository<TmsFormularioDetalle>, IFormularioDetalleRepository
     {
         public FormularioDetalleRepository(TmsDbContext dbContext) : base(dbContext) {
         

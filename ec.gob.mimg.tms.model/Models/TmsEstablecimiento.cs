@@ -5,6 +5,10 @@ namespace ec.gob.mimg.tms.model.Models;
 
 public partial class TmsEstablecimiento
 {
+    public int IdEstablecimiento { get; set; }
+
+    public string? NombreComercial { get; set; }
+
     public string? Direccion { get; set; }
 
     public string? Telefono { get; set; }
@@ -26,10 +30,6 @@ public partial class TmsEstablecimiento
     public DateTime? FechaModificacion { get; set; }
 
     public int? EmpresaId { get; set; }
-
-    public int IdEstablecimiento { get; set; }
-
-    public string? NombreComercial { get; set; }
 
     public string? Jurisdiccion { get; set; }
 
