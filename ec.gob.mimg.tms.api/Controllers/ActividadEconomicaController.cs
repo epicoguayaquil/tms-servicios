@@ -13,6 +13,7 @@ using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
+using Microsoft.AspNetCore.Cors;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
