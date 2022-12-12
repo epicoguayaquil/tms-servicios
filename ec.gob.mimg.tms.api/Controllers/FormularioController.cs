@@ -23,6 +23,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly TmsDbContext _dbContext;
         private readonly FormularioService _formularioService;
         private readonly FormularioDetalleService _formularioDetalleService;
+        private readonly FormularioActividadService _formularioActividadService;
 
         private readonly IMapper _mapper;
 
@@ -32,6 +33,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _dbContext = dbContext;
             _formularioService = new FormularioService(_dbContext);
             _formularioDetalleService = new FormularioDetalleService(_dbContext);
+            _formularioActividadService = new FormularioActividadService(_dbContext);
         }
 
         // GET: api/Formulario
@@ -97,6 +99,21 @@ namespace ec.gob.mimg.tms.api.Controllers
                 Cod = "200",
                 Msg = "OK",
                 Data = formularioDetalleList.Select(x => _mapper.Map<FormularioDetalleResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
+        // GET: api/Formulario/1/actividades
+        [HttpGet("{id}/actividades")]
+        public async Task<ActionResult<GenericResponse>> GetAllActividadesById(int id)
+        {
+            var formularioActividadList = await _formularioActividadService.GetAsync(x => x.FormularioId == id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioActividadList.Select(x => _mapper.Map<FormularioActividadResponse>(x))
             };
 
             return Ok(response);
