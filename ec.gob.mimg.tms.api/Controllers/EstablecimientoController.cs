@@ -176,8 +176,44 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
-        // PUT: api/Establecimiento/NombreComercial
-        [HttpPut("NombreComercial")]
+        // GET: api/Establecimiento/1/formularioActivo
+        [HttpGet("{id}/formularioActivo")]
+        public async Task<ActionResult<GenericResponse>> GetFormularioActivoById(int id)
+        {
+            var formularioActivoList = await _formularioService.GetAsync(x => x.EstablecimientoId == id
+                                    && x.Estado == EstadoEnum.ACTIVO.ToString());
+            TmsFormulario formulario;
+            if (formularioActivoList.Count == 0)
+            {
+                formulario = new TmsFormulario
+                {
+                    EstablecimientoId = id,
+                    PasoCreacionActual = 0,
+                    FechaRegistro = DateTime.Now,
+                    UsuarioRegistro = "admin@mail.com",
+                    Estado = EstadoEnum.ACTIVO.ToString()
+                };
+                bool isSaved = await _formularioService.AddAsync(formulario);
+                if (!isSaved)
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                formulario = formularioActivoList.First();
+            }
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = _mapper.Map<FormularioResponse>(formulario)
+            };
+            return Ok(response);
+        }
+
+        // PUT: api/Establecimiento/nombreComercial
+        [HttpPut("nombreComercial")]
         public async Task<IActionResult> UpdateNombreComercial(EstablecimientoExtraDataRequest establecimientoRequest)
         {
             try
@@ -197,34 +233,11 @@ namespace ec.gob.mimg.tms.api.Controllers
                     return BadRequest();
                 }
 
-                var formularioActivoList = await _formularioService.GetAsync(x => x.EstablecimientoId == establecimientoRequest.IdEstablecimiento
-                                        && x.Estado == EstadoEnum.ACTIVO.ToString());
-                TmsFormulario formulario;
-                if (formularioActivoList.Count == 0) {
-                    formulario = new TmsFormulario
-                    {
-                        EstablecimientoId = establecimientoRequest.IdEstablecimiento,
-                        PasoCreacionActual = 0,
-                        FechaRegistro = DateTime.Now,
-                        UsuarioRegistro = "admin@mail.com",
-                        Estado = EstadoEnum.ACTIVO.ToString()
-                    };
-                    isSaved = await _formularioService.AddAsync(formulario);
-                    if (!isSaved)
-                    {
-                        return BadRequest();
-                    }
-                }
-                else
-                {
-                    formulario = formularioActivoList.First();
-                }
-
                 GenericResponse response = new()
                 {
                     Cod = "200",
                     Msg = "OK",
-                    Data = _mapper.Map<FormularioResponse>(formulario)
+                    Data = _mapper.Map<EstablecimientoResponse>(establecimientoActual)
                 };
                 return Ok(response);
             }
