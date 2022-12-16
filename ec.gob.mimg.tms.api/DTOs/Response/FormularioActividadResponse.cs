@@ -20,5 +20,7 @@
 
         public DateTime? FechaModificacion { get; set; }
 
+        public ActividadEconomicaResponse? ActividadEconomica { get; set; }
+
     }
 }

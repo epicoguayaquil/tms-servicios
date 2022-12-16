@@ -203,11 +203,20 @@ namespace ec.gob.mimg.tms.api.Controllers
             {
                 formulario = formularioActivoList.First();
             }
+
+            FormularioResponse formularioResponse = _mapper.Map<FormularioResponse>(formulario);
+            foreach (var formularioActividad in formulario.TmsFormularioActividads)
+            {
+                FormularioActividadResponse formularioActividadResponse = _mapper.Map<FormularioActividadResponse>(formularioActividad);
+                formularioActividadResponse.ActividadEconomica = _mapper.Map<ActividadEconomicaResponse>(formularioActividad.ActividadEconomica);
+                formularioResponse.FormularioActividadResponseList.Add(formularioActividadResponse);
+            }
+
             GenericResponse response = new()
             {
                 Cod = "200",
                 Msg = "OK",
-                Data = _mapper.Map<FormularioResponse>(formulario)
+                Data = formularioResponse
             };
             return Ok(response);
         }
@@ -269,11 +278,24 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             var formularioList = await _formularioService.GetAsync(x => x.EstablecimientoId == id
                                                     && x.Estado == EstadoEnum.ACTIVO.ToString());
+            List<FormularioResponse> formularioResponseList = new List<FormularioResponse>();
+            foreach (var formulario in formularioList)
+            {
+                FormularioResponse formularioResponse = _mapper.Map<FormularioResponse>(formulario);
+                foreach (var formularioActividad in formulario.TmsFormularioActividads)
+                {
+                    FormularioActividadResponse formularioActividadResponse = _mapper.Map<FormularioActividadResponse>(formularioActividad);
+                    formularioActividadResponse.ActividadEconomica = _mapper.Map<ActividadEconomicaResponse>(formularioActividad.ActividadEconomica);
+                    formularioResponse.FormularioActividadResponseList.Add(formularioActividadResponse);
+                }
+                formularioResponseList.Add(formularioResponse);
+            }
+
             GenericResponse response = new()
             {
                 Cod = "200",
                 Msg = "OK",
-                Data = formularioList.Select(x => _mapper.Map<FormularioResponse>(x))
+                Data = formularioResponseList
             };
 
             return Ok(response);

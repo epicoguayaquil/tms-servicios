@@ -21,6 +21,6 @@ namespace ec.gob.mimg.tms.api.DTOs.Response
 
         public string? UsuarioModificacion { get; set; }
 
-
+        public virtual ICollection<FormularioActividadResponse> FormularioActividadResponseList { get; set; } = new List<FormularioActividadResponse>();
     }
 }

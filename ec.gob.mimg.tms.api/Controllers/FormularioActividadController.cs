@@ -57,11 +57,13 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
             else
             {
+                FormularioActividadResponse formularioActividadResponse = _mapper.Map<FormularioActividadResponse>(formularioActividad);
+                formularioActividadResponse.ActividadEconomica = _mapper.Map<ActividadEconomicaResponse>(formularioActividad.ActividadEconomica);
                 GenericResponse response = new()
                 {
                     Cod = "200",
                     Msg = "OK",
-                    Data = _mapper.Map<FormularioActividadResponse>(formularioActividad)
+                    Data = formularioActividadResponse
                 };
                 return Ok(response);
             }
