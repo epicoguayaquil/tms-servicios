@@ -11,5 +11,9 @@ namespace ec.gob.mimg.tms.api.Services.Implements
 
         }
 
+        public async Task<TmsFormulario> GetFirstOrDefaultById(int idFormulario)
+        {
+            return await this.GetFirstOrDefaultAsync(x => x.IdFormulario == idFormulario);
+        }
     }
 }

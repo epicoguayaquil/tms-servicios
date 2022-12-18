@@ -55,7 +55,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var formulario = await _formularioService.GetFirstOrDefaultAsync(x => x.IdFormulario == id);
+            var formulario =await _formularioService.GetFirstOrDefaultById(id);
 
             if (formulario == null)
             {

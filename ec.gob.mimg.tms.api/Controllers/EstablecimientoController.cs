@@ -68,7 +68,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     Cod = "200",
                     Msg = "OK",
-                    Data = _mapper.Map<EmpresaResponse>(establecimiento)
+                    Data = _mapper.Map<EstablecimientoResponse>(establecimiento)
                 };
                 return Ok(response);
             }
