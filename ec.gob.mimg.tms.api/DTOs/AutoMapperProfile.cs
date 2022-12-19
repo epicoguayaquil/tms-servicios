@@ -24,7 +24,26 @@ namespace ec.gob.mimg.tms.api.DTOs
             CreateMap<TmsEstablecimiento, EstablecimientoResponse>();
             CreateMap<EstablecimientoResponse, TmsEstablecimiento>();
 
+            // Formulario
+            CreateMap<TmsFormulario, FormularioResponse>();
+            CreateMap<FormularioResponse, TmsFormulario>();
 
+            CreateMap<TmsFormulario, FormularioRequest>();
+            CreateMap<FormularioRequest, TmsFormulario>();
+
+            // FormularioActividad
+            CreateMap<TmsFormularioActividad, FormularioActividadResponse>();
+            CreateMap<FormularioActividadResponse, TmsFormularioActividad>();
+
+            CreateMap<TmsFormularioActividad, FormularioActividadRequest>();
+            CreateMap<FormularioActividadRequest, TmsFormularioActividad>();
+
+            // FormularioDetalle
+            CreateMap<TmsFormularioDetalle, FormularioDetalleResponse>();
+            CreateMap<FormularioDetalleResponse, TmsFormularioDetalle>();
+
+            CreateMap<TmsFormularioDetalle, FormularioDetalleRequest>();
+            CreateMap<FormularioDetalleRequest, TmsFormularioDetalle>();
         }
     }
 }
