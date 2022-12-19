@@ -3,9 +3,14 @@ using ec.gob.mimg.tms.api.DTOs;
 using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
+using ec.gob.mimg.tms.api.Services;
 using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.model.Models;
+using ec.gob.mimg.tms.srv.mail.Models;
+using ec.gob.mimg.tms.srv.mail.Services;
+using ec.gob.mimg.tms.srv.mail.Services.Implements;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -13,32 +18,47 @@ namespace ec.gob.mimg.tms.api.Controllers
     [ApiController]
     public class EmpresaController : ControllerBase
     {
-        private readonly TmsDbContext _dbContext;
-        private readonly EmpresaService _empresaService;
-        private readonly EstablecimientoService _establecimientoService;
-
         private readonly IMapper _mapper;
+        private readonly TmsDbContext _dbContext;
+        private readonly ILogger<EmpresaController> _logger;
+        
+        private readonly IEmpresaService _empresaService;
+        private readonly INotificacionService _notificacionService;
+        private readonly IEstablecimientoService _establecimientoService;
 
-        public EmpresaController(IMapper mapper, TmsDbContext dbContext)
+
+        public EmpresaController(IMapper mapper, TmsDbContext dbContext, ILogger<EmpresaController> logger, INotificacionService notificacionService)
         {
+            _logger = logger;
             _mapper = mapper;
             _dbContext = dbContext;
             _empresaService = new EmpresaService(_dbContext);
             _establecimientoService = new EstablecimientoService(_dbContext);
+            _notificacionService = notificacionService;
         }
 
         // GET: api/Empresas
         [HttpGet]
         public async Task<ActionResult<GenericResponse>> GetAll()
         {
+            _logger.LogError(">>> Consultando Empresas ..............................");
             GenericResponse response = new()
             {
                 Cod = "200",
-                Msg = "OK"
+                Msg = "OK",
             };
 
             var empresaList = await _empresaService.GetAllAsync();
             response.Data = empresaList.Select(x => _mapper.Map<EmpresaResponse>(x));
+
+            // Send Mail Tester
+            NotificacionRequest request = new NotificacionRequest();
+            request.username = "Juan Lafuente";
+            request.mail = "juanklafuente@outlook.com";
+            request.titulo = "Notificación TMS";
+            request.contenido = "Su codigo de seguridad es: 123456";
+
+            await _notificacionService.EnviarNotificacion(request);
 
             return Ok(response);
         }

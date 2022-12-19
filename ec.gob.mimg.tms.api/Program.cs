@@ -1,14 +1,37 @@
-﻿using ec.gob.mimg.tms.model.Models;
+﻿using ec.gob.mimg.tms.api.Services;
+using ec.gob.mimg.tms.model.Models;
+using ec.gob.mimg.tms.srv.mail.Models;
+using ec.gob.mimg.tms.srv.mail.Services;
+using ec.gob.mimg.tms.srv.mail.Services.Implements;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Configuration;
+using Microsoft.Extensions.Logging.Console;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+# region LOGGER WITH SERILOG
+//var logger = new LoggerConfiguration()
+//    .ReadFrom.Configuration(builder.Configuration)
+//    .Enrich.FromLogContext()
+//    .CreateLogger();
+//builder.Logging.ClearProviders();
+//builder.Logging.AddSerilog(logger);
+#  endregion
+
+# region LOGGER WITH LOGGING MS
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+#  endregion
 
 // Add services to the container.
 builder.Services.AddCors(x => x.AddPolicy("EnableCors", builder => {
     builder.SetIsOriginAllowedToAllowWildcardSubdomains()
            .AllowAnyOrigin()
            .AllowAnyMethod()
-           .AllowAnyHeader();
+    .AllowAnyHeader();
 }));
 
 builder.Services.AddControllers();
@@ -16,6 +39,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<TmsDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL")));
+
+builder.Services.AddScoped<IMailService, MailService>();
+builder.Services.AddScoped<INotificacionService, NotifacionService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -30,5 +56,6 @@ app.MapControllers();
 
 app.UseCors("EnableCors");
 
+app.Logger.LogInformation(">>> Starting the app");
 app.Run();
 
