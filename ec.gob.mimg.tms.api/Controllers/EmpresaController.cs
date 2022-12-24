@@ -21,13 +21,15 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IMapper _mapper;
         private readonly TmsDbContext _dbContext;
         private readonly ILogger<EmpresaController> _logger;
-        
+
         private readonly IEmpresaService _empresaService;
         private readonly INotificacionService _notificacionService;
         private readonly IEstablecimientoService _establecimientoService;
 
 
-        public EmpresaController(IMapper mapper, TmsDbContext dbContext, ILogger<EmpresaController> logger, INotificacionService notificacionService)
+        public EmpresaController(IMapper mapper, TmsDbContext dbContext, 
+                                ILogger<EmpresaController> logger,
+                                INotificacionService notificacionService)
         {
             _logger = logger;
             _mapper = mapper;
@@ -202,7 +204,7 @@ namespace ec.gob.mimg.tms.api.Controllers
 
 
                 bool isSaved = await _empresaService.UpdateAsync(empresa);
-                    
+
                 if (isSaved)
                 {
                     GenericResponse response = new()

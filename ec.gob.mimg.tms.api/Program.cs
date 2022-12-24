@@ -1,4 +1,5 @@
 ﻿using ec.gob.mimg.tms.api.Services;
+using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.srv.mail.Models;
 using ec.gob.mimg.tms.srv.mail.Services;
@@ -12,18 +13,18 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 # region LOGGER WITH SERILOG
-//var logger = new LoggerConfiguration()
-//    .ReadFrom.Configuration(builder.Configuration)
-//    .Enrich.FromLogContext()
-//    .CreateLogger();
-//builder.Logging.ClearProviders();
-//builder.Logging.AddSerilog(logger);
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 #  endregion
 
 # region LOGGER WITH LOGGING MS
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
-builder.Logging.AddDebug();
+//builder.Logging.ClearProviders();
+//builder.Logging.AddConsole();
+//builder.Logging.AddDebug();
 #  endregion
 
 // Add services to the container.
@@ -57,5 +58,6 @@ app.MapControllers();
 app.UseCors("EnableCors");
 
 app.Logger.LogInformation(">>> Starting the app");
+
 app.Run();
 
