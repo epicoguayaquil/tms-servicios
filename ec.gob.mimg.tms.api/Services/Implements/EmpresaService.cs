@@ -7,9 +7,9 @@ namespace ec.gob.mimg.tms.api.Services.Implements
 {
     public class EmpresaService : CommonManager<TmsEmpresa>, IEmpresaService
     {
+
         public EmpresaService(TmsDbContext _dbContext) : base(new EmpresaRepository(_dbContext))
         {
-
         }
 
         public async Task<TmsEmpresa> GetByRucAsync(string ruc)
