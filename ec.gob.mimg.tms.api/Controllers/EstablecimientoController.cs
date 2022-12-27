@@ -24,6 +24,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly EstablecimientoService _establecimientoService;
         private readonly FormularioService _formularioService;
         private readonly FormularioActividadService _formularioActividadService;
+        private readonly ActividadEconomicaService _actividadEconomicaService;
 
         private readonly IMapper _mapper;
 
@@ -34,6 +35,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _establecimientoService = new EstablecimientoService(_dbContext);
             _formularioService = new FormularioService(_dbContext);
             _formularioActividadService = new FormularioActividadService(_dbContext);
+            _actividadEconomicaService = new ActividadEconomicaService(_dbContext);
         }
 
         // GET: api/Establecimiento
@@ -205,12 +207,16 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
 
             FormularioResponse formularioResponse = _mapper.Map<FormularioResponse>(formulario);
-            foreach (var formularioActividad in formulario.TmsFormularioActividads)
+            var formularioActividadList = await _formularioActividadService.GetAsync(x => x.FormularioId == formulario.IdFormulario);
+            var formularioActividadResponseList = formularioActividadList.Select(x => _mapper.Map<FormularioActividadResponse>(x));
+            var formularioActividadResponseListNew = new List<FormularioActividadResponse>();
+            foreach (var formularioActividadResponse in formularioActividadResponseList)
             {
-                FormularioActividadResponse formularioActividadResponse = _mapper.Map<FormularioActividadResponse>(formularioActividad);
-                formularioActividadResponse.ActividadEconomica = _mapper.Map<ActividadEconomicaResponse>(formularioActividad.ActividadEconomica);
-                formularioResponse.FormularioActividadResponseList.Add(formularioActividadResponse);
+                var actividadEconomica = await _actividadEconomicaService.GetFirstOrDefaultAsync(x => x.IdActividadEconomica == formularioActividadResponse.ActividadEconomicaId);
+                formularioActividadResponse.ActividadEconomica = _mapper.Map<ActividadEconomicaResponse>(actividadEconomica);
+                formularioActividadResponseListNew.Add(formularioActividadResponse);
             }
+            formularioResponse.FormularioActividadResponseList = formularioActividadResponseListNew;
 
             GenericResponse response = new()
             {
@@ -286,7 +292,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     FormularioActividadResponse formularioActividadResponse = _mapper.Map<FormularioActividadResponse>(formularioActividad);
                     formularioActividadResponse.ActividadEconomica = _mapper.Map<ActividadEconomicaResponse>(formularioActividad.ActividadEconomica);
-                    formularioResponse.FormularioActividadResponseList.Add(formularioActividadResponse);
+                    formularioResponse.FormularioActividadResponseList.Append(formularioActividadResponse);
                 }
                 formularioResponseList.Add(formularioResponse);
             }
