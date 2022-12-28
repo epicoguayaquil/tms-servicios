@@ -13,6 +13,7 @@ using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
 using ec.gob.mimg.tms.api.Services;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -147,6 +148,46 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     return BadRequest();
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+        }
+
+        // POST: api/Formulario
+        [HttpPost("detallesNivel")]
+        public async Task<ActionResult<GenericResponse>> CreateDetallesNivel(FormularioDetalleListRequest formularioDetalleListRequest)
+        {
+            try
+            {
+                if (formularioDetalleListRequest == null
+                    || formularioDetalleListRequest.CaracteristicaList.IsNullOrEmpty())
+                {
+                    return BadRequest();
+                }
+                foreach (var caracteristicaElement in formularioDetalleListRequest.CaracteristicaList)
+                {
+                    TmsFormularioDetalle formularioDetalle = new()
+                    {
+                        Caracteristica = caracteristicaElement.Caracteristica,
+                        Valor = caracteristicaElement.Valor,
+                        FormularioId = formularioDetalleListRequest.FormularioId,
+                        PasoCreacion = formularioDetalleListRequest.PasoCreacion,
+                        FechaRegistro = DateTime.Now,
+                        UsuarioRegistro = "admin@mail.com"
+                    };
+                    bool isSaved = await _formularioDetalleService.AddAsync(formularioDetalle);
+                }
+
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = "All saved"
+                };
+                return Ok(response);
             }
             catch (Exception ex)
             {
