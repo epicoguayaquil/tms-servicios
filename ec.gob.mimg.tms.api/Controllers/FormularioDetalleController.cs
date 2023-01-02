@@ -132,27 +132,25 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                var formularioDetalleActual = await _formularioDetalleService.GetFirstOrDefaultAsync(x => x.IdFormularioDetalle == formularioDetalleRequest.IdFormularioDetalle);
+                var formularioDetalleActual = await _formularioDetalleService.
+                    GetFirstOrDefaultAsync(x => x.IdFormularioDetalle == formularioDetalleRequest.IdFormularioDetalle);
                 if (formularioDetalleActual == null) { return NotFound(); }
 
-                TmsFormularioDetalle formularioDetalle = new TmsFormularioDetalle();
-                formularioDetalle = _mapper.Map<TmsFormularioDetalle>(formularioDetalleRequest);
+                formularioDetalleActual.Caracteristica = formularioDetalleRequest.Caracteristica;
+                formularioDetalleActual.Valor = formularioDetalleRequest.Valor;
+                formularioDetalleActual.PasoCreacion = formularioDetalleRequest.PasoCreacion;
+                formularioDetalleActual.FechaModificacion = DateTime.Now;
+                formularioDetalleActual.UsuarioModificacion = "admin@mail.com";
 
-                formularioDetalle.FechaRegistro = formularioDetalleActual.FechaRegistro;
-                formularioDetalle.UsuarioRegistro = formularioDetalleActual.UsuarioRegistro;
-                //formularioDetalle.Estado = formularioDetalleActual.Estado;
-                formularioDetalle.FechaModificacion = DateTime.Now;
-                formularioDetalle.UsuarioModificacion = "admin@mail.com";
-
-                bool isSaved = await _formularioDetalleService.UpdateAsync(formularioDetalle);
+                bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);
                     
-                if (isSaved)
+                if (isUpdate)
                 {
                     GenericResponse response = new()
                     {
                         Cod = "200",
                         Msg = "OK",
-                        Data = _mapper.Map<FormularioDetalleResponse>(formularioDetalle)
+                        Data = _mapper.Map<FormularioDetalleResponse>(formularioDetalleActual)
                     };
                     return Ok(response);
                 }

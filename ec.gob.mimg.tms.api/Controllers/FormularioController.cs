@@ -162,23 +162,39 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                if (formularioDetalleListRequest == null
-                    || formularioDetalleListRequest.CaracteristicaList.IsNullOrEmpty())
+                if (formularioDetalleListRequest == null)
+                {
+                    return BadRequest();
+                }
+                if (formularioDetalleListRequest.CaracteristicaList.IsNullOrEmpty())
                 {
                     return BadRequest();
                 }
                 foreach (var caracteristicaElement in formularioDetalleListRequest.CaracteristicaList)
                 {
-                    TmsFormularioDetalle formularioDetalle = new()
+                    TmsFormularioDetalle formularioDetalleActual;
+                    formularioDetalleActual  = await _formularioDetalleService.
+                        GetFirstOrDefaultAsync(x => (x.FormularioId == formularioDetalleListRequest.FormularioId
+                        && x.Caracteristica == caracteristicaElement.Caracteristica));
+                    if (formularioDetalleActual == null) {
+                        TmsFormularioDetalle formularioDetalle = new()
+                        {
+                            Caracteristica = caracteristicaElement.Caracteristica,
+                            Valor = caracteristicaElement.Valor,
+                            FormularioId = formularioDetalleListRequest.FormularioId,
+                            PasoCreacion = formularioDetalleListRequest.PasoCreacion,
+                            FechaRegistro = DateTime.Now,
+                            UsuarioRegistro = "admin@mail.com"
+                        };
+                        bool isSaved = await _formularioDetalleService.AddAsync(formularioDetalle);
+                    }
+                    else
                     {
-                        Caracteristica = caracteristicaElement.Caracteristica,
-                        Valor = caracteristicaElement.Valor,
-                        FormularioId = formularioDetalleListRequest.FormularioId,
-                        PasoCreacion = formularioDetalleListRequest.PasoCreacion,
-                        FechaRegistro = DateTime.Now,
-                        UsuarioRegistro = "admin@mail.com"
-                    };
-                    bool isSaved = await _formularioDetalleService.AddAsync(formularioDetalle);
+                        formularioDetalleActual.Valor = caracteristicaElement.Valor;
+                        formularioDetalleActual.FechaModificacion = DateTime.Now;
+                        formularioDetalleActual.UsuarioModificacion = "admin@mail.com";
+                        bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);
+                    }
                 }
 
                 GenericResponse response = new()
