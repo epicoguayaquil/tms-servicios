@@ -37,13 +37,11 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
         public async Task<TokenResponse> GetToken(TokenRequest request)
         {
-            _logger.LogError(">>> GetToken......{RunTime}", DateTime.Now);
-
+            _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
             TokenResponse? tokenResponse = new TokenResponse();
 
             var cliente = new HttpClient();
             cliente.BaseAddress = new Uri(BaseUrl);
-
 
             var nvc = new List<KeyValuePair<string, string>>();
             nvc.Add(new KeyValuePair<string, string>("client_id", clientId));
@@ -54,13 +52,10 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             var req = new HttpRequestMessage(HttpMethod.Post, BaseUrl) { Content = new FormUrlEncodedContent(nvc) };
             var apiResponse = await cliente.SendAsync(req);
 
-
             if (apiResponse.IsSuccessStatusCode)
             {
-
                 var data = await apiResponse.Content.ReadAsStringAsync();
                 tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(data);
-                //tokenResponse = JsonSerializer.Deserialize<TokenResponse>(data);
             }
             else
             {
