@@ -31,5 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ec.gob.mimg.tms.model\ec.gob.mimg.tms.model.csproj" />
     <ProjectReference Include="..\ec.gob.mimg.tms.srv.mail\ec.gob.mimg.tms.srv.mail.csproj" />
+    <ProjectReference Include="..\ec.gob.mimg.tms.srv.mimg\ec.gob.mimg.tms.srv.mimg.csproj" />
   </ItemGroup>
 </Project>

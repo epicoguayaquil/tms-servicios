@@ -1,13 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+
 namespace ec.gob.mimg.tms.srv.mimg.DTOs
 {
 	public class TokenResponse
     {
+        [JsonProperty("token_type")]
+        public string TokenType { get; set; }
 
-        public string token_type { get; set; }
-        public string expires_in { get; set; }
-        public string ext_expires_in { get; set; }
-        public string access_token { get; set; }
+        [JsonProperty("expires_in")]
+        public int ExpiresIn { get; set; }
+
+        [JsonProperty("ext_expires_in")]
+        public int ExtExpiresIn { get; set; }
+
+        [JsonProperty("access_token")]
+        public string AccessToken { get; set; }
 
 	}
 }

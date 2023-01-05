@@ -21,8 +21,6 @@
     <None Remove="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Services\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

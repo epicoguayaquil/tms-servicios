@@ -3,13 +3,13 @@ namespace ec.gob.mimg.tms.srv.mimg.Models
 {
 	public class EstablecimientoModel
 	{
-		public string ruc { get; set; }
-        public string establecimiento { get; set; }
-        public string fechaInicio { get; set; }
-        public string fechaCierre { get; set; }
-        public string estado { get; set; }
-        public string parroquia { get; set; }
-        public string direccion { get; set; }
+		public string Ruc { get; set; }
+        public string Establecimiento { get; set; }
+        public string FechaInicio { get; set; }
+        public string FechaCierre { get; set; }
+        public string Estado { get; set; }
+        public string Parroquia { get; set; }
+        public string Direccion { get; set; }
 
 	}
 }

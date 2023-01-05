@@ -3,11 +3,11 @@ namespace ec.gob.mimg.tms.srv.mimg.Models
 {
 	public class ResultadoModel
 	{
-        public bool ok { get; set; }
-        public string titulo { get; set; }
-        public int tipoMensaje { get; set; }
-        public bool errorValidacion { get; set; }
-        public int statusCode { get; set; }
+        public bool Ok { get; set; }
+        public string Titulo { get; set; }
+        public int TipoMensaje { get; set; }
+        public bool ErrorValidacion { get; set; }
+        public int StatusCode { get; set; }
     }
 }
 
