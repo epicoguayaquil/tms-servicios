@@ -19,11 +19,11 @@ namespace ec.gob.mimg.tms.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestController : ControllerBase
+    public class ABCTestController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly TmsDbContext _dbContext;
-        private readonly ILogger<TestController> _logger;
+        private readonly ILogger<ABCTestController> _logger;
 
         private readonly IEmpresaService _empresaService;
         private readonly INotificacionService _notificacionService;
@@ -33,8 +33,8 @@ namespace ec.gob.mimg.tms.api.Controllers
 
         private readonly IApiSriService _apiSriService;
 
-        public TestController(IMapper mapper, TmsDbContext dbContext, 
-                                ILogger<TestController> logger,
+        public ABCTestController(IMapper mapper, TmsDbContext dbContext, 
+                                ILogger<ABCTestController> logger,
                                 INotificacionService notificacionService,
                                 ITokenService tokenService,
                                 IApiSriService apiSriService)
