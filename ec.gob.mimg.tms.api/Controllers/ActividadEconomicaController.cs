@@ -4,16 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.api.Services;
 using AutoMapper;
-using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
-using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
-using Microsoft.AspNetCore.Cors;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -22,7 +18,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     public class ActividadEconomicaController : ControllerBase
     {
         private readonly TmsDbContext _dbContext;
-        private readonly ActividadEconomicaService _actividadEconomicaService;
+        private readonly IActividadEconomicaService _actividadEconomicaService;
 
         private readonly IMapper _mapper;
 
@@ -36,7 +32,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet]
         public async Task<ActionResult<GenericResponse>> GetAll()
         {
-            var actividadList = _actividadEconomicaService.GetByNivelAsync(7);
+            var actividadList = await _actividadEconomicaService.GetByNivelAsync(7);
 
             GenericResponse response = new()
             {
@@ -52,7 +48,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var actividad = await _actividadEconomicaService.GetFirstOrDefaultAsync(x => x.IdActividadEconomica == id);
+            var actividad = await _actividadEconomicaService.GetById(id);
 
             if (actividad == null)
             {
@@ -73,7 +69,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("[action]/{codigo}")]
         public async Task<ActionResult<GenericResponse>> ByCodigo(string codigo)
         {
-            var actividad = await _actividadEconomicaService.GetFirstOrDefaultAsync(x => x.Codigo == codigo);
+            var actividad = await _actividadEconomicaService.GetByCodigo(codigo);
 
             if (actividad == null)
             {
@@ -94,7 +90,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var actividad = await _actividadEconomicaService.GetFirstOrDefaultAsync(x => x.IdActividadEconomica == id);
+            var actividad = await _actividadEconomicaService.GetById(id);
 
             if (actividad == null)
             {

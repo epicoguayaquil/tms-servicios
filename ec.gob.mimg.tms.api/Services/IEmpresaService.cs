@@ -6,6 +6,8 @@ namespace ec.gob.mimg.tms.api.Services
 {
     public interface IEmpresaService : ICommonManager<TmsEmpresa>
     {
+        Task<TmsEmpresa> GetById(int id);
+
         Task<TmsEmpresa> GetByRucAsync(string ruc);
     }
 }

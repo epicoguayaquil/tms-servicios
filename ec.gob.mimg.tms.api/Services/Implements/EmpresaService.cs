@@ -12,6 +12,11 @@ namespace ec.gob.mimg.tms.api.Services.Implements
         {
         }
 
+        public async Task<TmsEmpresa> GetById(int id)
+        {
+            return await GetFirstOrDefaultAsync(x => x.IdEmpresa == id);
+        }
+
         public async Task<TmsEmpresa> GetByRucAsync(string ruc)
         {
             return await GetFirstOrDefaultAsync(x => x.Ruc == ruc);

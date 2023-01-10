@@ -8,9 +8,7 @@ using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.srv.mail.Models;
 using ec.gob.mimg.tms.srv.mail.Services;
-using ec.gob.mimg.tms.srv.mail.Services.Implements;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -69,7 +67,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var empresa = await _empresaService.GetFirstOrDefaultAsync(x => x.IdEmpresa == id);
+            var empresa = await _empresaService.GetById(id);
 
             if (empresa == null)
             {
@@ -163,7 +161,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var empresa = await _empresaService.GetFirstOrDefaultAsync(x => x.IdEmpresa == id);
+            var empresa = await _empresaService.GetById(id);
 
             if (empresa == null)
             {

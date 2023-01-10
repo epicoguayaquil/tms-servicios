@@ -22,9 +22,9 @@ namespace ec.gob.mimg.tms.api.Controllers
     public class FormularioController : ControllerBase
     {
         private readonly TmsDbContext _dbContext;
-        private readonly FormularioService _formularioService;
-        private readonly FormularioDetalleService _formularioDetalleService;
-        private readonly FormularioActividadService _formularioActividadService;
+        private readonly IFormularioService _formularioService;
+        private readonly IFormularioDetalleService _formularioDetalleService;
+        private readonly IFormularioActividadService _formularioActividadService;
 
         private readonly IMapper _mapper;
 
@@ -56,7 +56,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var formulario =await _formularioService.GetFirstOrDefaultById(id);
+            var formulario =await _formularioService.GetById(id);
 
             if (formulario == null)
             {
@@ -78,7 +78,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}/detalles")]
         public async Task<ActionResult<GenericResponse>> GetAllDetallesById(int id)
         {
-            var formularioDetalleList = await _formularioDetalleService.GetAsync(x => x.FormularioId == id);
+            var formularioDetalleList = await _formularioDetalleService.GetListByFormularioId(id);
             GenericResponse response = new()
             {
                 Cod = "200",
@@ -93,8 +93,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}/detallesNivel/{pasoCreacion}")]
         public async Task<ActionResult<GenericResponse>> GetAllDetallesNivelById(int id, int pasoCreacion)
         {
-            var formularioDetalleList = await _formularioDetalleService.GetAsync(x => (x.FormularioId == id
-                    && x.PasoCreacion == pasoCreacion));
+            var formularioDetalleList = await _formularioDetalleService.GetListByFormularioIdAndPasoCreacion(id, pasoCreacion);
             GenericResponse response = new()
             {
                 Cod = "200",
@@ -109,7 +108,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}/actividades")]
         public async Task<ActionResult<GenericResponse>> GetAllActividadesById(int id)
         {
-            var formularioActividadList = await _formularioActividadService.GetAsync(x => x.FormularioId == id);
+            var formularioActividadList = await _formularioActividadService.GetListByFormularioId(id);
             GenericResponse response = new()
             {
                 Cod = "200",
@@ -174,8 +173,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     TmsFormularioDetalle formularioDetalleActual;
                     formularioDetalleActual  = await _formularioDetalleService.
-                        GetFirstOrDefaultAsync(x => (x.FormularioId == formularioDetalleListRequest.FormularioId
-                        && x.Caracteristica == caracteristicaElement.Caracteristica));
+                        GetByFormularioIdAndCaracteristica(formularioDetalleListRequest.FormularioId,
+                            caracteristicaElement.Caracteristica);
                     if (formularioDetalleActual == null) {
                         TmsFormularioDetalle formularioDetalle = new()
                         {
@@ -216,7 +215,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var formulario = await _formularioService.GetFirstOrDefaultAsync(x => x.IdFormulario == id);
+            var formulario = await _formularioService.GetById(id);
 
             if (formulario == null)
             {
@@ -240,7 +239,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                var formularioActual = await _formularioService.GetFirstOrDefaultAsync(x => x.IdFormulario == formularioRequest.IdFormulario);
+                var formularioActual = await _formularioService.GetById(formularioRequest.IdFormulario);
 
                 if (formularioActual == null) { return NotFound(); }
 

@@ -11,6 +11,7 @@ using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
+using ec.gob.mimg.tms.api.Services;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -19,7 +20,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     public class FormularioActividadController : ControllerBase
     {
         private readonly TmsDbContext _dbContext;
-        private readonly FormularioActividadService _formularioActividadService;
+        private readonly IFormularioActividadService _formularioActividadService;
 
         private readonly IMapper _mapper;
 
@@ -49,7 +50,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var formularioActividad = await _formularioActividadService.GetFirstOrDefaultAsync(x => x.IdActividadFormulario == id);
+            var formularioActividad = await _formularioActividadService.GetById(id);
 
             if (formularioActividad == null)
             {
@@ -109,7 +110,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var formularioActividad = await _formularioActividadService.GetFirstOrDefaultAsync(x => x.IdActividadFormulario == id);
+            var formularioActividad = await _formularioActividadService.GetById(id);
 
             if (formularioActividad == null)
             {
@@ -133,7 +134,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                var formularioActividadActual = await _formularioActividadService.GetFirstOrDefaultAsync(x => x.IdActividadFormulario == formularioActividadRequest.IdActividadFormulario);
+                var formularioActividadActual = await _formularioActividadService.GetById(formularioActividadRequest.IdActividadFormulario);
                 if (formularioActividadActual == null) { return NotFound(); }
 
                 TmsFormularioActividad formularioActividad = new TmsFormularioActividad();
