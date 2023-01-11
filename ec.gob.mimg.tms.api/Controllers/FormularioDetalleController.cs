@@ -12,6 +12,7 @@ using ec.gob.mimg.tms.api.DTOs.Request;
 using ec.gob.mimg.tms.api.DTOs.Response;
 using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
+using ec.gob.mimg.tms.api.Services;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -20,7 +21,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     public class FormularioDetalleController : ControllerBase
     {
         private readonly TmsDbContext _dbContext;
-        private readonly FormularioDetalleService _formularioDetalleService;
+        private readonly IFormularioDetalleService _formularioDetalleService;
 
         private readonly IMapper _mapper;
 
@@ -50,7 +51,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var formularioDetalle = await _formularioDetalleService.GetFirstOrDefaultAsync(x => x.IdFormularioDetalle == id);
+            var formularioDetalle = await _formularioDetalleService.GetById(id);
 
             if (formularioDetalle == null)
             {
@@ -108,7 +109,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var formularioDetalle = await _formularioDetalleService.GetFirstOrDefaultAsync(x => x.IdFormularioDetalle == id);
+            var formularioDetalle = await _formularioDetalleService.GetById(id);
 
             if (formularioDetalle == null)
             {
@@ -132,27 +133,24 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                var formularioDetalleActual = await _formularioDetalleService.GetFirstOrDefaultAsync(x => x.IdFormularioDetalle == formularioDetalleRequest.IdFormularioDetalle);
+                var formularioDetalleActual = await _formularioDetalleService.GetById(formularioDetalleRequest.IdFormularioDetalle);
                 if (formularioDetalleActual == null) { return NotFound(); }
 
-                TmsFormularioDetalle formularioDetalle = new TmsFormularioDetalle();
-                formularioDetalle = _mapper.Map<TmsFormularioDetalle>(formularioDetalleRequest);
+                formularioDetalleActual.Caracteristica = formularioDetalleRequest.Caracteristica;
+                formularioDetalleActual.Valor = formularioDetalleRequest.Valor;
+                formularioDetalleActual.PasoCreacion = formularioDetalleRequest.PasoCreacion;
+                formularioDetalleActual.FechaModificacion = DateTime.Now;
+                formularioDetalleActual.UsuarioModificacion = "admin@mail.com";
 
-                formularioDetalle.FechaRegistro = formularioDetalleActual.FechaRegistro;
-                formularioDetalle.UsuarioRegistro = formularioDetalleActual.UsuarioRegistro;
-                //formularioDetalle.Estado = formularioDetalleActual.Estado;
-                formularioDetalle.FechaModificacion = DateTime.Now;
-                formularioDetalle.UsuarioModificacion = "admin@mail.com";
-
-                bool isSaved = await _formularioDetalleService.UpdateAsync(formularioDetalle);
+                bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);
                     
-                if (isSaved)
+                if (isUpdate)
                 {
                     GenericResponse response = new()
                     {
                         Cod = "200",
                         Msg = "OK",
-                        Data = _mapper.Map<FormularioDetalleResponse>(formularioDetalle)
+                        Data = _mapper.Map<FormularioDetalleResponse>(formularioDetalleActual)
                     };
                     return Ok(response);
                 }

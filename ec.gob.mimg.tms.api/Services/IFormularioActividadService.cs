@@ -5,5 +5,9 @@ namespace ec.gob.mimg.tms.api.Services
 {
     public interface IFormularioActividadService : ICommonManager<TmsFormularioActividad>
     {
+        Task<TmsFormularioActividad> GetById(int id);
+
+        Task<ICollection<TmsFormularioActividad>> GetListByFormularioId(int formularioId);
     }
+
 }

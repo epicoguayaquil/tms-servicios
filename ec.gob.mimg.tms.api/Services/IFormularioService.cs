@@ -5,6 +5,11 @@ namespace ec.gob.mimg.tms.api.Services
 {
     public interface IFormularioService : ICommonManager<TmsFormulario>
     {
-        Task<TmsFormulario> GetFirstOrDefaultById(int idFormulario);
+        Task<TmsFormulario> GetById(int id);
+
+        Task<ICollection<TmsFormulario>> GetListByEstablecimientoId(int establecimientoId);
+
+        Task<ICollection<TmsFormulario>> GetListByEstablecimientoIdAndEstado(int establecimientoId, string estado);
+
     }
 }

@@ -11,5 +11,10 @@ namespace ec.gob.mimg.tms.api.Services.Implements
 
         }
 
+        public async Task<TmsEstablecimiento> GetById(int id)
+        {
+            return await GetFirstOrDefaultAsync(x => x.IdEstablecimiento == id);
+        }
+
     }
 }

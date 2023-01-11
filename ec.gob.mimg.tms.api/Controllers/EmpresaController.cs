@@ -8,12 +8,7 @@ using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.srv.mail.Models;
 using ec.gob.mimg.tms.srv.mail.Services;
-using ec.gob.mimg.tms.srv.mail.Services.Implements;
-using ec.gob.mimg.tms.srv.mimg.DTOs;
-using ec.gob.mimg.tms.srv.mimg.Services;
-using ec.gob.mimg.tms.srv.mimg.Services.Implements;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -29,15 +24,10 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly INotificacionService _notificacionService;
         private readonly IEstablecimientoService _establecimientoService;
 
-        private readonly ITokenService _tokenService;
-
-        private readonly IApiSriService _apiSriService;
 
         public EmpresaController(IMapper mapper, TmsDbContext dbContext, 
                                 ILogger<EmpresaController> logger,
-                                INotificacionService notificacionService,
-                                ITokenService tokenService,
-                                IApiSriService apiSriService)
+                                INotificacionService notificacionService)
         {
             _logger = logger;
             _mapper = mapper;
@@ -45,8 +35,6 @@ namespace ec.gob.mimg.tms.api.Controllers
             _empresaService = new EmpresaService(_dbContext);
             _establecimientoService = new EstablecimientoService(_dbContext);
             _notificacionService = notificacionService;
-            _tokenService = tokenService;
-            _apiSriService = apiSriService;
         }
 
         // GET: api/Empresas
@@ -70,7 +58,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var empresa = await _empresaService.GetFirstOrDefaultAsync(x => x.IdEmpresa == id);
+            var empresa = await _empresaService.GetById(id);
 
             if (empresa == null)
             {
@@ -164,7 +152,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var empresa = await _empresaService.GetFirstOrDefaultAsync(x => x.IdEmpresa == id);
+            var empresa = await _empresaService.GetById(id);
 
             if (empresa == null)
             {

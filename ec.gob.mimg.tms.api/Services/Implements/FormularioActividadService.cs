@@ -11,5 +11,14 @@ namespace ec.gob.mimg.tms.api.Services.Implements
 
         }
 
+        public async Task<TmsFormularioActividad> GetById(int id)
+        {
+            return await GetFirstOrDefaultAsync(x => x.IdActividadFormulario == id);
+        }
+
+        public async Task<ICollection<TmsFormularioActividad>> GetListByFormularioId(int formularioId)
+        {
+            return await GetAsync(x => x.FormularioId == formularioId);
+        }
     }
 }
