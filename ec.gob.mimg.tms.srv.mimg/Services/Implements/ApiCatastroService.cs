@@ -55,15 +55,15 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
             var apiResponse = await cliente.GetAsync(string.Format("Contribuyente/ConsultarPorRuc/{0}", request.Ruc));
 
-            if (apiResponse.IsSuccessStatusCode)
-            {
-                var data = await apiResponse.Content.ReadAsStringAsync();
-                response = JsonConvert.DeserializeObject<ContribuyenteApiResponse>(data);
-            }
-            else
-            {
-                response = null;
-            }
+            //if (apiResponse.IsSuccessStatusCode)
+            //{
+            //    var data = await apiResponse.Content.ReadAsStringAsync();
+            //    response = JsonConvert.DeserializeObject<ContribuyenteApiResponse>(data);
+            //}
+            //else
+            //{
+            //    response = null;
+            //}
 
             throw new NotImplementedException();
         }

@@ -83,6 +83,15 @@ namespace ec.gob.mimg.tms.api.Controllers
             establecimientoApiRequest.Ruc = "0901986935001";
             response.Data = await _apiSriService.GetEstablecimientos(establecimientoApiRequest);
 
+
+
+            ActividadApiRequest request = new ActividadApiRequest();
+            request.Ruc = "0901986935001";
+            request.Establecimiento = "2";
+            response.Data = await _apiSriService.GetActividadEstablecimiento(request);
+
+
+
             return Ok(response);
         }
 

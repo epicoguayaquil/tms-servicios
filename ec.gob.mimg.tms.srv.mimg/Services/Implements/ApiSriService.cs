@@ -104,5 +104,47 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             return response;
         }
 
+        public async Task<ActividadApiResponse> GetActividadEstablecimiento(ActividadApiRequest request)
+        {
+            ActividadApiResponse? response = new ActividadApiResponse();
+
+            // Se gestiona el token para ejecutar la consulta.
+            _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
+            TokenRequest tokenRequest = new TokenRequest();
+            TokenResponse tokenResponse = await _tokenService.GetToken(tokenRequest);
+
+
+
+            // Se realiza la consulta del contribuyente
+            _logger.LogInformation(">>> GetContribuyente......{RunTime}", DateTime.Now);
+            var cliente = new HttpClient();
+            cliente.BaseAddress = new Uri(BaseUrl);
+            cliente.DefaultRequestHeaders.Clear();
+            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SubscriptionKey);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+
+            var query = new Dictionary<string, string>
+            {
+                ["Ruc"] = request.Ruc,
+                ["Numero"] = request.Establecimiento,
+                // ...
+            };
+
+            var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            var apiResponse = await cliente.GetAsync(string.Format("Establecimiento/ConsultarPorRuc/{0}", request.Ruc));
+            //var apiResponse = await cliente.GetAsync(QueryHelpers.AddQueryString("/Establecimiento/ConsultarActividades", query));
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var data = await apiResponse.Content.ReadAsStringAsync();
+                response = JsonConvert.DeserializeObject<ActividadApiResponse>(data);
+            }
+            else
+            {
+                response = null;
+            }
+
+            return response;
+        }
     }
 }

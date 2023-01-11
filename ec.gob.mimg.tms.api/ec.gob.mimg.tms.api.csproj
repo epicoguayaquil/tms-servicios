@@ -26,11 +26,15 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
     <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ec.gob.mimg.tms.model\ec.gob.mimg.tms.model.csproj" />
     <ProjectReference Include="..\ec.gob.mimg.tms.srv.mail\ec.gob.mimg.tms.srv.mail.csproj" />
     <ProjectReference Include="..\ec.gob.mimg.tms.srv.mimg\ec.gob.mimg.tms.srv.mimg.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Microsoft.AspNetCore.WebUtilities" />
   </ItemGroup>
 </Project>

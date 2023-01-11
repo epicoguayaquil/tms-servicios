@@ -13,6 +13,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services
         Task<ContribuyenteApiResponse> GetContribuyente(ContribuyenteApiRequest request);
 
         Task<EstablecimientoApiResponse> GetEstablecimientos(EstablecimientoApiRequest request);
+
+        Task<ActividadApiResponse> GetActividadEstablecimiento(ActividadApiRequest request);
     }
 
 }
