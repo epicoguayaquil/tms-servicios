@@ -4,11 +4,15 @@ using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.srv.mail.Models;
 using ec.gob.mimg.tms.srv.mail.Services;
 using ec.gob.mimg.tms.srv.mail.Services.Implements;
+using ec.gob.mimg.tms.srv.mimg.Services;
+using ec.gob.mimg.tms.srv.mimg.Services.Implements;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Configuration;
 using Microsoft.Extensions.Logging.Console;
+using Newtonsoft.Json.Serialization;
 using Serilog;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +47,9 @@ builder.Services.AddDbContext<TmsDbContext>(opt => opt.UseSqlServer(builder.Conf
 
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<INotificacionService, NotifacionService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IApiSriService, ApiSriService>();
+builder.Services.AddScoped<IApiCatastroService, ApiCatastroService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 

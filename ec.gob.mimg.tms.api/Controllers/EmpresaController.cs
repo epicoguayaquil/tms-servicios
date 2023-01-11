@@ -51,15 +51,6 @@ namespace ec.gob.mimg.tms.api.Controllers
             var empresaList = await _empresaService.GetAllAsync();
             response.Data = empresaList.Select(x => _mapper.Map<EmpresaResponse>(x));
 
-            // Send Mail Tester
-            NotificacionRequest request = new NotificacionRequest();
-            request.username = "Juan Lafuente";
-            request.mail = "juanklafuente@outlook.com";
-            request.titulo = "Notificación TMS";
-            request.contenido = "Su codigo de seguridad es: 123456";
-
-            await _notificacionService.EnviarNotificacion(request);
-
             return Ok(response);
         }
 
