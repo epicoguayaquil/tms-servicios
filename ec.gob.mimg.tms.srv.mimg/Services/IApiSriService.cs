@@ -15,6 +15,9 @@ namespace ec.gob.mimg.tms.srv.mimg.Services
         Task<EstablecimientoApiResponse> GetEstablecimientos(EstablecimientoApiRequest request);
 
         Task<ActividadApiResponse> GetActividadEstablecimiento(ActividadApiRequest request);
+        
+        Task<EstablecimientoApiResponse> GetEstablecimientosNuevos(string Fecha);
+
     }
 
 }

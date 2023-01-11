@@ -20,8 +20,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
         private readonly ITokenService _tokenService;
 
         //...
-        private static string? SubscriptionKey;
-        private static string? BaseUrl;
+        private static string? subscriptionKey;
+        private static string? baseUrl;
 
         public ApiSriService(ILogger<TokenService> logger, ITokenService tokenService)
         {
@@ -29,8 +29,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
 
             var root = builder.Build();
-            SubscriptionKey = root.GetSection("ApiMimg:subscription_key").Value;
-            BaseUrl = root.GetSection("ApiMimg:url_api_sri").Value;
+            subscriptionKey = root.GetSection("ApiMimg:subscription_key").Value;
+            baseUrl = root.GetSection("ApiMimg:url_api_sri").Value + "ssn/ext/cc/Sri/api/";
             //...
             _logger = logger;
             _tokenService = tokenService;
@@ -49,9 +49,9 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             // Se realiza la consulta del contribuyente
             _logger.LogInformation(">>> GetContribuyente......{RunTime}", DateTime.Now);
             var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(BaseUrl);
+            cliente.BaseAddress = new Uri(baseUrl);
             cliente.DefaultRequestHeaders.Clear();
-            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SubscriptionKey);
+            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
             var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
@@ -82,9 +82,9 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             // Se realiza la consulta del contribuyente
             _logger.LogInformation(">>> GetContribuyente......{RunTime}", DateTime.Now);
             var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(BaseUrl);
+            cliente.BaseAddress = new Uri(baseUrl);
             cliente.DefaultRequestHeaders.Clear();
-            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SubscriptionKey);
+            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
             var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
@@ -113,31 +113,54 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             TokenRequest tokenRequest = new TokenRequest();
             TokenResponse tokenResponse = await _tokenService.GetToken(tokenRequest);
 
-
-
             // Se realiza la consulta del contribuyente
             _logger.LogInformation(">>> GetContribuyente......{RunTime}", DateTime.Now);
             var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(BaseUrl);
+            cliente.BaseAddress = new Uri(baseUrl);
             cliente.DefaultRequestHeaders.Clear();
-            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SubscriptionKey);
+            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
-            var query = new Dictionary<string, string>
-            {
-                ["Ruc"] = request.Ruc,
-                ["Numero"] = request.Establecimiento,
-                // ...
-            };
-
             var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            var apiResponse = await cliente.GetAsync(string.Format("Establecimiento/ConsultarPorRuc/{0}", request.Ruc));
-            //var apiResponse = await cliente.GetAsync(QueryHelpers.AddQueryString("/Establecimiento/ConsultarActividades", query));
+            var apiResponse = await cliente.GetAsync(string.Format("Establecimiento/ConsultarActividades?Ruc={0}&Numero={1}", request.Ruc,request.Establecimiento));
 
             if (apiResponse.IsSuccessStatusCode)
             {
                 var data = await apiResponse.Content.ReadAsStringAsync();
                 response = JsonConvert.DeserializeObject<ActividadApiResponse>(data);
+            }
+            else
+            {
+                response = null;
+            }
+
+            return response;
+        }
+
+        public async Task<EstablecimientoApiResponse> GetEstablecimientosNuevos(string Fecha)
+        {
+            EstablecimientoApiResponse? response = new EstablecimientoApiResponse();
+
+            // Se gestiona el token para ejecutar la consulta.
+            _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
+            TokenRequest tokenRequest = new TokenRequest();
+            TokenResponse tokenResponse = await _tokenService.GetToken(tokenRequest);
+
+            // Se realiza la consulta del contribuyente
+            _logger.LogInformation(">>> GetEstablecimientosNuevos......{RunTime}", DateTime.Now);
+            var cliente = new HttpClient();
+            cliente.BaseAddress = new Uri(baseUrl);
+            cliente.DefaultRequestHeaders.Clear();
+            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+            cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
+
+            var apiRequest = new StringContent(JsonConvert.SerializeObject(Fecha), Encoding.UTF8, "application/json");
+            var apiResponse = await cliente.GetAsync(string.Format("Establecimiento/ConsultarNuevos/{0}", Fecha));
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var data = await apiResponse.Content.ReadAsStringAsync();
+                response = JsonConvert.DeserializeObject<EstablecimientoApiResponse>(data);
             }
             else
             {

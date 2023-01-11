@@ -32,12 +32,14 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly ITokenService _tokenService;
 
         private readonly IApiSriService _apiSriService;
+        private readonly IApiCatastroService _apiCatastroService;
 
         public ABCTestController(IMapper mapper, TmsDbContext dbContext, 
                                 ILogger<ABCTestController> logger,
                                 INotificacionService notificacionService,
                                 ITokenService tokenService,
-                                IApiSriService apiSriService)
+                                IApiSriService apiSriService, 
+                                IApiCatastroService apiCatastroService)
         {
             _logger = logger;
             _mapper = mapper;
@@ -47,6 +49,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _notificacionService = notificacionService;
             _tokenService = tokenService;
             _apiSriService = apiSriService;
+            _apiCatastroService = apiCatastroService;
         }
 
         // GET: api/Empresas
@@ -79,18 +82,21 @@ namespace ec.gob.mimg.tms.api.Controllers
             //contribuyenteRequest.Ruc = "0901986935001";
             //response.Data = await _apiSriService.GetContribuyente(contribuyenteRequest);
 
-            EstablecimientoApiRequest establecimientoApiRequest = new EstablecimientoApiRequest();
-            establecimientoApiRequest.Ruc = "0901986935001";
-            response.Data = await _apiSriService.GetEstablecimientos(establecimientoApiRequest);
+            //EstablecimientoApiRequest establecimientoApiRequest = new EstablecimientoApiRequest();
+            //establecimientoApiRequest.Ruc = "0901986935001";
+            //response.Data = await _apiSriService.GetEstablecimientos(establecimientoApiRequest);
 
 
 
-            ActividadApiRequest request = new ActividadApiRequest();
-            request.Ruc = "0901986935001";
-            request.Establecimiento = "2";
-            response.Data = await _apiSriService.GetActividadEstablecimiento(request);
+            //ActividadApiRequest request = new ActividadApiRequest();
+            //request.Ruc = "0901986935001";
+            //request.Establecimiento = "2";
+            //response.Data = await _apiSriService.GetActividadEstablecimiento(request);
 
+            //response.Data = await _apiSriService.GetEstablecimientosNuevos("2022-12-05");
 
+            EstablecimientoApiRequest request = new EstablecimientoApiRequest();
+            response.Data = await _apiCatastroService.GetPredio(request);
 
             return Ok(response);
         }

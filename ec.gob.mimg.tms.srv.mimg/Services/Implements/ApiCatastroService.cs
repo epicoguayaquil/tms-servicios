@@ -18,8 +18,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
         private readonly ITokenService _tokenService;
 
         //...
-        private static string? SubscriptionKey;
-        private static string? BaseUrl;
+        private static string? subscriptionKey;
+        private static string? baseUrl;
 
         public ApiCatastroService(ILogger<TokenService> logger, ITokenService tokenService)
         {
@@ -27,8 +27,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             builder.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json"));
 
             var root = builder.Build();
-            SubscriptionKey = root.GetSection("ApiMimg:subscription_key").Value;
-            BaseUrl = root.GetSection("ApiMimg:url_api_catastro").Value;
+            subscriptionKey = root.GetSection("ApiMimg:subscription_key").Value;
+            baseUrl = root.GetSection("ApiMimg:url_api_catastro").Value;
             //...
             _logger = logger;
             _tokenService = tokenService;
@@ -38,7 +38,6 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
         public async Task<EstablecimientoApiResponse> GetPredio(EstablecimientoApiRequest request)
         {
-
             // Se gestiona el token para ejecutar la consulta.
             _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
             TokenRequest tokenRequest = new TokenRequest();
@@ -47,23 +46,22 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             // Se realiza la consulta del contribuyente
             _logger.LogInformation(">>> GetContribuyente......{RunTime}", DateTime.Now);
             var cliente = new HttpClient();
-            cliente.BaseAddress = new Uri(BaseUrl);
+            cliente.BaseAddress = new Uri(baseUrl);
             cliente.DefaultRequestHeaders.Clear();
-            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", SubscriptionKey);
+            cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
             var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            var apiResponse = await cliente.GetAsync(string.Format("Contribuyente/ConsultarPorRuc/{0}", request.Ruc));
+            var apiResponse = await cliente.GetAsync(string.Format("TramiteSimplificadoSTH/VerificarPredio?IdSector=90&Manzana=1143&Lote=19&Division=0&Phv=0&Phh=0&Numero=1"));
 
-            //if (apiResponse.IsSuccessStatusCode)
-            //{
-            //    var data = await apiResponse.Content.ReadAsStringAsync();
-            //    response = JsonConvert.DeserializeObject<ContribuyenteApiResponse>(data);
-            //}
-            //else
-            //{
-            //    response = null;
-            //}
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var data = await apiResponse.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                return null;
+            }
 
             throw new NotImplementedException();
         }
