@@ -9,6 +9,11 @@ public partial class TmsFormularioDetalle
 
     public string? Caracteristica { get; set; }
 
+    /// <summary>
+    /// String, Integer, Float
+    /// </summary>
+    public string? TipoDato { get; set; }
+
     public string? Valor { get; set; }
 
     public DateTime? Fecha { get; set; }

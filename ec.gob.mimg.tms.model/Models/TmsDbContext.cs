@@ -365,7 +365,7 @@ public partial class TmsDbContext : DbContext
                 .IsUnicode(false)
                 .HasComment("Municipio o SRI");
             entity.Property(e => e.TiempoVigencia).HasComment("La vigencia se maneja en meses");
-            entity.Property(e => e.UsuarioModifcacion)
+            entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.UsuarioRegistro)

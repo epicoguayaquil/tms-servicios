@@ -34,6 +34,10 @@ public partial class TmsObligacion
     /// </summary>
     public string? Jerarquia { get; set; }
 
+    public int? OrdenEjecucion { get; set; }
+
+    public int? Dependencia { get; set; }
+
     public string? Estado { get; set; }
 
     public DateTime? FechaRegistro { get; set; }
@@ -42,7 +46,7 @@ public partial class TmsObligacion
 
     public DateTime? FechaModificacion { get; set; }
 
-    public string? UsuarioModifcacion { get; set; }
+    public string? UsuarioModificacion { get; set; }
 
     public virtual ICollection<TmsActividadObligacion> TmsActividadObligacions { get; } = new List<TmsActividadObligacion>();
 

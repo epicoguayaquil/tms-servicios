@@ -16,6 +16,11 @@ public partial class TmsObligacionCaracteristica
 
     public string Nombre { get; set; } = null!;
 
+    /// <summary>
+    /// String, Integer, Float
+    /// </summary>
+    public string? TipoDato { get; set; }
+
     public string? Valor { get; set; }
 
     public string Estado { get; set; } = null!;
