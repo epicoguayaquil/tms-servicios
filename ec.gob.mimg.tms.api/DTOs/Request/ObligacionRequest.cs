@@ -2,8 +2,6 @@
 {
     public class ObligacionRequest
     {
-        public int IdObligacion { get; set; }
-
         public string? Nombre { get; set; }
 
         public int? TiempoVigencia { get; set; }

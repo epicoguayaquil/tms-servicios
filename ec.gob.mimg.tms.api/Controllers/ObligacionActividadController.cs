@@ -127,13 +127,13 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        // PUT: api/ObligacionActividad
-        [HttpPut]
-        public async Task<IActionResult> Update(ObligacionActividadRequest obligacionActividadRequest)
+        // PUT: api/ObligacionActividad/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, ObligacionActividadRequest obligacionActividadRequest)
         {
             try
             {
-                var obligacionActividadActual = await _obligacionActividadService.GetById(obligacionActividadRequest.IdActividadObligacion);
+                var obligacionActividadActual = await _obligacionActividadService.GetById(id);
                 if (obligacionActividadActual == null) { return NotFound(); }
 
                 obligacionActividadActual.FechaModificacion = DateTime.Now;

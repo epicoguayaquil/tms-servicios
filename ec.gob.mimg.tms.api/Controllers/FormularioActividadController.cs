@@ -128,13 +128,13 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        // PUT: api/FormularioActividad
-        [HttpPut]
-        public async Task<IActionResult> Update(FormularioActividadRequest formularioActividadRequest)
+        // PUT: api/FormularioActividad/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, FormularioActividadRequest formularioActividadRequest)
         {
             try
             {
-                var formularioActividadActual = await _formularioActividadService.GetById(formularioActividadRequest.IdActividadFormulario);
+                var formularioActividadActual = await _formularioActividadService.GetById(id);
                 if (formularioActividadActual == null) { return NotFound(); }
 
                 TmsFormularioActividad formularioActividad = new TmsFormularioActividad();

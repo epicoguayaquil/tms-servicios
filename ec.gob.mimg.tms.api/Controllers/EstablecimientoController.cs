@@ -134,13 +134,13 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        // PUT: api/Establecimiento
-        [HttpPut]
-        public async Task<IActionResult> Update(EstablecimientoRequest establecimientoRequest)
+        // PUT: api/Establecimiento/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, EstablecimientoRequest establecimientoRequest)
         {
             try
             {
-                var establecimientoActual = await _establecimientoService.GetById(establecimientoRequest.IdEstablecimiento);
+                var establecimientoActual = await _establecimientoService.GetById(id);
 
                 if (establecimientoActual == null) { return NotFound(); }
 

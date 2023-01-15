@@ -127,13 +127,13 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        // PUT: api/FormularioObligacion
-        [HttpPut]
-        public async Task<IActionResult> Update(FormularioObligacionRequest formularioObligacionRequest)
+        // PUT: api/FormularioObligacion/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, FormularioObligacionRequest formularioObligacionRequest)
         {
             try
             {
-                var formularioObligacionActual = await _formularioObligacionService.GetById(formularioObligacionRequest.IdFormularioObligacion);
+                var formularioObligacionActual = await _formularioObligacionService.GetById(id);
                 if (formularioObligacionActual == null) { return NotFound(); }
 
                 formularioObligacionActual.ObligacionId = formularioObligacionRequest.ObligacionId;
