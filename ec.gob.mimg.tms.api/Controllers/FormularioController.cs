@@ -25,6 +25,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IFormularioService _formularioService;
         private readonly IFormularioDetalleService _formularioDetalleService;
         private readonly IFormularioActividadService _formularioActividadService;
+        private readonly IFormularioObligacionService _formularioObligacionService;
 
         private readonly IMapper _mapper;
 
@@ -35,6 +36,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _formularioService = new FormularioService(_dbContext);
             _formularioDetalleService = new FormularioDetalleService(_dbContext);
             _formularioActividadService = new FormularioActividadService(_dbContext);
+            _formularioObligacionService = new FormularioObligacionService(_dbContext);
         }
 
         // GET: api/Formulario
@@ -119,6 +121,21 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
+        // GET: api/Formulario/1/obligaciones
+        [HttpGet("{id}/obligaciones")]
+        public async Task<ActionResult<GenericResponse>> GetAllObligacionesById(int id)
+        {
+            var formularioObligacionList = await _formularioObligacionService.GetListByFormularioId(id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioObligacionList.Select(x => _mapper.Map<FormularioObligacionResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
         // POST: api/Formulario
         [HttpPost]
         public async Task<ActionResult<GenericResponse>> Create(FormularioRequest formularioRequest)
@@ -155,7 +172,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
-        // POST: api/Formulario
+        // POST: api/Formulario/detallesNivel
         [HttpPost("detallesNivel")]
         public async Task<ActionResult<GenericResponse>> CreateDetallesNivel(FormularioDetalleListRequest formularioDetalleListRequest)
         {
