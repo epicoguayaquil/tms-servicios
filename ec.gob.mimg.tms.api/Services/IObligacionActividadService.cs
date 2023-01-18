@@ -8,5 +8,7 @@ namespace ec.gob.mimg.tms.api.Services
         Task<TmsActividadObligacion> GetById(int id);
 
         Task<ICollection<TmsActividadObligacion>> GetListByObligacionId(int obligacionId);
+
+        Task<ICollection<TmsActividadObligacion>> GetListByActividadId(int actividadId);
     }
 }

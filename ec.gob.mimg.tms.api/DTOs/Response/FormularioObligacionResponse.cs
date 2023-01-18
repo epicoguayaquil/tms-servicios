@@ -20,5 +20,7 @@
 
         public string? UsuarioModificacion { get; set; }
 
+        public ObligacionResponse Obligacion { get; set; }
+
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.api.Services.Implements;
 using AutoMapper;
@@ -105,6 +104,41 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
+        // POST: api/ObligacionActividad/lista
+        [HttpPost("lista")]
+        public async Task<ActionResult<GenericResponse>> CreateLista(List<ObligacionActividadRequest> obligacionActividadListRequest)
+        {
+            try
+            {
+                foreach (ObligacionActividadRequest obligacionActividadRequest in obligacionActividadListRequest)
+                {
+                    TmsActividadObligacion obligacionActividad = new TmsActividadObligacion();
+                    obligacionActividad = _mapper.Map<TmsActividadObligacion>(obligacionActividadRequest);
+                    obligacionActividad.FechaRegistro = DateTime.Now;
+                    obligacionActividad.UsuarioRegistro = "admin@mail.com";
+                    obligacionActividad.Estado = EstadoEnum.ACTIVO.ToString();
+
+                    bool isSaved = await _obligacionActividadService.AddAsync(obligacionActividad);
+                    if (!isSaved)
+                    {
+                        return BadRequest();
+                    }
+                }
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = "Todos guardados"
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+        }
+
         // DELETE: api/ObligacionActividad/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -123,6 +157,30 @@ namespace ec.gob.mimg.tms.api.Controllers
                 Cod = "200",
                 Msg = "OK",
                 Data = "Eliminado"
+            };
+            return Ok(response);
+        }
+
+        // DELETE: api/ObligacionActividad/lista
+        [HttpDelete("lista")]
+        public async Task<IActionResult> DeleteLista(List<int> idList)
+        {
+            foreach (int id in idList)
+            {
+                var obligacionActividad = await _obligacionActividadService.GetById(id);
+
+                if (obligacionActividad == null)
+                {
+                    return NotFound();
+                }
+
+                await _obligacionActividadService.DeleteAsync(obligacionActividad);
+            }
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = "Eliminados todos"
             };
             return Ok(response);
         }

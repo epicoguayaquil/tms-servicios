@@ -26,6 +26,8 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IFormularioDetalleService _formularioDetalleService;
         private readonly IFormularioActividadService _formularioActividadService;
         private readonly IFormularioObligacionService _formularioObligacionService;
+        private readonly IObligacionActividadService _obligacionActividadService;
+        private readonly IObligacionService _obligacionService;
 
         private readonly IMapper _mapper;
 
@@ -37,6 +39,8 @@ namespace ec.gob.mimg.tms.api.Controllers
             _formularioDetalleService = new FormularioDetalleService(_dbContext);
             _formularioActividadService = new FormularioActividadService(_dbContext);
             _formularioObligacionService = new FormularioObligacionService(_dbContext);
+            _obligacionActividadService = new ObligacionActividadService(_dbContext);
+            _obligacionService = new ObligacionService(_dbContext);
         }
 
         // GET: api/Formulario
@@ -121,16 +125,70 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
+        // PUT: api/Formulario/1/confirmar
+        [HttpPut("{id}/confirmar")]
+        public async Task<IActionResult> GenerarObligaciones(int id)
+        {
+            try
+            {
+                var formularioActividadList = await _formularioActividadService.GetListByFormularioId(id);
+                TmsFormularioActividad firstActividad = formularioActividadList.First();
+
+                var obligacionActividadList = await _obligacionActividadService.GetListByActividadId(firstActividad.ActividadEconomicaId);
+
+                int contadorGeneradas = 0;
+                foreach (TmsActividadObligacion actividadObligacion in obligacionActividadList)
+                {
+                    TmsFormularioObligacion formularioObligacion = new()
+                    {
+                        ObligacionId = actividadObligacion.ObligacionId,
+                        FormularioId = id,
+                        FechaRegistro = DateTime.Now,
+                        UsuarioRegistro = "admin@mail.com",
+                        Estado = EstadoObligacionEnum.NO_CUMPLE.ToString()
+                    };
+
+                    bool isSaved = await _formularioObligacionService.AddAsync(formularioObligacion);
+                    if (isSaved)
+                    {
+                        contadorGeneradas++;
+                    }
+                }
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = "Obligaciones generadas: " + contadorGeneradas
+                };
+
+                return Ok(response);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+        }
+
         // GET: api/Formulario/1/obligaciones
         [HttpGet("{id}/obligaciones")]
         public async Task<ActionResult<GenericResponse>> GetAllObligacionesById(int id)
         {
             var formularioObligacionList = await _formularioObligacionService.GetListByFormularioId(id);
+            var formularioObligacionResponseListNew = new List<FormularioObligacionResponse>();
+            foreach (var formularioObligacion in formularioObligacionList)
+            {
+                var formularioObligacionRequest = _mapper.Map<FormularioObligacionResponse>(formularioObligacion);
+                var obligacion = await _obligacionService.GetById(formularioObligacion.ObligacionId);
+                formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+                formularioObligacionResponseListNew.Add(formularioObligacionRequest);
+            }
             GenericResponse response = new()
             {
                 Cod = "200",
                 Msg = "OK",
-                Data = formularioObligacionList.Select(x => _mapper.Map<FormularioObligacionResponse>(x))
+                Data = formularioObligacionResponseListNew
             };
 
             return Ok(response);
