@@ -10,8 +10,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services
 {
     public interface IApiCatastroService
     {
-        Task<ContribuyenteApiResponse> GetPredioInfo(ContribuyenteApiRequest request);
-
-        Task<EstablecimientoApiResponse> GetPredio(EstablecimientoApiRequest request);
+      
+        Task<PredioApiResponse> GetPredio(PredioApiRequest request);
     }
 }
