@@ -95,7 +95,7 @@ namespace ec.gob.mimg.tms.api.Controllers
 
             //response.Data = await _apiSriService.GetEstablecimientosNuevos("2022-12-05");
 
-            EstablecimientoApiRequest request = new EstablecimientoApiRequest();
+            PredioApiRequest request = new PredioApiRequest();
             response.Data = await _apiCatastroService.GetPredio(request);
 
             return Ok(response);

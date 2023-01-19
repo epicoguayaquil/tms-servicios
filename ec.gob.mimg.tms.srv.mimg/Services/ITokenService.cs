@@ -6,6 +6,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
     public interface ITokenService
     {
         Task<TokenResponse> GetToken(TokenRequest request);
+        
+        Task<TokenResponse> GetTokenTasa(TokenRequest request);
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using ec.gob.mimg.tms.srv.mail.Models;
 using ec.gob.mimg.tms.srv.mimg.DTOs;
+using ec.gob.mimg.tms.srv.mimg.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -28,7 +29,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
             var root = builder.Build();
             subscriptionKey = root.GetSection("ApiMimg:subscription_key").Value;
-            baseUrl = root.GetSection("ApiMimg:url_api_catastro").Value;
+            baseUrl = root.GetSection("ApiMimg:url_api_catastro").Value + "/ssn/ext/cc/Catastro/api/v1/";
             //...
             _logger = logger;
             _tokenService = tokenService;
@@ -36,12 +37,18 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
 
 
-        public async Task<EstablecimientoApiResponse> GetPredio(EstablecimientoApiRequest request)
+        public async Task<PredioApiResponse> GetPredio(PredioApiRequest request)
         {
+            PredioApiResponse? response = new PredioApiResponse();
+            PredioModel predio = new PredioModel();
+
+            PredioInfoApiResponse? infoApiResponse = new PredioInfoApiResponse();
+            PredioGpsApiResponse? gpsApiResponse = new PredioGpsApiResponse();
+
             // Se gestiona el token para ejecutar la consulta.
             _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
             TokenRequest tokenRequest = new TokenRequest();
-            TokenResponse tokenResponse = await _tokenService.GetToken(tokenRequest);
+            TokenResponse tokenResponse = await _tokenService.GetTokenTasa(tokenRequest);
 
             // Se realiza la consulta del contribuyente
             _logger.LogInformation(">>> GetContribuyente......{RunTime}", DateTime.Now);
@@ -57,18 +64,39 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             if (apiResponse.IsSuccessStatusCode)
             {
                 var data = await apiResponse.Content.ReadAsStringAsync();
+                infoApiResponse = JsonConvert.DeserializeObject<PredioInfoApiResponse>(data);
+                //...
+                if (infoApiResponse != null)
+                {
+                    predio.Parroquia = infoApiResponse.DataResult[0].Parroquia;
+                    predio.Ciudadela = infoApiResponse.DataResult[0].Ciudadela;
+                    predio.UsoEdificacion = infoApiResponse.DataResult[0].UsoEdificacion;
+                }
+
+                var gpsRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                var gpsResponse = await cliente.GetAsync(string.Format("TramiteSimplificadoSTH/CoordenadasPredio?IdSector=90&Manzana=1143&Lote=19&Division=0&Phv=0&Phh=0&Numero=1"));
+                if (gpsResponse.IsSuccessStatusCode)
+                {
+                    var gpsData = await gpsResponse.Content.ReadAsStringAsync();
+                    gpsApiResponse = JsonConvert.DeserializeObject<PredioGpsApiResponse>(gpsData);
+                    //...
+                    if (gpsApiResponse != null)
+                    {
+                        predio.Latitud = gpsApiResponse.DataResult[0].Latitud;
+                        predio.Longitud = gpsApiResponse.DataResult[0].Longitud;
+                    }
+                }
+
+                response.DataResult = predio;
             }
             else
             {
-                return null;
+                response = null;
             }
 
-            throw new NotImplementedException();
+            return response;
         }
 
-        Task<ContribuyenteApiResponse> IApiCatastroService.GetPredioInfo(ContribuyenteApiRequest request)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
