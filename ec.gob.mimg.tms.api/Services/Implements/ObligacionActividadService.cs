@@ -21,5 +21,10 @@ namespace ec.gob.mimg.tms.api.Services.Implements
             return await GetAsync(x => x.ObligacionId == obligacionId);
         }
 
+        public async Task<ICollection<TmsActividadObligacion>> GetListByActividadId(int actividadId)
+        {
+            return await GetAsync(x => x.ActividadEconomicaId == actividadId);
+        }
+
     }
 }

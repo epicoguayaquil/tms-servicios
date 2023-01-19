@@ -5,8 +5,6 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
 {
     public class EstablecimientoRequest
     {
-        public int IdEstablecimiento { get; set; }
-
         public int? EmpresaId { get; set; }
 
         public string? Nombre { get; set; }

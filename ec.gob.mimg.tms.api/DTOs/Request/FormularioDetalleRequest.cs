@@ -3,8 +3,6 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
 {
     public class FormularioDetalleRequest
     {
-        public int IdFormularioDetalle { get; set; }
-
         public int? FormularioId { get; set; }
 
         public string? Caracteristica { get; set; }

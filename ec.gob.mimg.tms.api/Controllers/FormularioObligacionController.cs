@@ -18,42 +18,42 @@ namespace ec.gob.mimg.tms.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FormularioDetalleController : ControllerBase
+    public class FormularioObligacionController : ControllerBase
     {
         private readonly TmsDbContext _dbContext;
-        private readonly IFormularioDetalleService _formularioDetalleService;
+        private readonly IFormularioObligacionService _formularioObligacionService;
 
         private readonly IMapper _mapper;
 
-        public FormularioDetalleController(IMapper mapper, TmsDbContext dbContext)
+        public FormularioObligacionController(IMapper mapper, TmsDbContext dbContext)
         {
             _mapper = mapper;
             _dbContext = dbContext;
-            _formularioDetalleService = new FormularioDetalleService(_dbContext);
+            _formularioObligacionService = new FormularioObligacionService(_dbContext);
         }
 
-        // GET: api/FormularioDetalle
+        // GET: api/FormularioObligacion
         [HttpGet]
         public async Task<ActionResult<GenericResponse>> GetAll()
         {
-            var formularioDetalleList = await _formularioDetalleService.GetAllAsync();
+            var formularioObligacionList = await _formularioObligacionService.GetAllAsync();
             GenericResponse response = new()
             {
                 Cod = "200",
                 Msg = "OK",
-                Data = formularioDetalleList.Select(x => _mapper.Map<FormularioDetalleResponse>(x))
+                Data = formularioObligacionList.Select(x => _mapper.Map<FormularioObligacionResponse>(x))
             };
 
             return Ok(response);
         }
 
-        // GET: api/FormularioDetalle/1
+        // GET: api/FormularioObligacion/1
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var formularioDetalle = await _formularioDetalleService.GetById(id);
+            var formularioObligacion = await _formularioObligacionService.GetById(id);
 
-            if (formularioDetalle == null)
+            if (formularioObligacion == null)
             {
                 return NotFound();
             }
@@ -63,25 +63,25 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     Cod = "200",
                     Msg = "OK",
-                    Data = _mapper.Map<FormularioDetalleResponse>(formularioDetalle)
+                    Data = _mapper.Map<FormularioObligacionResponse>(formularioObligacion)
                 };
                 return Ok(response);
             }
         }
 
-        // POST: api/FormularioDetalle
+        // POST: api/FormularioObligacion
         [HttpPost]
-        public async Task<ActionResult<GenericResponse>> Create(FormularioDetalleRequest formularioDetalleRequest)
+        public async Task<ActionResult<GenericResponse>> Create(FormularioObligacionRequest formularioObligacionRequest)
         {
             try
             {
-                TmsFormularioDetalle formularioDetalle = new TmsFormularioDetalle();
-                formularioDetalle = _mapper.Map<TmsFormularioDetalle>(formularioDetalleRequest);
-                formularioDetalle.FechaRegistro = DateTime.Now;
-                formularioDetalle.UsuarioRegistro = "admin@mail.com";
-                //formularioDetalle.Estado = EstadoEnum.ACTIVO.ToString();
+                TmsFormularioObligacion formularioObligacion = new TmsFormularioObligacion();
+                formularioObligacion = _mapper.Map<TmsFormularioObligacion>(formularioObligacionRequest);
+                formularioObligacion.FechaRegistro = DateTime.Now;
+                formularioObligacion.UsuarioRegistro = "admin@mail.com";
+                //formularioObligacion.Estado = EstadoEnum.ACTIVO.ToString();
 
-                bool isSaved = await _formularioDetalleService.AddAsync(formularioDetalle);
+                bool isSaved = await _formularioObligacionService.AddAsync(formularioObligacion);
 
                 if (isSaved)
                 {
@@ -89,7 +89,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                     {
                         Cod = "200",
                         Msg = "OK",
-                        Data = _mapper.Map<FormularioDetalleResponse>(formularioDetalle)
+                        Data = _mapper.Map<FormularioObligacionResponse>(formularioObligacion)
                     };
                     return Ok(response);
                 }
@@ -105,18 +105,18 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
-        // DELETE: api/FormularioDetalle/5
+        // DELETE: api/FormularioObligacion/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var formularioDetalle = await _formularioDetalleService.GetById(id);
+            var formularioObligacion = await _formularioObligacionService.GetById(id);
 
-            if (formularioDetalle == null)
+            if (formularioObligacion == null)
             {
                 return NotFound();
             }
 
-            await _formularioDetalleService.DeleteAsync(formularioDetalle);
+            await _formularioObligacionService.DeleteAsync(formularioObligacion);
 
             GenericResponse response = new()
             {
@@ -127,22 +127,21 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        // PUT: api/FormularioDetalle/1
+        // PUT: api/FormularioObligacion/1
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, FormularioDetalleRequest formularioDetalleRequest)
+        public async Task<IActionResult> Update(int id, FormularioObligacionRequest formularioObligacionRequest)
         {
             try
             {
-                var formularioDetalleActual = await _formularioDetalleService.GetById(id);
-                if (formularioDetalleActual == null) { return NotFound(); }
+                var formularioObligacionActual = await _formularioObligacionService.GetById(id);
+                if (formularioObligacionActual == null) { return NotFound(); }
 
-                formularioDetalleActual.Caracteristica = formularioDetalleRequest.Caracteristica;
-                formularioDetalleActual.Valor = formularioDetalleRequest.Valor;
-                formularioDetalleActual.PasoCreacion = formularioDetalleRequest.PasoCreacion;
-                formularioDetalleActual.FechaModificacion = DateTime.Now;
-                formularioDetalleActual.UsuarioModificacion = "admin@mail.com";
+                formularioObligacionActual.ObligacionId = formularioObligacionRequest.ObligacionId;
+                formularioObligacionActual.FormularioId = formularioObligacionRequest.FormularioId;
+                formularioObligacionActual.FechaModificacion = DateTime.Now;
+                formularioObligacionActual.UsuarioModificacion = "admin@mail.com";
 
-                bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);
+                bool isUpdate = await _formularioObligacionService.UpdateAsync(formularioObligacionActual);
                     
                 if (isUpdate)
                 {
@@ -150,7 +149,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                     {
                         Cod = "200",
                         Msg = "OK",
-                        Data = _mapper.Map<FormularioDetalleResponse>(formularioDetalleActual)
+                        Data = _mapper.Map<FormularioObligacionResponse>(formularioObligacionActual)
                     };
                     return Ok(response);
                 }

@@ -129,13 +129,13 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        // PUT: api/Obligacion
-        [HttpPut]
-        public async Task<IActionResult> Update(ObligacionRequest obligacionRequest)
+        // PUT: api/Obligacion/1
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, ObligacionRequest obligacionRequest)
         {
             try
             {
-                var obligacionActual = await _obligacionService.GetById(obligacionRequest.IdObligacion);
+                var obligacionActual = await _obligacionService.GetById(id);
                 if (obligacionActual == null) { return NotFound(); }
 
                 obligacionActual.Nombre = obligacionRequest.Nombre;
