@@ -19,6 +19,9 @@ public partial class TmsEstablecimiento
 
     public string? Lon { get; set; }
 
+    /// <summary>
+    /// Inhabilitado, Habilitado
+    /// </summary>
     public string? Estado { get; set; }
 
     public string? UsuarioRegistro { get; set; }
@@ -37,8 +40,13 @@ public partial class TmsEstablecimiento
 
     public DateTime? SrifechaActualizacion { get; set; }
 
-    public int? NumeroEstablecimiento { get; set; }
+    public string? NumeroEstablecimiento { get; set; }
 
+    /// <summary>
+    /// No_Registrado, En_Proceso, Registrado
+    /// </summary>
+    public string EstadoRegistro { get; set; } = null!;
+    
     public virtual TmsEmpresa? Empresa { get; set; }
 
     public virtual ICollection<TmsFormulario> TmsFormularios { get; } = new List<TmsFormulario>();

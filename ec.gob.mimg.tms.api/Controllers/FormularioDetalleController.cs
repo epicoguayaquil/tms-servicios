@@ -138,6 +138,8 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 formularioDetalleActual.Caracteristica = formularioDetalleRequest.Caracteristica;
                 formularioDetalleActual.Valor = formularioDetalleRequest.Valor;
+                formularioDetalleActual.TipoDato = formularioDetalleRequest.TipoDato;
+                formularioDetalleActual.ExtraInfo = formularioDetalleRequest.ExtraInfo;
                 formularioDetalleActual.PasoCreacion = formularioDetalleRequest.PasoCreacion;
                 formularioDetalleActual.FechaModificacion = DateTime.Now;
                 formularioDetalleActual.UsuarioModificacion = "admin@mail.com";

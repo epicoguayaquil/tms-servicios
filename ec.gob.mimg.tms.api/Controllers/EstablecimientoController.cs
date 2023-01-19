@@ -86,7 +86,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                 establecimiento = _mapper.Map<TmsEstablecimiento>(establecimientoRequest);
                 establecimiento.FechaRegistro = DateTime.Now;
                 establecimiento.UsuarioRegistro = "admin@mail.com";
-                establecimiento.Estado = EstadoEnum.ACTIVO.ToString();
+                establecimiento.Estado = EstadoEstablecimientoEnum.INHABILITADO.ToString();
+                establecimiento.EstadoRegistro = EstadoRegistroEnum.NO_REGISTRADO.ToString();
 
                 bool isSaved = await _establecimientoService.AddAsync(establecimiento);
 
@@ -150,6 +151,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 establecimiento.FechaRegistro = establecimientoActual.FechaRegistro;
                 establecimiento.UsuarioRegistro = establecimientoActual.UsuarioRegistro;
                 establecimiento.Estado = establecimientoActual.Estado;
+                establecimiento.EstadoRegistro = establecimientoActual.EstadoRegistro;
                 establecimiento.FechaModificacion = DateTime.Now;
                 establecimiento.UsuarioModificacion = "admin@mail.com";
 

@@ -16,6 +16,8 @@ public partial class TmsFormularioDetalle
 
     public string? Valor { get; set; }
 
+    public string? ExtraInfo { get; set; }
+
     public DateTime? Fecha { get; set; }
 
     public DateTime? FechaRegistro { get; set; }

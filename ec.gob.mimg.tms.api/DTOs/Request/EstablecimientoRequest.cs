@@ -27,7 +27,7 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
 
         public DateTime? SrifechaActualizacion { get; set; }
 
-        public int? NumeroEstablecimiento { get; set; }
+        public string? NumeroEstablecimiento { get; set; }
 
     }
 }

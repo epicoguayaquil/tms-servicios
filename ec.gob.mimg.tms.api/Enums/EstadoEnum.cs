@@ -5,6 +5,17 @@
         ACTIVO,
         INACTIVO
     }
+    enum EstadoEstablecimientoEnum
+    {
+        INHABILITADO,
+        HABILITADO
+    }
+    enum EstadoRegistroEnum
+    {
+        NO_REGISTRADO,
+        EN_PROCESO,
+        REGISTRADO
+    }
     enum EstadoObligacionEnum
     {
         CUMPLE,

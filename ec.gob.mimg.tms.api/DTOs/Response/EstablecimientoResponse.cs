@@ -31,11 +31,12 @@ namespace ec.gob.mimg.tms.api.DTOs.Response
 
         public DateTime? SrifechaActualizacion { get; set; }
 
-        public int? NumeroEstablecimiento { get; set; }
+        public string? NumeroEstablecimiento { get; set; }
 
         public string? UsuarioRegistro { get; set; }
 
         public DateTime? FechaRegistro { get; set; }
 
+        public string EstadoRegistro { get; set; } = null!;
     }
 }
