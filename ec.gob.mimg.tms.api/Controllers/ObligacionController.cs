@@ -23,6 +23,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly TmsDbContext _dbContext;
         private readonly IObligacionService _obligacionService;
         private readonly IObligacionActividadService _obligacionActividadService;
+        private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
 
         private readonly IMapper _mapper;
 
@@ -32,6 +33,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _dbContext = dbContext;
             _obligacionService = new ObligacionService(_dbContext);
             _obligacionActividadService = new ObligacionActividadService(_dbContext);
+            _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
         }
 
         // GET: api/Obligacion
@@ -224,6 +226,34 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
+        // GET: api/Obligacion/1/caracteristicas
+        [HttpGet("{id}/caracteristicas")]
+        public async Task<ActionResult<GenericResponse>> GetAllCaracteristicasById(int id)
+        {
+            var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionId(id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = obligacionCaracteristicaList.Select(x => _mapper.Map<ObligacionCaracteristicaResponse>(x))
+            };
 
+            return Ok(response);
+        }
+
+        // GET: api/Obligacion/1/caracteristicas/FORMULARIO
+        [HttpGet("{id}/caracteristicas/{tipo}")]
+        public async Task<ActionResult<GenericResponse>> GetAllCaracteristicasByIdAndTipo(int id, string tipo)
+        {
+            var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipo(id, tipo);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = obligacionCaracteristicaList.Select(x => _mapper.Map<ObligacionCaracteristicaResponse>(x))
+            };
+
+            return Ok(response);
+        }
     }
 }
