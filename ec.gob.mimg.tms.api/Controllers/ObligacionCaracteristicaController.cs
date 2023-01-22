@@ -170,10 +170,16 @@ namespace ec.gob.mimg.tms.api.Controllers
                 var obligacionCaracteristicaActual = await _obligacionCaracteristicaService.GetById(id);
                 if (obligacionCaracteristicaActual == null) { return NotFound(); }
 
-                obligacionCaracteristicaActual.FechaModificacion = DateTime.Now;
-                obligacionCaracteristicaActual.UsuarioModificacion = "admin@mail.com";
+                TmsObligacionCaracteristica obligacionCaracteristica = new TmsObligacionCaracteristica();
+                obligacionCaracteristica = _mapper.Map<TmsObligacionCaracteristica>(obligacionCaracteristicaRequest);
+                obligacionCaracteristica.FechaResgitro = obligacionCaracteristicaActual.FechaResgitro;
+                obligacionCaracteristica.UsuarioRegistro = obligacionCaracteristicaActual.UsuarioRegistro;
+                obligacionCaracteristica.Estado = obligacionCaracteristicaActual.Estado;
+                obligacionCaracteristica.FechaModificacion = DateTime.Now;
+                obligacionCaracteristica.UsuarioModificacion = "admin@mail.com";
+                obligacionCaracteristica.IdObligacionCaracteristica = id;
 
-                bool isUpdate = await _obligacionCaracteristicaService.UpdateAsync(obligacionCaracteristicaActual);
+                bool isUpdate = await _obligacionCaracteristicaService.UpdateAsync(obligacionCaracteristica);
                     
                 if (isUpdate)
                 {
@@ -181,7 +187,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                     {
                         Cod = "200",
                         Msg = "OK",
-                        Data = _mapper.Map<ObligacionCaracteristicaResponse>(obligacionCaracteristicaActual)
+                        Data = _mapper.Map<ObligacionCaracteristicaResponse>(obligacionCaracteristica)
                     };
                     return Ok(response);
                 }
