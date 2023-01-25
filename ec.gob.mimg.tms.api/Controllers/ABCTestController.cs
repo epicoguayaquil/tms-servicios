@@ -96,6 +96,14 @@ namespace ec.gob.mimg.tms.api.Controllers
             //response.Data = await _apiSriService.GetEstablecimientosNuevos("2022-12-05");
 
             PredioApiRequest request = new PredioApiRequest();
+            request.IdSector = "90";
+            request.Manzana = "1143";
+            request.Lote= "19";
+            request.Division = "0";
+            request.Phv = "0";
+            request.Phh= "0";
+            request.Numero = "1";
+            //...
             response.Data = await _apiCatastroService.GetPredio(request);
 
             return Ok(response);

@@ -3,6 +3,7 @@ using ec.gob.mimg.tms.srv.mimg.DTOs;
 using ec.gob.mimg.tms.srv.mimg.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,18 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
             var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-            var apiResponse = await cliente.GetAsync(string.Format("TramiteSimplificadoSTH/VerificarPredio?IdSector=90&Manzana=1143&Lote=19&Division=0&Phv=0&Phh=0&Numero=1"));
+
+            StringBuilder query = new StringBuilder();
+            query.Append("TramiteSimplificadoSTH/VerificarPredio?");
+            query.Append(string.Format("IdSector={0}", request.IdSector));
+            query.Append(string.Format("&Manzana={0}", request.Manzana));
+            query.Append(string.Format("&Lote={0}", request.Lote));
+            query.Append(string.Format("&Division={0}", request.Division));
+            query.Append(string.Format("&Phv={0}", request.Phv));
+            query.Append(string.Format("&Phh={0}", request.Phh));
+            query.Append(string.Format("&Numero={0}", request.Numero));
+
+            var apiResponse = await cliente.GetAsync(query.ToString());
 
             if (apiResponse.IsSuccessStatusCode)
             {
