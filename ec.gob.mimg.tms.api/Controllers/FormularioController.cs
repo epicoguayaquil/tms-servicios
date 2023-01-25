@@ -255,6 +255,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                         {
                             Caracteristica = caracteristicaElement.Caracteristica,
                             Valor = caracteristicaElement.Valor,
+                            TipoDato = caracteristicaElement.TipoDato,
+                            ExtraInfo = caracteristicaElement.ExtraInfo,
                             FormularioId = formularioDetalleListRequest.FormularioId,
                             PasoCreacion = formularioDetalleListRequest.PasoCreacion,
                             FechaRegistro = DateTime.Now,
@@ -265,6 +267,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                     else
                     {
                         formularioDetalleActual.Valor = caracteristicaElement.Valor;
+                        formularioDetalleActual.TipoDato = caracteristicaElement.TipoDato;
+                        formularioDetalleActual.ExtraInfo = caracteristicaElement.ExtraInfo;
                         formularioDetalleActual.FechaModificacion = DateTime.Now;
                         formularioDetalleActual.UsuarioModificacion = "admin@mail.com";
                         bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);

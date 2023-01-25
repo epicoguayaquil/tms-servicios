@@ -14,5 +14,7 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
         public DateTime? Fecha { get; set; }
 
         public int? PasoCreacion { get; set; }
+
+        public string? ExtraInfo { get; set; }
     }
 }

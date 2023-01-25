@@ -23,6 +23,8 @@ public partial class TmsObligacionCaracteristica
 
     public string? Valor { get; set; }
 
+    public int Secuencia { get; set; }
+
     public string Estado { get; set; } = null!;
 
     public DateTime FechaResgitro { get; set; }

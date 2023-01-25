@@ -186,6 +186,9 @@ public partial class TmsDbContext : DbContext
             entity.Property(e => e.Estado)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.EstadoRegistro)
+                .HasMaxLength(30)
+                .IsUnicode(false);
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
             entity.Property(e => e.Jurisdiccion)
@@ -199,6 +202,9 @@ public partial class TmsDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.NombreComercial)
                 .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.NumeroEstablecimiento)
+                .HasMaxLength(10)
                 .IsUnicode(false);
             entity.Property(e => e.SrifechaActualizacion)
                 .HasColumnType("datetime")
@@ -296,6 +302,12 @@ public partial class TmsDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Valor)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.TipoDato)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ExtraInfo)
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
