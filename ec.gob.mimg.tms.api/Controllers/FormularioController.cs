@@ -325,6 +325,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 TmsFormulario formulario = new TmsFormulario();
                 formulario = _mapper.Map<TmsFormulario>(formularioRequest);
 
+                formulario.IdFormulario = id;
                 formulario.FechaRegistro = formularioActual.FechaRegistro;
                 formulario.UsuarioRegistro = formularioActual.UsuarioRegistro;
                 formulario.Estado = formularioActual.Estado;

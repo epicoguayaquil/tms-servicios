@@ -140,6 +140,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 TmsFormularioActividad formularioActividad = new TmsFormularioActividad();
                 formularioActividad = _mapper.Map<TmsFormularioActividad>(formularioActividadRequest);
 
+                formularioActividad.IdActividadFormulario = id;
                 formularioActividad.FechaRegistro = formularioActividadActual.FechaRegistro;
                 formularioActividad.UsuarioRegistro = formularioActividadActual.UsuarioRegistro;
                 formularioActividad.Estado = formularioActividadActual.Estado;

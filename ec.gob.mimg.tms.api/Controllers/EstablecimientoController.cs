@@ -148,6 +148,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 TmsEstablecimiento establecimiento = new TmsEstablecimiento();
                 establecimiento = _mapper.Map<TmsEstablecimiento>(establecimientoRequest);
 
+                establecimiento.IdEstablecimiento = id;
                 establecimiento.FechaRegistro = establecimientoActual.FechaRegistro;
                 establecimiento.UsuarioRegistro = establecimientoActual.UsuarioRegistro;
                 establecimiento.Estado = establecimientoActual.Estado;

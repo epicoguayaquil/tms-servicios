@@ -172,6 +172,8 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 TmsObligacionCaracteristica obligacionCaracteristica = new TmsObligacionCaracteristica();
                 obligacionCaracteristica = _mapper.Map<TmsObligacionCaracteristica>(obligacionCaracteristicaRequest);
+
+                obligacionCaracteristica.IdObligacionCaracteristica = id;
                 obligacionCaracteristica.FechaResgitro = obligacionCaracteristicaActual.FechaResgitro;
                 obligacionCaracteristica.UsuarioRegistro = obligacionCaracteristicaActual.UsuarioRegistro;
                 obligacionCaracteristica.Estado = obligacionCaracteristicaActual.Estado;
