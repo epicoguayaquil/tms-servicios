@@ -73,6 +73,13 @@ namespace ec.gob.mimg.tms.api.DTOs
             CreateMap<TmsObligacionCaracteristica, ObligacionCaracteristicaRequest>();
             CreateMap<ObligacionCaracteristicaRequest, TmsObligacionCaracteristica>();
 
+            // FormularioObligacionCaracteristicaValor
+            CreateMap<TmsFormularioObligacionCaracteristicaValor, FormularioObligacionCaracteristicaValorResponse>();
+            CreateMap<FormularioObligacionCaracteristicaValorResponse, TmsFormularioObligacionCaracteristicaValor>();
+
+            CreateMap<TmsFormularioObligacionCaracteristicaValor, FormularioObligacionCaracteristicaValorRequest>();
+            CreateMap<FormularioObligacionCaracteristicaValorRequest, TmsFormularioObligacionCaracteristicaValor>();
+
         }
     }
 }

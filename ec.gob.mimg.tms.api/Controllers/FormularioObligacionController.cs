@@ -22,6 +22,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     {
         private readonly TmsDbContext _dbContext;
         private readonly IFormularioObligacionService _formularioObligacionService;
+        private readonly IFormularioObligacionCaracteristicaValorService _formularioObligacionCaracteristicaValorService;
 
         private readonly IMapper _mapper;
 
@@ -30,6 +31,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _mapper = mapper;
             _dbContext = dbContext;
             _formularioObligacionService = new FormularioObligacionService(_dbContext);
+            _formularioObligacionCaracteristicaValorService = new FormularioObligacionCaracteristicaValorService(_dbContext);
         }
 
         // GET: api/FormularioObligacion
@@ -165,5 +167,21 @@ namespace ec.gob.mimg.tms.api.Controllers
                 return BadRequest();
             }
         }
+
+        // GET: api/FormularioObligacion/1/caracteristicas
+        [HttpGet("{id}/caracteristicas")]
+        public async Task<ActionResult<GenericResponse>> GetAllCaracteristicasById(int id)
+        {
+            var formularioObligacionCaracteristicaValorList = await _formularioObligacionCaracteristicaValorService.GetListByFormularioObligacionId(id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioObligacionCaracteristicaValorList.Select(x => _mapper.Map<FormularioObligacionCaracteristicaValorResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
     }
 }
