@@ -9,14 +9,7 @@ public partial class TmsFormularioDetalle
 
     public string? Caracteristica { get; set; }
 
-    /// <summary>
-    /// String, Integer, Float
-    /// </summary>
-    public string? TipoDato { get; set; }
-
     public string? Valor { get; set; }
-
-    public string? ExtraInfo { get; set; }
 
     public DateTime? Fecha { get; set; }
 
@@ -31,6 +24,13 @@ public partial class TmsFormularioDetalle
     public int? FormularioId { get; set; }
 
     public int? PasoCreacion { get; set; }
+
+    /// <summary>
+    /// String, Integer, Float
+    /// </summary>
+    public string? TipoDato { get; set; }
+
+    public string? ExtraInfo { get; set; }
 
     public virtual TmsFormulario? Formulario { get; set; }
 }

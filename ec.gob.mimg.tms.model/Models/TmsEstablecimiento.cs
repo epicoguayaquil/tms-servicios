@@ -20,7 +20,7 @@ public partial class TmsEstablecimiento
     public string? Lon { get; set; }
 
     /// <summary>
-    /// Inhabilitado, Habilitado
+    /// Habilitado, Inhabilitado
     /// </summary>
     public string? Estado { get; set; }
 
@@ -45,8 +45,8 @@ public partial class TmsEstablecimiento
     /// <summary>
     /// No_Registrado, En_Proceso, Registrado
     /// </summary>
-    public string EstadoRegistro { get; set; } = null!;
-    
+    public string? EstadoRegistro { get; set; }
+
     public virtual TmsEmpresa? Empresa { get; set; }
 
     public virtual ICollection<TmsFormulario> TmsFormularios { get; } = new List<TmsFormulario>();

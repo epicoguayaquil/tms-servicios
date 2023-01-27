@@ -15,6 +15,10 @@ public partial class TmsDbContext : DbContext
     {
     }
 
+    public virtual DbSet<ConfiguracionObligacion> ConfiguracionObligacions { get; set; }
+
+    public virtual DbSet<Renovacion> Renovacions { get; set; }
+
     public virtual DbSet<TmsActividadEconomica> TmsActividadEconomicas { get; set; }
 
     public virtual DbSet<TmsActividadObligacion> TmsActividadObligacions { get; set; }
@@ -32,6 +36,8 @@ public partial class TmsDbContext : DbContext
     public virtual DbSet<TmsFormularioDetalle> TmsFormularioDetalles { get; set; }
 
     public virtual DbSet<TmsFormularioObligacion> TmsFormularioObligacions { get; set; }
+
+    public virtual DbSet<TmsFormularioObligacionCaracteristicaValor> TmsFormularioObligacionCaracteristicaValors { get; set; }
 
     public virtual DbSet<TmsObligacion> TmsObligacions { get; set; }
 
@@ -51,6 +57,35 @@ public partial class TmsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ConfiguracionObligacion>(entity =>
+        {
+            entity.HasKey(e => e.Secuencial).HasName("PK__Configur__32F8CA869FAB10B9");
+
+            entity.ToTable("ConfiguracionObligacion");
+
+            entity.Property(e => e.Secuencial).ValueGeneratedNever();
+            entity.Property(e => e.Estado)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioRegistro)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Renovacion>(entity =>
+        {
+            entity.HasKey(e => e.IdRenovacion).HasName("PK__Renovaci__9F986BC75043FFD7");
+
+            entity.ToTable("Renovacion");
+
+            entity.Property(e => e.IdRenovacion).ValueGeneratedNever();
+        });
+
         modelBuilder.Entity<TmsActividadEconomica>(entity =>
         {
             entity.HasKey(e => e.IdActividadEconomica).HasName("PK__TmsActiv__A3040710E0C907C3");
@@ -185,10 +220,12 @@ public partial class TmsDbContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Estado)
                 .HasMaxLength(255)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("Habilitado, Inhabilitado");
             entity.Property(e => e.EstadoRegistro)
                 .HasMaxLength(30)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("No_Registrado, En_Proceso, Registrado");
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
             entity.Property(e => e.Jurisdiccion)
@@ -292,9 +329,16 @@ public partial class TmsDbContext : DbContext
             entity.Property(e => e.Caracteristica)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.ExtraInfo)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.Fecha).HasColumnType("datetime");
             entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
             entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
+            entity.Property(e => e.TipoDato)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasComment("String, Integer, Float");
             entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -302,12 +346,6 @@ public partial class TmsDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.Valor)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.TipoDato)
-                .HasMaxLength(30)
-                .IsUnicode(false);
-            entity.Property(e => e.ExtraInfo)
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
@@ -346,6 +384,44 @@ public partial class TmsDbContext : DbContext
                 .HasForeignKey(d => d.ObligacionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_FormularioObligacion_TmsObligacion_1");
+        });
+
+        modelBuilder.Entity<TmsFormularioObligacionCaracteristicaValor>(entity =>
+        {
+            entity.HasKey(e => e.IdFormularioObligacionCaracteristicaValor).HasName("_copy_1");
+
+            entity.ToTable("TmsFormularioObligacionCaracteristicaValor");
+
+            entity.Property(e => e.Estado)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaResgitro).HasColumnType("datetime");
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.TipoDato)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasComment("String, Integer, Float");
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioRegistro)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Valor)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.FormularioObligacion).WithMany(p => p.TmsFormularioObligacionCaracteristicaValors)
+                .HasForeignKey(d => d.FormularioObligacionId)
+                .HasConstraintName("fk_TmsFormularioObligacionCaracteristicaValor_TmsFormularioObligacion");
+
+            entity.HasOne(d => d.ObligacionCaracteristica).WithMany(p => p.TmsFormularioObligacionCaracteristicaValors)
+                .HasForeignKey(d => d.ObligacionCaracteristicaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_TmsFormularioObligacionCaracteristicaValor_TmsObligacionCaracteristica");
         });
 
         modelBuilder.Entity<TmsObligacion>(entity =>
@@ -402,7 +478,11 @@ public partial class TmsDbContext : DbContext
             entity.Property(e => e.Tipo)
                 .HasMaxLength(255)
                 .IsUnicode(false)
-                .HasComment("General, Accion, Disparador");
+                .HasComment("General, Accion, Disparador, Inicial");
+            entity.Property(e => e.TipoDato)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasComment("String, Integer, Float");
             entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(255)
                 .IsUnicode(false);

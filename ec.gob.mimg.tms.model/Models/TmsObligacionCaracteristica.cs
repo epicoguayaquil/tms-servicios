@@ -10,20 +10,13 @@ public partial class TmsObligacionCaracteristica
     public int ObligacionId { get; set; }
 
     /// <summary>
-    /// General, Accion, Disparador
+    /// General, Accion, Disparador, Inicial
     /// </summary>
     public string? Tipo { get; set; }
 
     public string Nombre { get; set; } = null!;
 
-    /// <summary>
-    /// String, Integer, Float
-    /// </summary>
-    public string? TipoDato { get; set; }
-
     public string? Valor { get; set; }
-
-    public int Secuencia { get; set; }
 
     public string Estado { get; set; } = null!;
 
@@ -35,5 +28,14 @@ public partial class TmsObligacionCaracteristica
 
     public string? UsuarioModificacion { get; set; }
 
+    /// <summary>
+    /// String, Integer, Float
+    /// </summary>
+    public string? TipoDato { get; set; }
+
+    public int? Secuencia { get; set; }
+
     public virtual TmsObligacion Obligacion { get; set; } = null!;
+
+    public virtual ICollection<TmsFormularioObligacionCaracteristicaValor> TmsFormularioObligacionCaracteristicaValors { get; } = new List<TmsFormularioObligacionCaracteristicaValor>();
 }
