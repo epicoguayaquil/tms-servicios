@@ -25,6 +25,8 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IFormularioService _formularioService;
         private readonly IFormularioActividadService _formularioActividadService;
         private readonly IActividadEconomicaService _actividadEconomicaService;
+        private readonly IEstablecimientoObligacionService _establecimientoObligacionService;
+        private readonly IObligacionService _obligacionService;
 
         private readonly IMapper _mapper;
 
@@ -36,6 +38,8 @@ namespace ec.gob.mimg.tms.api.Controllers
             _formularioService = new FormularioService(_dbContext);
             _formularioActividadService = new FormularioActividadService(_dbContext);
             _actividadEconomicaService = new ActividadEconomicaService(_dbContext);
+            _establecimientoObligacionService = new EstablecimientoObligacionService(_dbContext);
+            _obligacionService = new ObligacionService(_dbContext);
         }
 
         // GET: api/Establecimiento
@@ -309,5 +313,29 @@ namespace ec.gob.mimg.tms.api.Controllers
 
             return Ok(response);
         }
+
+        // GET: api/Establecimiento/1/obligaciones
+        [HttpGet("{id}/obligaciones")]
+        public async Task<ActionResult<GenericResponse>> GetAllObligacionesById(int id)
+        {
+            var establecimientoObligacionList = await _establecimientoObligacionService.GetListByEstablecimientoId(id);
+            var establecimientoObligacionResponseListNew = new List<FormularioObligacionResponse>();
+            foreach (var establecimientoObligacion in establecimientoObligacionList)
+            {
+                var formularioObligacionRequest = _mapper.Map<FormularioObligacionResponse>(establecimientoObligacion);
+                var obligacion = await _obligacionService.GetById(establecimientoObligacion.ObligacionId);
+                formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+                establecimientoObligacionResponseListNew.Add(formularioObligacionRequest);
+            }
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = establecimientoObligacionResponseListNew
+            };
+
+            return Ok(response);
+        }
+
     }
 }
