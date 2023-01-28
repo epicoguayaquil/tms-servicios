@@ -9,5 +9,7 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
 
         public string? NombreComercial { get; set; }
 
+        public string? Industria { get; set; }
+
     }
 }

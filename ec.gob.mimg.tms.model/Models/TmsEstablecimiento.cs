@@ -19,6 +19,8 @@ public partial class TmsEstablecimiento
 
     public string? Lon { get; set; }
 
+    public string? Industria { get; set; }
+
     /// <summary>
     /// Habilitado, Inhabilitado
     /// </summary>

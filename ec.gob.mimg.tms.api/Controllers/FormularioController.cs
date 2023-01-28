@@ -22,6 +22,7 @@ namespace ec.gob.mimg.tms.api.Controllers
     public class FormularioController : ControllerBase
     {
         private readonly TmsDbContext _dbContext;
+        private readonly IEstablecimientoService _establecimientoService;
         private readonly IFormularioService _formularioService;
         private readonly IFormularioDetalleService _formularioDetalleService;
         private readonly IFormularioActividadService _formularioActividadService;
@@ -35,6 +36,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             _mapper = mapper;
             _dbContext = dbContext;
+            _establecimientoService = new EstablecimientoService(_dbContext);
             _formularioService = new FormularioService(_dbContext);
             _formularioDetalleService = new FormularioDetalleService(_dbContext);
             _formularioActividadService = new FormularioActividadService(_dbContext);
@@ -62,7 +64,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var formulario =await _formularioService.GetById(id);
+            var formulario = await _formularioService.GetById(id);
 
             if (formulario == null)
             {
@@ -139,19 +141,23 @@ namespace ec.gob.mimg.tms.api.Controllers
                 int contadorGeneradas = 0;
                 foreach (TmsActividadObligacion actividadObligacion in obligacionActividadList)
                 {
-                    TmsFormularioObligacion formularioObligacion = new()
-                    {
-                        ObligacionId = actividadObligacion.ObligacionId,
-                        FormularioId = id,
-                        FechaRegistro = DateTime.Now,
-                        UsuarioRegistro = "admin@mail.com",
-                        Estado = EstadoObligacionEnum.NO_CUMPLE.ToString()
-                    };
+                    TmsFormularioObligacion formularioObligacion;
+                    formularioObligacion = await _formularioObligacionService.GetByFormularioIdAndObligacionId(id, actividadObligacion.ObligacionId);
+                    if (formularioObligacion == null) {
+                        formularioObligacion = new()
+                        {
+                            ObligacionId = actividadObligacion.ObligacionId,
+                            FormularioId = id,
+                            FechaRegistro = DateTime.Now,
+                            UsuarioRegistro = "admin@mail.com",
+                            Estado = EstadoObligacionEnum.NO_CUMPLE.ToString()
+                        };
 
-                    bool isSaved = await _formularioObligacionService.AddAsync(formularioObligacion);
-                    if (isSaved)
-                    {
-                        contadorGeneradas++;
+                        bool isSaved = await _formularioObligacionService.AddAsync(formularioObligacion);
+                        if (isSaved)
+                        {
+                            contadorGeneradas++;
+                        }
                     }
                 }
                 GenericResponse response = new()
@@ -160,6 +166,9 @@ namespace ec.gob.mimg.tms.api.Controllers
                     Msg = "OK",
                     Data = "Obligaciones generadas: " + contadorGeneradas
                 };
+
+                var formulario = await _formularioService.GetById(id);
+                bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.REGISTRADO.ToString());
 
                 return Ok(response);
 
@@ -244,8 +253,10 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     return BadRequest();
                 }
+                int formularioId = 0;
                 foreach (var caracteristicaElement in formularioDetalleListRequest.CaracteristicaList)
                 {
+                    formularioId = formularioDetalleListRequest.FormularioId;
                     TmsFormularioDetalle formularioDetalleActual;
                     formularioDetalleActual  = await _formularioDetalleService.
                         GetByFormularioIdAndCaracteristica(formularioDetalleListRequest.FormularioId,
@@ -273,6 +284,12 @@ namespace ec.gob.mimg.tms.api.Controllers
                         formularioDetalleActual.UsuarioModificacion = "admin@mail.com";
                         bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);
                     }
+                }
+
+                if (formularioId != 0)
+                {
+                    var formulario = await _formularioService.GetById(formularioId);
+                    bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.EN_PROCESO.ToString());
                 }
 
                 GenericResponse response = new()

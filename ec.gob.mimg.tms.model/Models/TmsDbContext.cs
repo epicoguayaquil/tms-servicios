@@ -240,6 +240,9 @@ public partial class TmsDbContext : DbContext
             entity.Property(e => e.NombreComercial)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Industria)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.NumeroEstablecimiento)
                 .HasMaxLength(10)
                 .IsUnicode(false);

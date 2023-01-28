@@ -240,6 +240,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 if (establecimientoActual == null) { return NotFound(); }
 
                 establecimientoActual.NombreComercial = establecimientoRequest.NombreComercial;
+                establecimientoActual.Industria = establecimientoRequest.Industria;
                 establecimientoActual.FechaModificacion = DateTime.Now;
                 establecimientoActual.UsuarioModificacion = "admin@mail.com";
 
