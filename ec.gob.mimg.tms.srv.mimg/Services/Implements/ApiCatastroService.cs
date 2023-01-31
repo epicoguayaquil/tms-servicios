@@ -73,6 +73,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
             var apiResponse = await cliente.GetAsync(query.ToString());
 
+            response.Success = apiResponse.IsSuccessStatusCode;
             if (apiResponse.IsSuccessStatusCode)
             {
                 var data = await apiResponse.Content.ReadAsStringAsync();
@@ -87,6 +88,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
                 var gpsRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
                 var gpsResponse = await cliente.GetAsync(string.Format("TramiteSimplificadoSTH/CoordenadasPredio?IdSector=90&Manzana=1143&Lote=19&Division=0&Phv=0&Phh=0&Numero=1"));
+                response.SuccessCoordenadas = gpsResponse.IsSuccessStatusCode;
                 if (gpsResponse.IsSuccessStatusCode)
                 {
                     var gpsData = await gpsResponse.Content.ReadAsStringAsync();
@@ -100,10 +102,6 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
                 }
 
                 response.DataResult = predio;
-            }
-            else
-            {
-                response = null;
             }
 
             return response;

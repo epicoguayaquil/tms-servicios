@@ -16,6 +16,7 @@ using ec.gob.mimg.tms.api.Services;
 using Microsoft.IdentityModel.Tokens;
 using ec.gob.mimg.tms.srv.mimg.Services;
 using ec.gob.mimg.tms.srv.mimg.DTOs;
+using ec.gob.mimg.tms.srv.mimg.Services.Implements;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -35,7 +36,7 @@ namespace ec.gob.mimg.tms.api.Controllers
 
         private readonly IMapper _mapper;
 
-        public FormularioController(IMapper mapper, TmsDbContext dbContext)
+        public FormularioController(IMapper mapper, TmsDbContext dbContext, IApiCatastroService apiCatastroService)
         {
             _mapper = mapper;
             _dbContext = dbContext;
@@ -46,6 +47,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _formularioObligacionService = new FormularioObligacionService(_dbContext);
             _obligacionActividadService = new ObligacionActividadService(_dbContext);
             _obligacionService = new ObligacionService(_dbContext);
+            _apiCatastroService = apiCatastroService;
         }
 
         // GET: api/Formulario

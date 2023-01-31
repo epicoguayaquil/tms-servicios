@@ -65,13 +65,13 @@ namespace ec.gob.mimg.tms.api.Controllers
 
 
             // Test Mail Tester
-            NotificacionRequest request = new NotificacionRequest();
-            request.username = "Juan Lafuente";
-            request.mail = "juanklafuente@outlook.com";
-            request.titulo = "Notificación TMS";
-            request.contenido = "Su codigo de seguridad es: 123456";
+            //NotificacionRequest request = new NotificacionRequest();
+            //request.username = "Juan Lafuente";
+            //request.mail = "juanklafuente@outlook.com";
+            //request.titulo = "Notificación TMS";
+            //request.contenido = "Su codigo de seguridad es: 123456";
 
-            await _notificacionService.EnviarNotificacion(request);
+            //await _notificacionService.EnviarNotificacion(request);
 
             //// Test Token 
             //TokenRequest tokenRequest = new TokenRequest();
@@ -95,16 +95,16 @@ namespace ec.gob.mimg.tms.api.Controllers
 
             //response.Data = await _apiSriService.GetEstablecimientosNuevos("2022-12-05");
 
-            //PredioApiRequest request = new PredioApiRequest();
-            //request.IdSector = "90";
-            //request.Manzana = "1143";
-            //request.Lote= "19";
-            //request.Division = "0";
-            //request.Phv = "0";
-            //request.Phh= "0";
-            //request.Numero = "1";
-            ////...
-            //response.Data = await _apiCatastroService.GetPredio(request);
+            PredioApiRequest request = new PredioApiRequest();
+            request.IdSector = "90";
+            request.Manzana = "1143";
+            request.Lote = "19";
+            request.Division = "0";
+            request.Phv = "0";
+            request.Phh = "0";
+            request.Numero = "1";
+            //...
+            response.Data = await _apiCatastroService.GetPredio(request);
 
             return Ok(response);
         }
