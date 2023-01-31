@@ -14,6 +14,8 @@ using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
 using ec.gob.mimg.tms.api.Services;
 using Microsoft.IdentityModel.Tokens;
+using ec.gob.mimg.tms.srv.mimg.Services;
+using ec.gob.mimg.tms.srv.mimg.DTOs;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -29,6 +31,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IFormularioObligacionService _formularioObligacionService;
         private readonly IObligacionActividadService _obligacionActividadService;
         private readonly IObligacionService _obligacionService;
+        private readonly IApiCatastroService _apiCatastroService;
 
         private readonly IMapper _mapper;
 
@@ -253,10 +256,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     return BadRequest();
                 }
-                int formularioId = 0;
                 foreach (var caracteristicaElement in formularioDetalleListRequest.CaracteristicaList)
                 {
-                    formularioId = formularioDetalleListRequest.FormularioId;
                     TmsFormularioDetalle formularioDetalleActual;
                     formularioDetalleActual  = await _formularioDetalleService.
                         GetByFormularioIdAndCaracteristica(formularioDetalleListRequest.FormularioId,
@@ -286,12 +287,9 @@ namespace ec.gob.mimg.tms.api.Controllers
                     }
                 }
 
-                if (formularioId != 0)
-                {
-                    var formulario = await _formularioService.GetById(formularioId);
-                    bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.EN_PROCESO.ToString());
-                }
-
+                var formulario = await _formularioService.GetById(formularioDetalleListRequest.FormularioId);
+                bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.EN_PROCESO.ToString());
+                
                 GenericResponse response = new()
                 {
                     Cod = "200",
@@ -373,5 +371,72 @@ namespace ec.gob.mimg.tms.api.Controllers
                 return BadRequest();
             }
         }
+
+        // POST: api/Formulario/codigoCatastral
+        [HttpPost("codigoCatastral")]
+        public async Task<ActionResult<GenericResponse>> ValidarCodigoCatastral(FormularioDetalleListRequest formularioDetalleListRequest)
+        {
+            try
+            {
+                if (formularioDetalleListRequest == null)
+                {
+                    return BadRequest();
+                }
+                if (formularioDetalleListRequest.CaracteristicaList.IsNullOrEmpty())
+                {
+                    return BadRequest();
+                }
+
+                PredioApiRequest request = new PredioApiRequest();
+
+                foreach (var caracteristicaElement in formularioDetalleListRequest.CaracteristicaList)
+                {
+                    if (caracteristicaElement.Caracteristica == "Sector")
+                    {
+                        request.IdSector = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Manzana")
+                    {
+                        request.Manzana = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Lote")
+                    {
+                        request.Lote = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Division")
+                    {
+                        request.Division = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Phv")
+                    {
+                        request.Phv = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Phh")
+                    {
+                        request.Phh = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Numero")
+                    {
+                        request.Numero = caracteristicaElement.Valor;
+                    }
+                }
+                var predio = await _apiCatastroService.GetPredio(request);
+
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = predio
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+        }
+
+
     }
 }
