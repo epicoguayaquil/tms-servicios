@@ -29,7 +29,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
             var root = builder.Build();
             subscriptionKey = root.GetSection("ApiMimg:subscription_key").Value;
-            baseUrl = root.GetSection("ApiMimg:url_api_catastro").Value + "ssn/ext/cc/TasaHabilitacion/api/";
+            baseUrl = root.GetSection("ApiMimg:url_api").Value + "ssn/ext/cc/TasaHabilitacion/api/";
             //...
             _logger = logger;
             _tokenService = tokenService;

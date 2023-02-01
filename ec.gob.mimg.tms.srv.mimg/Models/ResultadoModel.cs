@@ -21,7 +21,18 @@ namespace ec.gob.mimg.tms.srv.mimg.Models
             };
         }
 
-    
+        public static ResultadoModel NotFound()
+        {
+            return new ResultadoModel()
+            {
+                Ok = false,
+                Titulo = "Valor no encontrado",
+                TipoMensaje = 0,
+                ErrorValidacion = false,
+                StatusCode = 400
+            };
+        }
+
     }
 
 
