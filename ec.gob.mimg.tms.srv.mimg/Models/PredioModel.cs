@@ -14,5 +14,6 @@ namespace ec.gob.mimg.tms.srv.mimg.Models
         public string Latitud { get; set; }
         public string Longitud { get; set; }
 
+
     }
 }

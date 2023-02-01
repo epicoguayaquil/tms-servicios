@@ -33,13 +33,15 @@ namespace ec.gob.mimg.tms.api.Controllers
 
         private readonly IApiSriService _apiSriService;
         private readonly IApiCatastroService _apiCatastroService;
+        private readonly IApiMimgService _apiMimgService;
 
         public ABCTestController(IMapper mapper, TmsDbContext dbContext, 
                                 ILogger<ABCTestController> logger,
                                 INotificacionService notificacionService,
                                 ITokenService tokenService,
-                                IApiSriService apiSriService, 
-                                IApiCatastroService apiCatastroService)
+                                IApiSriService apiSriService,
+                                IApiCatastroService apiCatastroService,
+                                IApiMimgService apiMimgService)
         {
             _logger = logger;
             _mapper = mapper;
@@ -50,6 +52,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _tokenService = tokenService;
             _apiSriService = apiSriService;
             _apiCatastroService = apiCatastroService;
+            _apiMimgService = apiMimgService;
         }
 
         // GET: api/Empresas
@@ -64,14 +67,14 @@ namespace ec.gob.mimg.tms.api.Controllers
             };
 
 
-            // Test Mail Tester
-            NotificacionRequest request = new NotificacionRequest();
-            request.username = "Juan Lafuente";
-            request.mail = "juanklafuente@outlook.com";
-            request.titulo = "Notificación TMS";
-            request.contenido = "Su codigo de seguridad es: 123456";
+            //// Test Mail Tester
+            //NotificacionRequest request = new NotificacionRequest();
+            //request.username = "Juan Lafuente";
+            //request.mail = "juanklafuente@outlook.com";
+            //request.titulo = "Notificación TMS";
+            //request.contenido = "Su codigo de seguridad es: 123456";
 
-            await _notificacionService.EnviarNotificacion(request);
+            //await _notificacionService.EnviarNotificacion(request);
 
             //// Test Token 
             //TokenRequest tokenRequest = new TokenRequest();
@@ -98,13 +101,38 @@ namespace ec.gob.mimg.tms.api.Controllers
             //PredioApiRequest request = new PredioApiRequest();
             //request.IdSector = "90";
             //request.Manzana = "1143";
-            //request.Lote= "19";
+            //request.Lote = "19";
             //request.Division = "0";
             //request.Phv = "0";
-            //request.Phh= "0";
+            //request.Phh = "0";
             //request.Numero = "1";
             ////...
             //response.Data = await _apiCatastroService.GetPredio(request);
+
+            //FactibilidadUsoRequest request = new FactibilidadUsoRequest();
+            //request.IdActividad = "1268";
+            //request.IdSector = "1";
+            //request.Manzana = "6";
+            //request.Lote = "1";
+            //request.Division = "4";
+            //request.Phv = "3";
+            //request.Phh = "6";
+            //request.Numero = "1";
+            ////...
+            //response.Data = await _apiMimgService.GetFacilidadUso(request);
+
+
+            DimensionesRequest request = new DimensionesRequest();
+            request.IdActividad = "427";
+            request.IdSector = "90";
+            request.Manzana = "1143";
+            request.Lote = "19";
+            request.Division = "0";
+            request.Phv = "0";
+            request.Phh = "0";
+            request.Numero = "1";
+            //...
+            response.Data = await _apiMimgService.GetDimensionMinima(request);
 
             return Ok(response);
         }

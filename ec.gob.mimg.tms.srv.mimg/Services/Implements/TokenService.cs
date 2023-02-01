@@ -16,6 +16,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
         private static string? clientId;
         private static string? scope;
         private static string? scope_tasa;
+        private static string? scope_habilitacion;
         private static string? clientSecret;
         private static string? grantType;
         //...
@@ -30,6 +31,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             clientId = root.GetSection("ApiMimg:client_id").Value;
             scope = root.GetSection("ApiMimg:scope").Value;
             scope_tasa = root.GetSection("ApiMimg:scope_tasa").Value;
+            scope_habilitacion = root.GetSection("ApiMimg:scope_habilitacion").Value;
             clientSecret = root.GetSection("ApiMimg:client_secret").Value;
             grantType = root.GetSection("ApiMimg:grant_type").Value;
             BaseUrl = root.GetSection("ApiMimg:url_token").Value;
@@ -78,6 +80,36 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             var nvc = new List<KeyValuePair<string, string>>();
             nvc.Add(new KeyValuePair<string, string>("client_id", clientId));
             nvc.Add(new KeyValuePair<string, string>("scope", scope_tasa));
+            nvc.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
+            nvc.Add(new KeyValuePair<string, string>("grant_type", grantType));
+
+            var req = new HttpRequestMessage(HttpMethod.Post, BaseUrl) { Content = new FormUrlEncodedContent(nvc) };
+            var apiResponse = await cliente.SendAsync(req);
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var data = await apiResponse.Content.ReadAsStringAsync();
+                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(data);
+            }
+            else
+            {
+                tokenResponse = null;
+            }
+
+            return tokenResponse;
+        }
+
+        public async Task<TokenResponse> GetTokenHabilitacion(TokenRequest request)
+        {
+            _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
+            TokenResponse? tokenResponse = new TokenResponse();
+
+            var cliente = new HttpClient();
+            cliente.BaseAddress = new Uri(BaseUrl);
+
+            var nvc = new List<KeyValuePair<string, string>>();
+            nvc.Add(new KeyValuePair<string, string>("client_id", clientId));
+            nvc.Add(new KeyValuePair<string, string>("scope", scope_habilitacion));
             nvc.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
             nvc.Add(new KeyValuePair<string, string>("grant_type", grantType));
 

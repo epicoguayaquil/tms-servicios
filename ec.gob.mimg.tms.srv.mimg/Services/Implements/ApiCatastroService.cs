@@ -60,20 +60,19 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
             var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            StringBuilder apiQuery = new StringBuilder();
+            apiQuery.Append("TramiteSimplificadoSTH/VerificarPredio?");
+            apiQuery.Append(string.Format("IdSector={0}", request.IdSector));
+            apiQuery.Append(string.Format("&Manzana={0}", request.Manzana));
+            apiQuery.Append(string.Format("&Lote={0}", request.Lote));
+            apiQuery.Append(string.Format("&Division={0}", request.Division));
+            apiQuery.Append(string.Format("&Phv={0}", request.Phv));
+            apiQuery.Append(string.Format("&Phh={0}", request.Phh));
+            apiQuery.Append(string.Format("&Numero={0}", request.Numero));
 
-            StringBuilder query = new StringBuilder();
-            query.Append("TramiteSimplificadoSTH/VerificarPredio?");
-            query.Append(string.Format("IdSector={0}", request.IdSector));
-            query.Append(string.Format("&Manzana={0}", request.Manzana));
-            query.Append(string.Format("&Lote={0}", request.Lote));
-            query.Append(string.Format("&Division={0}", request.Division));
-            query.Append(string.Format("&Phv={0}", request.Phv));
-            query.Append(string.Format("&Phh={0}", request.Phh));
-            query.Append(string.Format("&Numero={0}", request.Numero));
+            var apiResponse = await cliente.GetAsync(apiQuery.ToString());
 
-            var apiResponse = await cliente.GetAsync(query.ToString());
-
-            if (apiResponse.IsSuccessStatusCode)
+            if (apiResponse != null && apiResponse.IsSuccessStatusCode)
             {
                 var data = await apiResponse.Content.ReadAsStringAsync();
                 infoApiResponse = JsonConvert.DeserializeObject<PredioInfoApiResponse>(data);
@@ -86,8 +85,18 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
                 }
 
                 var gpsRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                var gpsResponse = await cliente.GetAsync(string.Format("TramiteSimplificadoSTH/CoordenadasPredio?IdSector=90&Manzana=1143&Lote=19&Division=0&Phv=0&Phh=0&Numero=1"));
-                if (gpsResponse.IsSuccessStatusCode)
+                StringBuilder gpsQuery = new StringBuilder();
+                gpsQuery.Append("TramiteSimplificadoSTH/CoordenadasPredio?");
+                gpsQuery.Append(string.Format("IdSector={0}", request.IdSector));
+                gpsQuery.Append(string.Format("&Manzana={0}", request.Manzana));
+                gpsQuery.Append(string.Format("&Lote={0}", request.Lote));
+                gpsQuery.Append(string.Format("&Division={0}", request.Division));
+                gpsQuery.Append(string.Format("&Phv={0}", request.Phv));
+                gpsQuery.Append(string.Format("&Phh={0}", request.Phh));
+                gpsQuery.Append(string.Format("&Numero={0}", request.Numero));
+                var gpsResponse = await cliente.GetAsync(gpsQuery.ToString());
+                
+                if (gpsResponse != null && gpsResponse.IsSuccessStatusCode)
                 {
                     var gpsData = await gpsResponse.Content.ReadAsStringAsync();
                     gpsApiResponse = JsonConvert.DeserializeObject<PredioGpsApiResponse>(gpsData);
