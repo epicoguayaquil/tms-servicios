@@ -6,5 +6,7 @@ namespace ec.gob.mimg.tms.api.Services
     public interface IEstablecimientoService : ICommonManager<TmsEstablecimiento>
     {
         Task<TmsEstablecimiento> GetById(int id);
+
+        Task<bool> UpdateEstadoRegistroById(int id, string estadoRegistro);
     }
 }

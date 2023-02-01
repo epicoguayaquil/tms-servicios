@@ -8,5 +8,8 @@ namespace ec.gob.mimg.tms.api.Services
         Task<TmsFormularioObligacion> GetById(int id);
 
         Task<ICollection<TmsFormularioObligacion>> GetListByFormularioId(int formularioId);
+
+        Task<TmsFormularioObligacion> GetByFormularioIdAndObligacionId(int formularioId, int obligacionId);
+
     }
 }

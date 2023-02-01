@@ -14,6 +14,9 @@ using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.DTOs;
 using ec.gob.mimg.tms.api.Services;
 using Microsoft.IdentityModel.Tokens;
+using ec.gob.mimg.tms.srv.mimg.Services;
+using ec.gob.mimg.tms.srv.mimg.DTOs;
+using ec.gob.mimg.tms.srv.mimg.Services.Implements;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -22,25 +25,29 @@ namespace ec.gob.mimg.tms.api.Controllers
     public class FormularioController : ControllerBase
     {
         private readonly TmsDbContext _dbContext;
+        private readonly IEstablecimientoService _establecimientoService;
         private readonly IFormularioService _formularioService;
         private readonly IFormularioDetalleService _formularioDetalleService;
         private readonly IFormularioActividadService _formularioActividadService;
         private readonly IFormularioObligacionService _formularioObligacionService;
         private readonly IObligacionActividadService _obligacionActividadService;
         private readonly IObligacionService _obligacionService;
+        private readonly IApiCatastroService _apiCatastroService;
 
         private readonly IMapper _mapper;
 
-        public FormularioController(IMapper mapper, TmsDbContext dbContext)
+        public FormularioController(IMapper mapper, TmsDbContext dbContext, IApiCatastroService apiCatastroService)
         {
             _mapper = mapper;
             _dbContext = dbContext;
+            _establecimientoService = new EstablecimientoService(_dbContext);
             _formularioService = new FormularioService(_dbContext);
             _formularioDetalleService = new FormularioDetalleService(_dbContext);
             _formularioActividadService = new FormularioActividadService(_dbContext);
             _formularioObligacionService = new FormularioObligacionService(_dbContext);
             _obligacionActividadService = new ObligacionActividadService(_dbContext);
             _obligacionService = new ObligacionService(_dbContext);
+            _apiCatastroService = apiCatastroService;
         }
 
         // GET: api/Formulario
@@ -62,7 +69,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GenericResponse>> GetById(int id)
         {
-            var formulario =await _formularioService.GetById(id);
+            var formulario = await _formularioService.GetById(id);
 
             if (formulario == null)
             {
@@ -139,19 +146,23 @@ namespace ec.gob.mimg.tms.api.Controllers
                 int contadorGeneradas = 0;
                 foreach (TmsActividadObligacion actividadObligacion in obligacionActividadList)
                 {
-                    TmsFormularioObligacion formularioObligacion = new()
-                    {
-                        ObligacionId = actividadObligacion.ObligacionId,
-                        FormularioId = id,
-                        FechaRegistro = DateTime.Now,
-                        UsuarioRegistro = "admin@mail.com",
-                        Estado = EstadoObligacionEnum.NO_CUMPLE.ToString()
-                    };
+                    TmsFormularioObligacion formularioObligacion;
+                    formularioObligacion = await _formularioObligacionService.GetByFormularioIdAndObligacionId(id, actividadObligacion.ObligacionId);
+                    if (formularioObligacion == null) {
+                        formularioObligacion = new()
+                        {
+                            ObligacionId = actividadObligacion.ObligacionId,
+                            FormularioId = id,
+                            FechaRegistro = DateTime.Now,
+                            UsuarioRegistro = "admin@mail.com",
+                            Estado = EstadoObligacionEnum.NO_CUMPLE.ToString()
+                        };
 
-                    bool isSaved = await _formularioObligacionService.AddAsync(formularioObligacion);
-                    if (isSaved)
-                    {
-                        contadorGeneradas++;
+                        bool isSaved = await _formularioObligacionService.AddAsync(formularioObligacion);
+                        if (isSaved)
+                        {
+                            contadorGeneradas++;
+                        }
                     }
                 }
                 GenericResponse response = new()
@@ -160,6 +171,9 @@ namespace ec.gob.mimg.tms.api.Controllers
                     Msg = "OK",
                     Data = "Obligaciones generadas: " + contadorGeneradas
                 };
+
+                var formulario = await _formularioService.GetById(id);
+                bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.REGISTRADO.ToString());
 
                 return Ok(response);
 
@@ -275,6 +289,9 @@ namespace ec.gob.mimg.tms.api.Controllers
                     }
                 }
 
+                var formulario = await _formularioService.GetById(formularioDetalleListRequest.FormularioId);
+                bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.EN_PROCESO.ToString());
+                
                 GenericResponse response = new()
                 {
                     Cod = "200",
@@ -356,5 +373,72 @@ namespace ec.gob.mimg.tms.api.Controllers
                 return BadRequest();
             }
         }
+
+        // POST: api/Formulario/codigoCatastral
+        [HttpPost("codigoCatastral")]
+        public async Task<ActionResult<GenericResponse>> ValidarCodigoCatastral(FormularioDetalleListRequest formularioDetalleListRequest)
+        {
+            try
+            {
+                if (formularioDetalleListRequest == null)
+                {
+                    return BadRequest();
+                }
+                if (formularioDetalleListRequest.CaracteristicaList.IsNullOrEmpty())
+                {
+                    return BadRequest();
+                }
+
+                PredioApiRequest request = new PredioApiRequest();
+
+                foreach (var caracteristicaElement in formularioDetalleListRequest.CaracteristicaList)
+                {
+                    if (caracteristicaElement.Caracteristica == "Sector")
+                    {
+                        request.IdSector = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Manzana")
+                    {
+                        request.Manzana = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Lote")
+                    {
+                        request.Lote = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Division")
+                    {
+                        request.Division = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Phv")
+                    {
+                        request.Phv = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Phh")
+                    {
+                        request.Phh = caracteristicaElement.Valor;
+                    }
+                    else if (caracteristicaElement.Caracteristica == "Numero")
+                    {
+                        request.Numero = caracteristicaElement.Valor;
+                    }
+                }
+                var predio = await _apiCatastroService.GetPredio(request);
+
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = predio
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+        }
+
+
     }
 }

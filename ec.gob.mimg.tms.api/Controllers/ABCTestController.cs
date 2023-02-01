@@ -67,7 +67,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             };
 
 
-            //// Test Mail Tester
+            // Test Mail Tester
             //NotificacionRequest request = new NotificacionRequest();
             //request.username = "Juan Lafuente";
             //request.mail = "juanklafuente@outlook.com";

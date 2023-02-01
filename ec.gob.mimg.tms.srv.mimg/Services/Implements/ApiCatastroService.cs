@@ -72,7 +72,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
             var apiResponse = await cliente.GetAsync(apiQuery.ToString());
 
-            if (apiResponse != null && apiResponse.IsSuccessStatusCode)
+            response.Success = apiResponse.IsSuccessStatusCode;
+            if (apiResponse.IsSuccessStatusCode)
             {
                 var data = await apiResponse.Content.ReadAsStringAsync();
                 infoApiResponse = JsonConvert.DeserializeObject<PredioInfoApiResponse>(data);
@@ -95,7 +96,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
                 gpsQuery.Append(string.Format("&Phh={0}", request.Phh));
                 gpsQuery.Append(string.Format("&Numero={0}", request.Numero));
                 var gpsResponse = await cliente.GetAsync(gpsQuery.ToString());
-                
+
                 if (gpsResponse != null && gpsResponse.IsSuccessStatusCode)
                 {
                     var gpsData = await gpsResponse.Content.ReadAsStringAsync();
@@ -109,10 +110,6 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
                 }
 
                 response.DataResult = predio;
-            }
-            else
-            {
-                response = null;
             }
 
             return response;

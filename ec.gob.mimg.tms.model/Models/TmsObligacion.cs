@@ -50,6 +50,8 @@ public partial class TmsObligacion
 
     public virtual ICollection<TmsActividadObligacion> TmsActividadObligacions { get; } = new List<TmsActividadObligacion>();
 
+    public virtual ICollection<TmsEstablecimientoObligacion> TmsEstablecimientoObligacions { get; } = new List<TmsEstablecimientoObligacion>();
+
     public virtual ICollection<TmsFormularioObligacion> TmsFormularioObligacions { get; } = new List<TmsFormularioObligacion>();
 
     public virtual ICollection<TmsObligacionCaracteristica> TmsObligacionCaracteristicas { get; } = new List<TmsObligacionCaracteristica>();

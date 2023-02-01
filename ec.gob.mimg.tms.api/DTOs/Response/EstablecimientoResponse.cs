@@ -25,6 +25,8 @@ namespace ec.gob.mimg.tms.api.DTOs.Response
 
         public string? NombreComercial { get; set; }
 
+        public string? Industria { get; set; }
+
         public string? Jurisdiccion { get; set; }
 
         public DateTime? SrifechaRegistro { get; set; }

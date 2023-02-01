@@ -20,5 +20,9 @@ namespace ec.gob.mimg.tms.api.Services.Implements
             return await GetAsync(x => x.FormularioId == formularioId);
         }
 
+        public async Task<TmsFormularioObligacion> GetByFormularioIdAndObligacionId(int formularioId, int obligacionId)
+        {
+            return await GetFirstOrDefaultAsync(x => x.FormularioId == formularioId && x.ObligacionId == obligacionId);
+        }
     }
 }
