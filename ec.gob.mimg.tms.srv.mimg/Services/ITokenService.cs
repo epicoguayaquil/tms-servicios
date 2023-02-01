@@ -8,6 +8,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
         Task<TokenResponse> GetToken(TokenRequest request);
         
         Task<TokenResponse> GetTokenTasa(TokenRequest request);
+
+        Task<TokenResponse> GetTokenHabilitacion(TokenRequest request);
     }
 }
 

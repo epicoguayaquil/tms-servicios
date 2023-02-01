@@ -30,7 +30,7 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
             var root = builder.Build();
             subscriptionKey = root.GetSection("ApiMimg:subscription_key").Value;
-            baseUrl = root.GetSection("ApiMimg:url_api_catastro").Value + "/ssn/ext/cc/Catastro/api/v1/";
+            baseUrl = root.GetSection("ApiMimg:url_api").Value + "ssn/ext/cc/Catastro/api/v1/";
             //...
             _logger = logger;
             _tokenService = tokenService;
@@ -59,21 +59,18 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             cliente.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
             cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResponse.AccessToken);
 
-            var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            //var apiRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+            StringBuilder apiQuery = new StringBuilder();
+            apiQuery.Append("TramiteSimplificadoSTH/VerificarPredio?");
+            apiQuery.Append(string.Format("IdSector={0}", request.IdSector));
+            apiQuery.Append(string.Format("&Manzana={0}", request.Manzana));
+            apiQuery.Append(string.Format("&Lote={0}", request.Lote));
+            apiQuery.Append(string.Format("&Division={0}", request.Division));
+            apiQuery.Append(string.Format("&Phv={0}", request.Phv));
+            apiQuery.Append(string.Format("&Phh={0}", request.Phh));
+            apiQuery.Append(string.Format("&Numero={0}", request.Numero));
 
-            StringBuilder query = new StringBuilder();
-            query.Append("TramiteSimplificadoSTH/VerificarPredio?");
-            query.Append(string.Format("IdSector={0}", request.IdSector));
-            query.Append(string.Format("&Manzana={0}", request.Manzana));
-            query.Append(string.Format("&Lote={0}", request.Lote));
-            query.Append(string.Format("&Division={0}", request.Division));
-            query.Append(string.Format("&Phv={0}", request.Phv));
-            query.Append(string.Format("&Phh={0}", request.Phh));
-            query.Append(string.Format("&Numero={0}", request.Numero));
-
-            var apiResponse = await cliente.GetAsync(query.ToString());
-
-            response.Success = apiResponse.IsSuccessStatusCode;
+            var apiResponse = await cliente.GetAsync(apiQuery.ToString());
             if (apiResponse.IsSuccessStatusCode)
             {
                 var data = await apiResponse.Content.ReadAsStringAsync();
@@ -84,11 +81,23 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
                     predio.Parroquia = infoApiResponse.DataResult[0].Parroquia;
                     predio.Ciudadela = infoApiResponse.DataResult[0].Ciudadela;
                     predio.UsoEdificacion = infoApiResponse.DataResult[0].UsoEdificacion;
+                    //..
+                    response.Resultado = infoApiResponse.Resultado;
+                    response.DataResult = predio;
                 }
 
                 var gpsRequest = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
-                var gpsResponse = await cliente.GetAsync(string.Format("TramiteSimplificadoSTH/CoordenadasPredio?IdSector=90&Manzana=1143&Lote=19&Division=0&Phv=0&Phh=0&Numero=1"));
-                response.SuccessCoordenadas = gpsResponse.IsSuccessStatusCode;
+                StringBuilder gpsQuery = new StringBuilder();
+                gpsQuery.Append("TramiteSimplificadoSTH/CoordenadasPredio?");
+                gpsQuery.Append(string.Format("IdSector={0}", request.IdSector));
+                gpsQuery.Append(string.Format("&Manzana={0}", request.Manzana));
+                gpsQuery.Append(string.Format("&Lote={0}", request.Lote));
+                gpsQuery.Append(string.Format("&Division={0}", request.Division));
+                gpsQuery.Append(string.Format("&Phv={0}", request.Phv));
+                gpsQuery.Append(string.Format("&Phh={0}", request.Phh));
+                gpsQuery.Append(string.Format("&Numero={0}", request.Numero));
+                var gpsResponse = await cliente.GetAsync(gpsQuery.ToString());
+                //...
                 if (gpsResponse.IsSuccessStatusCode)
                 {
                     var gpsData = await gpsResponse.Content.ReadAsStringAsync();
@@ -98,10 +107,19 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
                     {
                         predio.Latitud = gpsApiResponse.DataResult[0].Latitud;
                         predio.Longitud = gpsApiResponse.DataResult[0].Longitud;
+                        //..
+                        response.Resultado = gpsApiResponse.Resultado;
+                        response.DataResult = predio;
                     }
                 }
-
-                response.DataResult = predio;
+                else
+                {
+                    response.Resultado = ResultadoModel.NotFound();
+                }
+            }
+            else
+            {
+                response.Resultado = ResultadoModel.NotFound();
             }
 
             return response;

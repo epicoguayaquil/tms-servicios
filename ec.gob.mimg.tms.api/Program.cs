@@ -50,6 +50,7 @@ builder.Services.AddScoped<INotificacionService, NotifacionService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IApiSriService, ApiSriService>();
 builder.Services.AddScoped<IApiCatastroService, ApiCatastroService>();
+builder.Services.AddScoped<IApiMimgService, ApiMimgService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
