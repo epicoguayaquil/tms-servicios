@@ -17,6 +17,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
         private static string? scope;
         private static string? scope_tasa;
         private static string? scope_habilitacion;
+        private static string? scope_activo_mil;
+        private static string? scope_patente;
         private static string? clientSecret;
         private static string? grantType;
         //...
@@ -32,6 +34,8 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
             scope = root.GetSection("ApiMimg:scope").Value;
             scope_tasa = root.GetSection("ApiMimg:scope_tasa").Value;
             scope_habilitacion = root.GetSection("ApiMimg:scope_habilitacion").Value;
+            scope_activo_mil = root.GetSection("ApiMimg:scope_activo_mil").Value;
+            scope_patente = root.GetSection("ApiMimg:scope_patente").Value;
             clientSecret = root.GetSection("ApiMimg:client_secret").Value;
             grantType = root.GetSection("ApiMimg:grant_type").Value;
             BaseUrl = root.GetSection("ApiMimg:url_token").Value;
@@ -128,6 +132,67 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
             return tokenResponse;
         }
+
+        public async Task<TokenResponse> GetTokenActivoMil(TokenRequest request)
+        {
+            _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
+            TokenResponse? tokenResponse = new TokenResponse();
+
+            var cliente = new HttpClient();
+            cliente.BaseAddress = new Uri(BaseUrl);
+
+            var nvc = new List<KeyValuePair<string, string>>();
+            nvc.Add(new KeyValuePair<string, string>("client_id", clientId));
+            nvc.Add(new KeyValuePair<string, string>("scope", scope_activo_mil));
+            nvc.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
+            nvc.Add(new KeyValuePair<string, string>("grant_type", grantType));
+
+            var req = new HttpRequestMessage(HttpMethod.Post, BaseUrl) { Content = new FormUrlEncodedContent(nvc) };
+            var apiResponse = await cliente.SendAsync(req);
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var data = await apiResponse.Content.ReadAsStringAsync();
+                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(data);
+            }
+            else
+            {
+                tokenResponse = null;
+            }
+
+            return tokenResponse;
+        }
+
+        public async Task<TokenResponse> GetTokenPatente(TokenRequest request)
+        {
+            _logger.LogInformation(">>> GetToken......{RunTime}", DateTime.Now);
+            TokenResponse? tokenResponse = new TokenResponse();
+
+            var cliente = new HttpClient();
+            cliente.BaseAddress = new Uri(BaseUrl);
+
+            var nvc = new List<KeyValuePair<string, string>>();
+            nvc.Add(new KeyValuePair<string, string>("client_id", clientId));
+            nvc.Add(new KeyValuePair<string, string>("scope", scope_patente));
+            nvc.Add(new KeyValuePair<string, string>("client_secret", clientSecret));
+            nvc.Add(new KeyValuePair<string, string>("grant_type", grantType));
+
+            var req = new HttpRequestMessage(HttpMethod.Post, BaseUrl) { Content = new FormUrlEncodedContent(nvc) };
+            var apiResponse = await cliente.SendAsync(req);
+
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                var data = await apiResponse.Content.ReadAsStringAsync();
+                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(data);
+            }
+            else
+            {
+                tokenResponse = null;
+            }
+
+            return tokenResponse;
+        }
+
     }
 }
 

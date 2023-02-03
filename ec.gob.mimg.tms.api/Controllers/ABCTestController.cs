@@ -34,6 +34,8 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IApiSriService _apiSriService;
         private readonly IApiCatastroService _apiCatastroService;
         private readonly IApiMimgService _apiMimgService;
+        private readonly IApiActivoMilService _apiActivoMilService;
+        private readonly IApiPatenteService _apiPatenteService;
 
         public ABCTestController(IMapper mapper, TmsDbContext dbContext, 
                                 ILogger<ABCTestController> logger,
@@ -41,7 +43,9 @@ namespace ec.gob.mimg.tms.api.Controllers
                                 ITokenService tokenService,
                                 IApiSriService apiSriService,
                                 IApiCatastroService apiCatastroService,
-                                IApiMimgService apiMimgService)
+                                IApiMimgService apiMimgService,
+                                IApiActivoMilService apiActivoMilService, 
+                                IApiPatenteService apiPatenteService)
         {
             _logger = logger;
             _mapper = mapper;
@@ -53,6 +57,8 @@ namespace ec.gob.mimg.tms.api.Controllers
             _apiSriService = apiSriService;
             _apiCatastroService = apiCatastroService;
             _apiMimgService = apiMimgService;
+            _apiActivoMilService = apiActivoMilService;
+            _apiPatenteService = apiPatenteService;
         }
 
         // GET: api/Empresas
@@ -98,16 +104,16 @@ namespace ec.gob.mimg.tms.api.Controllers
 
             //response.Data = await _apiSriService.GetEstablecimientosNuevos("2022-12-05");
 
-            PredioApiRequest request = new PredioApiRequest();
-            request.IdSector = "90";
-            request.Manzana = "1143";
-            request.Lote = "19";
-            request.Division = "10";
-            request.Phv = "0";
-            request.Phh = "0";
-            request.Numero = "1";
-            //...
-            response.Data = await _apiCatastroService.GetPredio(request);
+            //PredioApiRequest request = new PredioApiRequest();
+            //request.IdSector = "90";
+            //request.Manzana = "1143";
+            //request.Lote = "19";
+            //request.Division = "10";
+            //request.Phv = "0";
+            //request.Phh = "0";
+            //request.Numero = "1";
+            ////...
+            //response.Data = await _apiCatastroService.GetPredio(request);
 
             //FactibilidadUsoRequest request = new FactibilidadUsoRequest();
             //request.IdActividad = "1268";
@@ -133,6 +139,15 @@ namespace ec.gob.mimg.tms.api.Controllers
             //request.Numero = "1";
             ////...
             //response.Data = await _apiMimgService.GetDimensionMinima(request);
+
+
+            //ContribuyenteApiRequest request= new ContribuyenteApiRequest();
+            //request.Ruc = "0991465502001";
+            //response.Data = await _apiActivoMilService.GetByRuc(request);
+
+            ContribuyenteApiRequest request = new ContribuyenteApiRequest();
+            request.Ruc = "0963036769001";
+            response.Data = await _apiPatenteService.GetByRuc(request);
 
             return Ok(response);
         }
