@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using ec.gob.mimg.tms.srv.mimg.Services;
 using ec.gob.mimg.tms.srv.mimg.DTOs;
 using ec.gob.mimg.tms.srv.mimg.Services.Implements;
+using System.IO;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -198,6 +199,19 @@ namespace ec.gob.mimg.tms.api.Controllers
                 formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
                 formularioObligacionResponseListNew.Add(formularioObligacionRequest);
             }
+            formularioObligacionResponseListNew.Sort(delegate (FormularioObligacionResponse x, FormularioObligacionResponse y)
+            {
+                if (x.Obligacion.OrdenEjecucion == y.Obligacion.OrdenEjecucion)
+                {
+                    return 0;
+                } else if (x.Obligacion.OrdenEjecucion > y.Obligacion.OrdenEjecucion)
+                {
+                    return 1;
+                } else
+                {
+                    return -1;
+                }
+            });
             GenericResponse response = new()
             {
                 Cod = "200",
