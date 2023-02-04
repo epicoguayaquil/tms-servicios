@@ -233,6 +233,74 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
+        // GET: api/Establecimiento/1/formularioRenovacion
+        [HttpGet("{id}/formularioRenovacion")]
+        public async Task<ActionResult<GenericResponse>> GetFormularioParaRenovarById(int id)
+        {
+            TmsFormulario formulario;
+            var formularioEnProcesoList = await _formularioService.GetListByEstablecimientoIdAndEstado(id, EstadoEnum.EN_PROCESO.ToString());
+            if (formularioEnProcesoList.Count > 0)
+            {
+                formulario = formularioEnProcesoList.First();
+            }
+            else
+            {
+                var formularioActivoList = await _formularioService.GetListByEstablecimientoIdAndEstado(id, EstadoEnum.ACTIVO.ToString());
+                if (formularioActivoList.Count == 0)
+                {
+                    formulario = new TmsFormulario
+                    {
+                        EstablecimientoId = id,
+                        PasoCreacionActual = 0,
+                        FechaRegistro = DateTime.Now,
+                        UsuarioRegistro = "admin@mail.com",
+                        Estado = EstadoEnum.ACTIVO.ToString()
+                    };
+                    bool isSaved = await _formularioService.AddAsync(formulario);
+                    if (!isSaved)
+                    {
+                        return NotFound();
+                    }
+                }
+                else
+                {
+                    TmsFormulario formularioActivo = formularioActivoList.First();
+                    formulario = new TmsFormulario
+                    {
+                        EstablecimientoId = id,
+                        PasoCreacionActual = 0,
+                        FechaRegistro = DateTime.Now,
+                        UsuarioRegistro = "admin@mail.com",
+                        Estado = EstadoEnum.EN_PROCESO.ToString()
+                    };
+                    bool isSaved = await _formularioService.AddAsync(formulario);
+                    if (!isSaved)
+                    {
+                        return NotFound();
+                    }
+                }
+            }
+            FormularioResponse formularioResponse = _mapper.Map<FormularioResponse>(formulario);
+            var formularioActividadList = await _formularioActividadService.GetListByFormularioId(formulario.IdFormulario);
+            var formularioActividadResponseList = formularioActividadList.Select(x => _mapper.Map<FormularioActividadResponse>(x));
+            var formularioActividadResponseListNew = new List<FormularioActividadResponse>();
+            foreach (var formularioActividadResponse in formularioActividadResponseList)
+            {
+                var actividadEconomica = await _actividadEconomicaService.GetById(formularioActividadResponse.ActividadEconomicaId);
+                formularioActividadResponse.ActividadEconomica = _mapper.Map<ActividadEconomicaResponse>(actividadEconomica);
+                formularioActividadResponseListNew.Add(formularioActividadResponse);
+            }
+            formularioResponse.FormularioActividadResponseList = formularioActividadResponseListNew;
+
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioResponse
+            };
+            return Ok(response);
+        }
+
         // PUT: api/Establecimiento/nombreComercial
         [HttpPut("nombreComercial")]
         public async Task<IActionResult> UpdateNombreComercial(EstablecimientoExtraDataRequest establecimientoRequest)

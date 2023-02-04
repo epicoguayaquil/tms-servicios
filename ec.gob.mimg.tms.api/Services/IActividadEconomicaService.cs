@@ -7,6 +7,8 @@ namespace ec.gob.mimg.tms.api.Services
     {
         Task<ICollection<TmsActividadEconomica>> GetByNivelAsync(int nivel);
 
+        Task<ICollection<TmsActividadEconomica>> GetByCampoActivo(int activo);
+
         Task<TmsActividadEconomica> GetById(int id);
 
         Task<TmsActividadEconomica> GetByCodigo(string codigo);

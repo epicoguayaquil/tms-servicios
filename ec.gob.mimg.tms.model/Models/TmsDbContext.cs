@@ -111,6 +111,15 @@ public partial class TmsDbContext : DbContext
             entity.Property(e => e.UsuarioRegistro)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Grupo)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.NivelImpacto)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Bombero)
+                .HasMaxLength(255)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TmsActividadObligacion>(entity =>

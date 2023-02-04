@@ -8,13 +8,21 @@ namespace ec.gob.mimg.tms.api.DTOs.Response
 
         public int IdActividadEconomica { get; set; }
 
-        public string? Codigo { get; set; }
-
         public string? Descripcion { get; set; }
 
-        public int? Nivel { get; set; }
+        public string? Grupo { get; set; }
 
-        public string? Estado { get; set; }
+        public int? EsIndustrial { get; set; }
+
+        public string? NivelImpacto { get; set; }
+
+        public int? Automatica { get; set; }
+
+        public int? ValidarTurismo { get; set; }
+
+        public string? Bombero { get; set; }
+
+        public int? Activo { get; set; }
 
     }
 }
