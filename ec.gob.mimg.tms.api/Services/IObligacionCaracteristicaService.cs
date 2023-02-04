@@ -10,5 +10,7 @@ namespace ec.gob.mimg.tms.api.Services
         Task<ICollection<TmsObligacionCaracteristica>> GetListByObligacionId(int obligacionId);
 
         Task<ICollection<TmsObligacionCaracteristica>> GetListByObligacionIdAndTipo(int obligacionId, string tipo);
+
+        Task<ICollection<TmsObligacionCaracteristica>> GetListByObligacionIdAndTipoANdSubTipo(int obligacionId, string tipo, string subTipo);
     }
 }

@@ -517,6 +517,9 @@ public partial class TmsDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasComment("General, Accion, Disparador, Inicial");
+            entity.Property(e => e.SubTipo)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.TipoDato)
                 .HasMaxLength(30)
                 .IsUnicode(false)

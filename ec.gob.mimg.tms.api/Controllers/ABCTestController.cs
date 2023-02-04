@@ -95,8 +95,6 @@ namespace ec.gob.mimg.tms.api.Controllers
             //establecimientoApiRequest.Ruc = "0901986935001";
             //response.Data = await _apiSriService.GetEstablecimientos(establecimientoApiRequest);
 
-
-
             //ActividadApiRequest request = new ActividadApiRequest();
             //request.Ruc = "0901986935001";
             //request.Establecimiento = "2";
@@ -104,16 +102,16 @@ namespace ec.gob.mimg.tms.api.Controllers
 
             //response.Data = await _apiSriService.GetEstablecimientosNuevos("2022-12-05");
 
-            //PredioApiRequest request = new PredioApiRequest();
-            //request.IdSector = "90";
-            //request.Manzana = "1143";
-            //request.Lote = "19";
-            //request.Division = "10";
-            //request.Phv = "0";
-            //request.Phh = "0";
-            //request.Numero = "1";
-            ////...
-            //response.Data = await _apiCatastroService.GetPredio(request);
+            PredioApiRequest request = new PredioApiRequest();
+            request.IdSector = "90";
+            request.Manzana = "1143";
+            request.Lote = "19";
+            request.Division = "10";
+            request.Phv = "0";
+            request.Phh = "0";
+            request.Numero = "1";
+            //...
+            response.Data = await _apiCatastroService.GetPredio(request);
 
             //FactibilidadUsoRequest request = new FactibilidadUsoRequest();
             //request.IdActividad = "1268";
@@ -145,9 +143,9 @@ namespace ec.gob.mimg.tms.api.Controllers
             //request.Ruc = "0991465502001";
             //response.Data = await _apiActivoMilService.GetByRuc(request);
 
-            ContribuyenteApiRequest request = new ContribuyenteApiRequest();
-            request.Ruc = "0963036769001";
-            response.Data = await _apiPatenteService.GetByRuc(request);
+            //ContribuyenteApiRequest request = new ContribuyenteApiRequest();
+            //request.Ruc = "0963036769001";
+            //response.Data = await _apiPatenteService.GetByRuc(request);
 
             return Ok(response);
         }

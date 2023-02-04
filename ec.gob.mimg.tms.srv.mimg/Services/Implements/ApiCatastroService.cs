@@ -124,7 +124,5 @@ namespace ec.gob.mimg.tms.srv.mimg.Services.Implements
 
             return response;
         }
-
-
     }
 }
