@@ -175,6 +175,17 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 var formulario = await _formularioService.GetById(id);
                 bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.REGISTRADO.ToString());
+                if (formulario.Estado == EstadoEnum.EN_PROCESO.ToString())
+                {
+                    var formularioActivoList = await _formularioService.GetListByEstablecimientoIdAndEstado(formulario.EstablecimientoId, EstadoEnum.ACTIVO.ToString());
+                    foreach(var formularioActivo in formularioActivoList)
+                    {
+                        formularioActivo.Estado = EstadoEnum.INACTIVO.ToString();
+                        await _formularioService.UpdateAsync(formularioActivo);
+                    }
+                    formulario.Estado = EstadoEnum.ACTIVO.ToString();
+                    await _formularioService.UpdateAsync(formulario);
+                }
 
                 return Ok(response);
 

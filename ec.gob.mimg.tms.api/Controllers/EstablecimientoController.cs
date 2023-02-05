@@ -27,6 +27,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IActividadEconomicaService _actividadEconomicaService;
         private readonly IEstablecimientoObligacionService _establecimientoObligacionService;
         private readonly IObligacionService _obligacionService;
+        private readonly IFormularioDetalleService _formularioDetalleService;
 
         private readonly IMapper _mapper;
 
@@ -40,6 +41,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _actividadEconomicaService = new ActividadEconomicaService(_dbContext);
             _establecimientoObligacionService = new EstablecimientoObligacionService(_dbContext);
             _obligacionService = new ObligacionService(_dbContext);
+            _formularioDetalleService = new FormularioDetalleService(_dbContext);
         }
 
         // GET: api/Establecimiento
@@ -264,7 +266,6 @@ namespace ec.gob.mimg.tms.api.Controllers
                 }
                 else
                 {
-                    TmsFormulario formularioActivo = formularioActivoList.First();
                     formulario = new TmsFormulario
                     {
                         EstablecimientoId = id,
@@ -278,6 +279,25 @@ namespace ec.gob.mimg.tms.api.Controllers
                     {
                         return NotFound();
                     }
+                    TmsFormulario formularioActivo = formularioActivoList.First();
+                    var formularioDetalleList = await _formularioDetalleService.GetListByFormularioId(formularioActivo.IdFormulario);
+                    foreach (TmsFormularioDetalle formularioDetalleIni in formularioDetalleList)
+                    {
+                        TmsFormularioDetalle formularioDetalle = new()
+                        {
+                            FormularioId = formularioDetalleIni.FormularioId,
+                            Caracteristica = formularioDetalleIni.Caracteristica,
+                            Valor = formularioDetalleIni.Valor,
+                            TipoDato = formularioDetalleIni.TipoDato,
+                            ExtraInfo = formularioDetalleIni.ExtraInfo,
+                            PasoCreacion = formularioDetalleIni.PasoCreacion,
+                            FechaRegistro = DateTime.Now,
+                            UsuarioRegistro = "admin@mail.com"
+                        };
+                        await _formularioDetalleService.AddAsync(formularioDetalle);
+
+                    }
+
                 }
             }
             FormularioResponse formularioResponse = _mapper.Map<FormularioResponse>(formulario);
