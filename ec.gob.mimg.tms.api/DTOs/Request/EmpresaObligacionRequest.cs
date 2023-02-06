@@ -1,11 +1,11 @@
 ﻿
 namespace ec.gob.mimg.tms.api.DTOs.Request
 {
-    public class FormularioObligacionRequest
+    public class EmpresaObligacionRequest
     {
-        public int ObligacionId { get; set; }
+        public int EmpresaId { get; set; }
 
-        public int FormularioId { get; set; }
+        public int ObligacionId { get; set; }
 
         public string? Observacion { get; set; }
 

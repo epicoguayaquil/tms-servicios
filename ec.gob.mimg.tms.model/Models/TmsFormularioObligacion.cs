@@ -11,6 +11,10 @@ public partial class TmsFormularioObligacion
 
     public string? Observacion { get; set; }
 
+    public DateTime? FechaExigibilidad { get; set; }
+
+    public DateTime? FechaRenovacion { get; set; }
+
     public DateTime FechaRegistro { get; set; }
 
     public string UsuarioRegistro { get; set; } = null!;

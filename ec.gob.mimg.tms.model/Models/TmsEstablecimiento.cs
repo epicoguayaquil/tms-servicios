@@ -51,7 +51,5 @@ public partial class TmsEstablecimiento
 
     public virtual TmsEmpresa? Empresa { get; set; }
 
-    public virtual ICollection<TmsEstablecimientoObligacion> TmsEstablecimientoObligacions { get; } = new List<TmsEstablecimientoObligacion>();
-
     public virtual ICollection<TmsFormulario> TmsFormularios { get; } = new List<TmsFormulario>();
 }

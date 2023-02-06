@@ -155,6 +155,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                 obligacionActual.TiempoVigencia = obligacionRequest.TiempoVigencia;
                 obligacionActual.FechaExigibilidad = obligacionRequest.FechaExigibilidad;
                 obligacionActual.FechaRenovacion = obligacionRequest.FechaRenovacion;
+                obligacionActual.MesExigibilidad = obligacionRequest.MesExigibilidad;
+                obligacionActual.MesRenovacion = obligacionRequest.MesRenovacion;
                 obligacionActual.Origen = obligacionRequest.Origen;
                 obligacionActual.Jerarquia = obligacionRequest.Jerarquia;
                 obligacionActual.OrdenEjecucion = obligacionRequest.OrdenEjecucion;

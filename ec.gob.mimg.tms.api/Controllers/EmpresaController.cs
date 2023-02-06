@@ -23,9 +23,10 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IEmpresaService _empresaService;
         private readonly INotificacionService _notificacionService;
         private readonly IEstablecimientoService _establecimientoService;
+        private readonly IEmpresaObligacionService _empresaObligacionService;
+        private readonly IObligacionService _obligacionService;
 
-
-        public EmpresaController(IMapper mapper, TmsDbContext dbContext, 
+        public EmpresaController(IMapper mapper, TmsDbContext dbContext,
                                 ILogger<EmpresaController> logger,
                                 INotificacionService notificacionService)
         {
@@ -35,6 +36,8 @@ namespace ec.gob.mimg.tms.api.Controllers
             _empresaService = new EmpresaService(_dbContext);
             _establecimientoService = new EstablecimientoService(_dbContext);
             _notificacionService = notificacionService;
+            _empresaObligacionService = new EmpresaObligacionService(_dbContext);
+            _obligacionService = new ObligacionService(_dbContext);
         }
 
         // GET: api/Empresas
@@ -216,5 +219,29 @@ namespace ec.gob.mimg.tms.api.Controllers
                 return BadRequest();
             }
         }
+
+        // GET: api/Empresa/1/obligaciones
+        [HttpGet("{id}/obligaciones")]
+        public async Task<ActionResult<GenericResponse>> GetAllObligacionesById(int id)
+        {
+            var empresaObligacionList = await _empresaObligacionService.GetListByEmpresaId(id);
+            var empresaObligacionResponseListNew = new List<FormularioObligacionResponse>();
+            foreach (var empresaObligacion in empresaObligacionList)
+            {
+                var formularioObligacionRequest = _mapper.Map<FormularioObligacionResponse>(empresaObligacion);
+                var obligacion = await _obligacionService.GetById(empresaObligacion.ObligacionId);
+                formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+                empresaObligacionResponseListNew.Add(formularioObligacionRequest);
+            }
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = empresaObligacionResponseListNew
+            };
+
+            return Ok(response);
+        }
+
     }
 }
