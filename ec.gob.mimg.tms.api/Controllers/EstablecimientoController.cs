@@ -275,7 +275,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                     {
                         TmsFormularioDetalle formularioDetalle = new()
                         {
-                            FormularioId = formularioDetalleIni.FormularioId,
+                            FormularioId = formulario.IdFormulario,
                             Caracteristica = formularioDetalleIni.Caracteristica,
                             Valor = formularioDetalleIni.Valor,
                             TipoDato = formularioDetalleIni.TipoDato,
