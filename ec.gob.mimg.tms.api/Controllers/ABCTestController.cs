@@ -147,6 +147,9 @@ namespace ec.gob.mimg.tms.api.Controllers
             //request.Ruc = "0963036769001";
             //response.Data = await _apiPatenteService.GetByRuc(request);
 
+
+
+
             return Ok(response);
         }
 

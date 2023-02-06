@@ -53,6 +53,7 @@ builder.Services.AddScoped<IApiCatastroService, ApiCatastroService>();
 builder.Services.AddScoped<IApiMimgService, ApiMimgService>();
 builder.Services.AddScoped<IApiActivoMilService, ApiActivoMilService>();
 builder.Services.AddScoped<IApiPatenteService, ApiPatenteService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -60,6 +61,8 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
