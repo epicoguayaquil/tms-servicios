@@ -26,4 +26,6 @@ public partial class TmsEmpresa
     public DateTime? FechaModificacion { get; set; }
 
     public virtual ICollection<TmsEstablecimiento> TmsEstablecimientos { get; } = new List<TmsEstablecimiento>();
+    public virtual ICollection<TmsEmpresaObligacion> TmsEmpresaObligacions { get; } = new List<TmsEmpresaObligacion>();
+
 }

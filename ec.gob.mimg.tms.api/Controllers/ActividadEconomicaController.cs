@@ -32,7 +32,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpGet]
         public async Task<ActionResult<GenericResponse>> GetAll()
         {
-            var actividadList = await _actividadEconomicaService.GetByNivelAsync(7);
+            var actividadList = await _actividadEconomicaService.GetByCampoActivo(1);
 
             GenericResponse response = new()
             {

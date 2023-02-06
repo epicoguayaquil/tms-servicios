@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using ec.gob.mimg.tms.srv.mimg.Services;
 using ec.gob.mimg.tms.srv.mimg.DTOs;
 using ec.gob.mimg.tms.srv.mimg.Services.Implements;
+using System.IO;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -174,6 +175,17 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 var formulario = await _formularioService.GetById(id);
                 bool update = await _establecimientoService.UpdateEstadoRegistroById(formulario.EstablecimientoId, EstadoRegistroEnum.REGISTRADO.ToString());
+                if (formulario.Estado == EstadoEnum.EN_PROCESO.ToString())
+                {
+                    var formularioActivoList = await _formularioService.GetListByEstablecimientoIdAndEstado(formulario.EstablecimientoId, EstadoEnum.ACTIVO.ToString());
+                    foreach(var formularioActivo in formularioActivoList)
+                    {
+                        formularioActivo.Estado = EstadoEnum.INACTIVO.ToString();
+                        await _formularioService.UpdateAsync(formularioActivo);
+                    }
+                    formulario.Estado = EstadoEnum.ACTIVO.ToString();
+                    await _formularioService.UpdateAsync(formulario);
+                }
 
                 return Ok(response);
 
@@ -198,6 +210,19 @@ namespace ec.gob.mimg.tms.api.Controllers
                 formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
                 formularioObligacionResponseListNew.Add(formularioObligacionRequest);
             }
+            formularioObligacionResponseListNew.Sort(delegate (FormularioObligacionResponse x, FormularioObligacionResponse y)
+            {
+                if (x.Obligacion.OrdenEjecucion == y.Obligacion.OrdenEjecucion)
+                {
+                    return 0;
+                } else if (x.Obligacion.OrdenEjecucion > y.Obligacion.OrdenEjecucion)
+                {
+                    return 1;
+                } else
+                {
+                    return -1;
+                }
+            });
             GenericResponse response = new()
             {
                 Cod = "200",

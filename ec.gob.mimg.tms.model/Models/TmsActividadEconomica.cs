@@ -11,6 +11,20 @@ public partial class TmsActividadEconomica
 
     public string? Descripcion { get; set; }
 
+    public string? Grupo { get; set; }
+
+    public int? EsIndustrial { get; set; }
+
+    public string? NivelImpacto { get; set; }
+
+    public int? Automatica { get; set; }
+
+    public int? ValidarTurismo { get; set; }
+
+    public string? Bombero { get; set; }
+
+    public int? Activo { get; set; }
+
     public int? Nivel { get; set; }
 
     public string? Estado { get; set; }

@@ -12,6 +12,10 @@
 
         public DateTime? FechaRenovacion { get; set; }
 
+        public int? MesExigibilidad { get; set; }
+
+        public int? MesRenovacion { get; set; }
+
         public string? Origen { get; set; }
 
         public string? Jerarquia { get; set; }

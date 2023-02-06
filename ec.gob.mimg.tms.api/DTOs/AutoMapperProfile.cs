@@ -81,11 +81,11 @@ namespace ec.gob.mimg.tms.api.DTOs
             CreateMap<FormularioObligacionCaracteristicaValorRequest, TmsFormularioObligacionCaracteristicaValor>();
 
             // EstablecimientoObligacion
-            CreateMap<TmsEstablecimientoObligacion, EstablecimientoObligacionResponse>();
-            CreateMap<EstablecimientoObligacionResponse, TmsEstablecimientoObligacion>();
+            CreateMap<TmsEmpresaObligacion, EmpresaObligacionResponse>();
+            CreateMap<EmpresaObligacionResponse, TmsEmpresaObligacion>();
 
-            CreateMap<TmsEstablecimientoObligacion, EstablecimientoObligacionRequest>();
-            CreateMap<EstablecimientoObligacionRequest, TmsEstablecimientoObligacion>();
+            CreateMap<TmsEmpresaObligacion, EmpresaObligacionRequest>();
+            CreateMap<EmpresaObligacionRequest, TmsEmpresaObligacion>();
 
         }
     }

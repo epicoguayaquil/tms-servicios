@@ -11,6 +11,8 @@
         /// </summary>
         public string? Tipo { get; set; }
 
+        public string? SubTipo { get; set; }
+
         public string Nombre { get; set; } = null!;
 
         /// <summary>

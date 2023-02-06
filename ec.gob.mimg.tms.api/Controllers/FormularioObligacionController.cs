@@ -140,6 +140,9 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 formularioObligacionActual.ObligacionId = formularioObligacionRequest.ObligacionId;
                 formularioObligacionActual.FormularioId = formularioObligacionRequest.FormularioId;
+                formularioObligacionActual.Observacion = formularioObligacionRequest.Observacion;
+                formularioObligacionActual.FechaExigibilidad = formularioObligacionRequest.FechaExigibilidad;
+                formularioObligacionActual.FechaRenovacion = formularioObligacionRequest.FechaRenovacion;
                 formularioObligacionActual.FechaModificacion = DateTime.Now;
                 formularioObligacionActual.UsuarioModificacion = "admin@mail.com";
 

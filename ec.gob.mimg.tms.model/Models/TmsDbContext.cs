@@ -29,7 +29,7 @@ public partial class TmsDbContext : DbContext
 
     public virtual DbSet<TmsEstablecimiento> TmsEstablecimientos { get; set; }
 
-    public virtual DbSet<TmsEstablecimientoObligacion> TmsEstablecimientoObligacions { get; set; }
+    public virtual DbSet<TmsEmpresaObligacion> TmsEstablecimientoObligacions { get; set; }
 
     public virtual DbSet<TmsFormulario> TmsFormularios { get; set; }
 
@@ -109,6 +109,15 @@ public partial class TmsDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.UsuarioRegistro)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Grupo)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.NivelImpacto)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Bombero)
                 .HasMaxLength(255)
                 .IsUnicode(false);
         });
@@ -269,21 +278,23 @@ public partial class TmsDbContext : DbContext
                 .HasConstraintName("fk_TmsEstablecimiento_TmsEmpresa_1");
         });
 
-        modelBuilder.Entity<TmsEstablecimientoObligacion>(entity =>
+        modelBuilder.Entity<TmsEmpresaObligacion>(entity =>
         {
-            entity.HasKey(e => e.IdEstablecimientoObligacion).HasName("PK__TmsEstab__3EE9A53F15AA6B14");
+            entity.HasKey(e => e.IdEmpresaObligacion).HasName("PK__TmsEstab__3EE9A53F15AA6B14");
 
-            entity.ToTable("TmsEstablecimientoObligacion");
+            entity.ToTable("TmsEmpresaObligacion");
 
-            entity.Property(e => e.IdEstablecimientoObligacion).ValueGeneratedNever();
+            entity.Property(e => e.IdEmpresaObligacion).ValueGeneratedNever();
             entity.Property(e => e.Estado)
                 .HasMaxLength(30)
                 .IsUnicode(false);
-            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
             entity.Property(e => e.Observacion)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.FechaExigibilidad).HasColumnType("datetime");
+            entity.Property(e => e.FechaRenovacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
             entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -291,15 +302,15 @@ public partial class TmsDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.Establecimiento).WithMany(p => p.TmsEstablecimientoObligacions)
-                .HasForeignKey(d => d.EstablecimientoId)
+            entity.HasOne(d => d.Empresa).WithMany(p => p.TmsEmpresaObligacions)
+                .HasForeignKey(d => d.EmpresaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TmsEstablecimientoObligacion_TmsEstablecimiento");
+                .HasConstraintName("FK_TmsEmpresaObligacion_TmsEmpresa");
 
             entity.HasOne(d => d.Obligacion).WithMany(p => p.TmsEstablecimientoObligacions)
                 .HasForeignKey(d => d.ObligacionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TmsEstablecimientoObligacion_TmsObligacion");
+                .HasConstraintName("FK_TmsEmpresaObligacion_TmsObligacion");
         });
 
         modelBuilder.Entity<TmsFormulario>(entity =>
@@ -401,11 +412,13 @@ public partial class TmsDbContext : DbContext
             entity.Property(e => e.Estado)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
             entity.Property(e => e.Observacion)
                 .HasMaxLength(300)
                 .IsUnicode(false);
+            entity.Property(e => e.FechaExigibilidad).HasColumnType("datetime");
+            entity.Property(e => e.FechaRenovacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
             entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -517,6 +530,9 @@ public partial class TmsDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasComment("General, Accion, Disparador, Inicial");
+            entity.Property(e => e.SubTipo)
+                .HasMaxLength(255)
+                .IsUnicode(false);
             entity.Property(e => e.TipoDato)
                 .HasMaxLength(30)
                 .IsUnicode(false)

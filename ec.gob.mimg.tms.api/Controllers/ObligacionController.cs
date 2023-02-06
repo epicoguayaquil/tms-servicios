@@ -120,15 +120,26 @@ namespace ec.gob.mimg.tms.api.Controllers
                 return NotFound();
             }
 
-            await _obligacionService.DeleteAsync(obligacion);
+            obligacion.Estado = EstadoEnum.INACTIVO.ToString();
+            obligacion.FechaModificacion = DateTime.Now;
+            obligacion.UsuarioModificacion = "admin@mail.com";
 
-            GenericResponse response = new()
+            bool isUpdate = await _obligacionService.UpdateAsync(obligacion);
+
+            if (isUpdate)
             {
-                Cod = "200",
-                Msg = "OK",
-                Data = "Eliminado"
-            };
-            return Ok(response);
+                GenericResponse response = new()
+                {
+                    Cod = "200",
+                    Msg = "OK",
+                    Data = "Eliminado"
+                };
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // PUT: api/Obligacion/1
@@ -144,6 +155,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                 obligacionActual.TiempoVigencia = obligacionRequest.TiempoVigencia;
                 obligacionActual.FechaExigibilidad = obligacionRequest.FechaExigibilidad;
                 obligacionActual.FechaRenovacion = obligacionRequest.FechaRenovacion;
+                obligacionActual.MesExigibilidad = obligacionRequest.MesExigibilidad;
+                obligacionActual.MesRenovacion = obligacionRequest.MesRenovacion;
                 obligacionActual.Origen = obligacionRequest.Origen;
                 obligacionActual.Jerarquia = obligacionRequest.Jerarquia;
                 obligacionActual.OrdenEjecucion = obligacionRequest.OrdenEjecucion;
@@ -246,6 +259,21 @@ namespace ec.gob.mimg.tms.api.Controllers
         public async Task<ActionResult<GenericResponse>> GetAllCaracteristicasByIdAndTipo(int id, string tipo)
         {
             var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipo(id, tipo);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = obligacionCaracteristicaList.Select(x => _mapper.Map<ObligacionCaracteristicaResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
+        // GET: api/Obligacion/1/caracteristicas/FORMULARIO/Industria
+        [HttpGet("{id}/caracteristicas/{tipo}/{subtipo}")]
+        public async Task<ActionResult<GenericResponse>> GetAllCaracteristicasByIdAndTipoAndSubTipo(int id, string tipo, string subtipo)
+        {
+            var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipoANdSubTipo(id, tipo, subtipo);
             GenericResponse response = new()
             {
                 Cod = "200",

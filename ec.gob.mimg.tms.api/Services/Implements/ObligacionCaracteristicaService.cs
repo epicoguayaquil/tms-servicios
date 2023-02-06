@@ -26,5 +26,9 @@ namespace ec.gob.mimg.tms.api.Services.Implements
             return await GetAsync(x => x.ObligacionId == obligacionId && x.Tipo == tipo);
         }
 
+        public async Task<ICollection<TmsObligacionCaracteristica>> GetListByObligacionIdAndTipoANdSubTipo(int obligacionId, string tipo, string subTipo)
+        {
+            return await GetAsync(x => x.ObligacionId == obligacionId && x.Tipo == tipo && x.SubTipo == subTipo);
+        }
     }
 }

@@ -16,6 +16,11 @@ namespace ec.gob.mimg.tms.api.Services.Implements
             return await GetAsync(x=> x.Nivel==nivel);
         }
 
+        public async Task<ICollection<TmsActividadEconomica>> GetByCampoActivo(int activo)
+        {
+            return await GetAsync(x => x.Activo == activo);
+        }
+
         public async Task<TmsActividadEconomica> GetById(int id)
         {
             return await GetFirstOrDefaultAsync(x => x.IdActividadEconomica == id);

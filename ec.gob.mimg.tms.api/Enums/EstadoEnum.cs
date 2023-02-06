@@ -3,7 +3,8 @@
     enum EstadoEnum
     {
         ACTIVO,
-        INACTIVO
+        INACTIVO,
+        EN_PROCESO
     }
     enum EstadoEstablecimientoEnum
     {
