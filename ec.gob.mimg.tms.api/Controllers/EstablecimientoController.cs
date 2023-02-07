@@ -269,7 +269,24 @@ namespace ec.gob.mimg.tms.api.Controllers
                     {
                         return NotFound();
                     }
+
                     TmsFormulario formularioActivo = formularioActivoList.First();
+
+                    var formularioActividadListActivo = await _formularioActividadService.GetListByFormularioId(formularioActivo.IdFormulario);
+                    foreach(TmsFormularioActividad formularioActividadIni in formularioActividadListActivo)
+                    {
+                        TmsFormularioActividad formularioActividad = new()
+                        {
+                            FormularioId = formulario.IdFormulario,
+                            ActividadEconomicaId = formularioActividadIni.ActividadEconomicaId,
+                            Observacion = formularioActividadIni.Observacion,
+                            Estado = EstadoEnum.ACTIVO.ToString(),
+                            UsuarioRegistro = "admin@mail.com",
+                            FechaRegistro = DateTime.Now
+                        };
+                        await _formularioActividadService.AddAsync(formularioActividad);
+                    }
+
                     var formularioDetalleList = await _formularioDetalleService.GetListByFormularioId(formularioActivo.IdFormulario);
                     foreach (TmsFormularioDetalle formularioDetalleIni in formularioDetalleList)
                     {

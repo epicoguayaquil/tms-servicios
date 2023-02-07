@@ -149,7 +149,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     TmsFormularioObligacion formularioObligacion;
                     formularioObligacion = await _formularioObligacionService.GetByFormularioIdAndObligacionId(id, actividadObligacion.ObligacionId);
-                    if (formularioObligacion == null) {
+                    if (formularioObligacion == null)
+                    {
                         formularioObligacion = new()
                         {
                             ObligacionId = actividadObligacion.ObligacionId,
