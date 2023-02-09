@@ -14,8 +14,6 @@ public partial class TmsObligacionCaracteristica
     /// </summary>
     public string? Tipo { get; set; }
 
-    public string? SubTipo { get; set; }
-
     public string Nombre { get; set; } = null!;
 
     public string? Valor { get; set; }
@@ -36,6 +34,8 @@ public partial class TmsObligacionCaracteristica
     public string? TipoDato { get; set; }
 
     public int? Secuencia { get; set; }
+
+    public string? SubTipo { get; set; }
 
     public virtual TmsObligacion Obligacion { get; set; } = null!;
 

@@ -7156,10 +7156,10 @@
                     "computedBaseType": "",
                     "isDefaultConstraint": false,
                     "defaultConstraint": "",
-                    "isIdentity": false,
+                    "isIdentity": true,
                     "isExistingField": false,
-                    "identitySeed": 0,
-                    "identityIncrement": 0,
+                    "identitySeed": -2147483648,
+                    "identityIncrement": -2147483648,
                     "identityIsNotForReplication": false
                   },
                   {
@@ -7466,7 +7466,7 @@
                 "indexes": [],
                 "primaryKey": {
                   "objectType": "PrimaryKey_MSSQL",
-                  "name": "",
+                  "name": "PK__TmsEmpre__28B879F8252FBC96",
                   "fields": [
                     "IdEmpresaObligacion"
                   ],

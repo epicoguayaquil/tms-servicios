@@ -15,5 +15,10 @@ namespace ec.gob.mimg.tms.api.Services.Implements
         {
             return await GetFirstOrDefaultAsync(x => x.IdObligacion == id);
         }
+
+        public async Task<ICollection<TmsObligacion>> GetListByJerarquia(string jerarquia)
+        {
+            return await GetAsync(x => x.Jerarquia == jerarquia);
+        }
     }
 }

@@ -155,6 +155,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                         {
                             ObligacionId = actividadObligacion.ObligacionId,
                             FormularioId = id,
+                            FechaExigibilidad = DateTime.Now,
+                            FechaRenovacion = DateTime.Now,
                             FechaRegistro = DateTime.Now,
                             UsuarioRegistro = "admin@mail.com",
                             Estado = EstadoObligacionEnum.NO_CUMPLE.ToString()

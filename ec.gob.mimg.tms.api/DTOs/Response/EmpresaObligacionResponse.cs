@@ -24,5 +24,7 @@
 
         public DateTime? FechaModificacion { get; set; }
 
+        public ObligacionResponse? Obligacion { get; set; }
+
     }
 }

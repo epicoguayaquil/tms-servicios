@@ -11,6 +11,18 @@ public partial class TmsActividadEconomica
 
     public string? Descripcion { get; set; }
 
+    public int? Nivel { get; set; }
+
+    public string? Estado { get; set; }
+
+    public DateTime? FechaRegistro { get; set; }
+
+    public string? UsuarioRegistro { get; set; }
+
+    public DateTime? FechaModificacion { get; set; }
+
+    public string? UsuarioModificacion { get; set; }
+
     public string? Grupo { get; set; }
 
     public int? EsIndustrial { get; set; }
@@ -24,18 +36,6 @@ public partial class TmsActividadEconomica
     public string? Bombero { get; set; }
 
     public int? Activo { get; set; }
-
-    public int? Nivel { get; set; }
-
-    public string? Estado { get; set; }
-
-    public DateTime? FechaRegistro { get; set; }
-
-    public string? UsuarioRegistro { get; set; }
-
-    public DateTime? FechaModificacion { get; set; }
-
-    public string? UsuarioModificacion { get; set; }
 
     public virtual ICollection<TmsActividadObligacion> TmsActividadObligacions { get; } = new List<TmsActividadObligacion>();
 

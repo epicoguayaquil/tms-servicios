@@ -13,10 +13,6 @@ public partial class TmsEmpresaObligacion
 
     public string? Observacion { get; set; }
 
-    public DateTime? FechaExigibilidad { get; set; }
-
-    public DateTime? FechaRenovacion { get; set; }
-
     public string Estado { get; set; } = null!;
 
     public DateTime FechaRegistro { get; set; }
@@ -26,6 +22,10 @@ public partial class TmsEmpresaObligacion
     public string? UsuarioModificacion { get; set; }
 
     public DateTime? FechaModificacion { get; set; }
+
+    public DateTime? FechaExigibilidad { get; set; }
+
+    public DateTime? FechaRenovacion { get; set; }
 
     public virtual TmsEmpresa Empresa { get; set; } = null!;
 

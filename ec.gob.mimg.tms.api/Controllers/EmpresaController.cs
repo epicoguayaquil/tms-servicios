@@ -225,19 +225,59 @@ namespace ec.gob.mimg.tms.api.Controllers
         public async Task<ActionResult<GenericResponse>> GetAllObligacionesById(int id)
         {
             var empresaObligacionList = await _empresaObligacionService.GetListByEmpresaId(id);
-            var empresaObligacionResponseListNew = new List<FormularioObligacionResponse>();
+            var empresaObligacionResponseListNew = new List<EmpresaObligacionResponse>();
             foreach (var empresaObligacion in empresaObligacionList)
             {
-                var formularioObligacionRequest = _mapper.Map<FormularioObligacionResponse>(empresaObligacion);
+                var empresaObligacionResponse = _mapper.Map<EmpresaObligacionResponse>(empresaObligacion);
                 var obligacion = await _obligacionService.GetById(empresaObligacion.ObligacionId);
-                formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
-                empresaObligacionResponseListNew.Add(formularioObligacionRequest);
+                empresaObligacionResponse.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+                empresaObligacionResponseListNew.Add(empresaObligacionResponse);
             }
             GenericResponse response = new()
             {
                 Cod = "200",
                 Msg = "OK",
                 Data = empresaObligacionResponseListNew
+            };
+
+            return Ok(response);
+        }
+
+        // POST: api/Empresa/1/obligacionesGenerales
+        [HttpPost("{id}/obligacionesGenerales")]
+        public async Task<ActionResult<GenericResponse>> GenerarObligacionesGenerales(int id)
+        {
+            var obligacionesList = await _obligacionService.GetListByJerarquia(JerarquiaObligacion.EMPRESA.ToString());
+            int contadorGeneradas = 0;
+            foreach (var obligacion in obligacionesList)
+            {
+                TmsEmpresaObligacion empresaObligacion;
+                empresaObligacion = await _empresaObligacionService.GetByEmpresaIdAndObligacionId(id, obligacion.IdObligacion);
+                if (empresaObligacion == null)
+                {
+                    empresaObligacion = new()
+                    {
+                        EmpresaId = id,
+                        ObligacionId = obligacion.IdObligacion,
+                        Observacion = "",
+                        FechaExigibilidad = DateTime.Now,
+                        FechaRenovacion = DateTime.Now,
+                        Estado = EstadoObligacionEnum.NO_CUMPLE.ToString(),
+                        FechaRegistro = DateTime.Now,
+                        UsuarioRegistro = "admin@mail.com"
+                    };
+                    bool isSaved = await _empresaObligacionService.AddAsync(empresaObligacion);
+                    if (isSaved)
+                    {
+                        contadorGeneradas++;
+                    }
+                }
+            }
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = "Obligaciones generadas: " + contadorGeneradas
             };
 
             return Ok(response);

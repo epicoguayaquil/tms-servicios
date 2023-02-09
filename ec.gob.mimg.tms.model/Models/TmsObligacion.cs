@@ -24,9 +24,6 @@ public partial class TmsObligacion
     /// </summary>
     public DateTime? FechaRenovacion { get; set; }
 
-    public int? MesExigibilidad { get; set; }
-
-    public int? MesRenovacion { get; set; }
     /// <summary>
     /// Municipio o SRI
     /// </summary>
@@ -51,9 +48,13 @@ public partial class TmsObligacion
 
     public string? UsuarioModificacion { get; set; }
 
+    public int? MesExigibilidad { get; set; }
+
+    public int? MesRenovacion { get; set; }
+
     public virtual ICollection<TmsActividadObligacion> TmsActividadObligacions { get; } = new List<TmsActividadObligacion>();
 
-    public virtual ICollection<TmsEmpresaObligacion> TmsEstablecimientoObligacions { get; } = new List<TmsEmpresaObligacion>();
+    public virtual ICollection<TmsEmpresaObligacion> TmsEmpresaObligacions { get; } = new List<TmsEmpresaObligacion>();
 
     public virtual ICollection<TmsFormularioObligacion> TmsFormularioObligacions { get; } = new List<TmsFormularioObligacion>();
 

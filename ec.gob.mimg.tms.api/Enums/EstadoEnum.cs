@@ -22,4 +22,9 @@
         CUMPLE,
         NO_CUMPLE
     }
+    enum JerarquiaObligacion
+    {
+        EMPRESA,
+        ESTABLECIMIENTO
+    }
 }
