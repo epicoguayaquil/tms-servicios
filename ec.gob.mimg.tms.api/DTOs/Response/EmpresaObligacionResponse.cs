@@ -2,9 +2,9 @@
 {
     public class EmpresaObligacionResponse
     {
-        public int IdEstablecimientoObligacion { get; set; }
+        public int IdEmpresaObligacion { get; set; }
 
-        public int EstablecimientoId { get; set; }
+        public int EmpresaId { get; set; }
 
         public int ObligacionId { get; set; }
 

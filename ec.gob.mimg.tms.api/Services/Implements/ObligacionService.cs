@@ -16,9 +16,9 @@ namespace ec.gob.mimg.tms.api.Services.Implements
             return await GetFirstOrDefaultAsync(x => x.IdObligacion == id);
         }
 
-        public async Task<ICollection<TmsObligacion>> GetListByJerarquia(string jerarquia)
+        public async Task<ICollection<TmsObligacion>> GetListByJerarquiaAndEstado(string jerarquia, string estado)
         {
-            return await GetAsync(x => x.Jerarquia == jerarquia);
+            return await GetAsync(x => x.Jerarquia == jerarquia && x.Estado == estado);
         }
     }
 }

@@ -247,7 +247,8 @@ namespace ec.gob.mimg.tms.api.Controllers
         [HttpPost("{id}/obligacionesGenerales")]
         public async Task<ActionResult<GenericResponse>> GenerarObligacionesGenerales(int id)
         {
-            var obligacionesList = await _obligacionService.GetListByJerarquia(JerarquiaObligacion.EMPRESA.ToString());
+            var obligacionesList = await _obligacionService.GetListByJerarquiaAndEstado(JerarquiaObligacion.EMPRESA.ToString(),
+                EstadoEnum.ACTIVO.ToString());
             int contadorGeneradas = 0;
             foreach (var obligacion in obligacionesList)
             {

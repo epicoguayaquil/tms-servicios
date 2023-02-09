@@ -7,6 +7,6 @@ namespace ec.gob.mimg.tms.api.Services
     {
         Task<TmsObligacion> GetById(int id);
 
-        Task<ICollection<TmsObligacion>> GetListByJerarquia(string jerarquia);
+        Task<ICollection<TmsObligacion>> GetListByJerarquiaAndEstado(string jerarquia, string estado);
     }
 }
