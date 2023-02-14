@@ -26,5 +26,7 @@
 
         public ObligacionResponse? Obligacion { get; set; }
 
+        public IEnumerable<ObligacionCaracteristicaResponse>? CaracteristicasDeGestion { get; set; }
+
     }
 }

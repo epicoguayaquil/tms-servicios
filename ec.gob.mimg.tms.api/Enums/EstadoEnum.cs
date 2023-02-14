@@ -27,4 +27,10 @@
         EMPRESA,
         ESTABLECIMIENTO
     }
+
+    enum TipoCaracteristica
+    {
+        FORMULARIO,
+        GESTION
+    }
 }

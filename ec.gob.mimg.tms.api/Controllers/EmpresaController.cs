@@ -25,6 +25,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IEstablecimientoService _establecimientoService;
         private readonly IEmpresaObligacionService _empresaObligacionService;
         private readonly IObligacionService _obligacionService;
+        private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
 
         public EmpresaController(IMapper mapper, TmsDbContext dbContext,
                                 ILogger<EmpresaController> logger,
@@ -38,6 +39,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _notificacionService = notificacionService;
             _empresaObligacionService = new EmpresaObligacionService(_dbContext);
             _obligacionService = new ObligacionService(_dbContext);
+            _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
         }
 
         // GET: api/Empresas
@@ -231,6 +233,10 @@ namespace ec.gob.mimg.tms.api.Controllers
                 var empresaObligacionResponse = _mapper.Map<EmpresaObligacionResponse>(empresaObligacion);
                 var obligacion = await _obligacionService.GetById(empresaObligacion.ObligacionId);
                 empresaObligacionResponse.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+
+                var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipo(empresaObligacion.ObligacionId, TipoCaracteristica.GESTION.ToString());
+                empresaObligacionResponse.CaracteristicasDeGestion = obligacionCaracteristicaList.Select(x => _mapper.Map<ObligacionCaracteristicaResponse>(x));
+
                 empresaObligacionResponseListNew.Add(empresaObligacionResponse);
             }
             GenericResponse response = new()

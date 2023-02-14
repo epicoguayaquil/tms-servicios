@@ -34,6 +34,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IObligacionActividadService _obligacionActividadService;
         private readonly IObligacionService _obligacionService;
         private readonly IApiCatastroService _apiCatastroService;
+        private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
 
         private readonly IMapper _mapper;
 
@@ -49,6 +50,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _obligacionActividadService = new ObligacionActividadService(_dbContext);
             _obligacionService = new ObligacionService(_dbContext);
             _apiCatastroService = apiCatastroService;
+            _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
         }
 
         // GET: api/Formulario
@@ -211,6 +213,10 @@ namespace ec.gob.mimg.tms.api.Controllers
                 var formularioObligacionRequest = _mapper.Map<FormularioObligacionResponse>(formularioObligacion);
                 var obligacion = await _obligacionService.GetById(formularioObligacion.ObligacionId);
                 formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+
+                var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipo(formularioObligacion.ObligacionId, TipoCaracteristica.GESTION.ToString());
+                formularioObligacionRequest.CaracteristicasDeGestion = obligacionCaracteristicaList.Select(x => _mapper.Map<ObligacionCaracteristicaResponse>(x));
+
                 formularioObligacionResponseListNew.Add(formularioObligacionRequest);
             }
             formularioObligacionResponseListNew.Sort(delegate (FormularioObligacionResponse x, FormularioObligacionResponse y)
