@@ -212,19 +212,22 @@ namespace ec.gob.mimg.tms.api.Controllers
             {
                 var formularioObligacionRequest = _mapper.Map<FormularioObligacionResponse>(formularioObligacion);
                 var obligacion = await _obligacionService.GetById(formularioObligacion.ObligacionId);
-                formularioObligacionRequest.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+                formularioObligacionRequest.NombreObligacion = obligacion.Nombre;
+                formularioObligacionRequest.OrdenEjecucion = obligacion.OrdenEjecucion;
+                formularioObligacionRequest.Dependencia = obligacion.Dependencia;
 
                 var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipo(formularioObligacion.ObligacionId, TipoCaracteristica.GESTION.ToString());
-                formularioObligacionRequest.CaracteristicasDeGestion = obligacionCaracteristicaList.Select(x => _mapper.Map<ObligacionCaracteristicaResponse>(x));
+                ProcesarCaracteristicasDeGestion(obligacionCaracteristicaList, formularioObligacionRequest, formularioObligacion.IdFormularioObligacion);
 
                 formularioObligacionResponseListNew.Add(formularioObligacionRequest);
             }
+            DeterminarSiSePuedenGestionarObligaciones(formularioObligacionResponseListNew, 0);
             formularioObligacionResponseListNew.Sort(delegate (FormularioObligacionResponse x, FormularioObligacionResponse y)
             {
-                if (x.Obligacion.OrdenEjecucion == y.Obligacion.OrdenEjecucion)
+                if (x.OrdenEjecucion == y.OrdenEjecucion)
                 {
                     return 0;
-                } else if (x.Obligacion.OrdenEjecucion > y.Obligacion.OrdenEjecucion)
+                } else if (x.OrdenEjecucion > y.OrdenEjecucion)
                 {
                     return 1;
                 } else
@@ -240,6 +243,101 @@ namespace ec.gob.mimg.tms.api.Controllers
             };
 
             return Ok(response);
+        }
+
+        private void ProcesarCaracteristicasDeGestion(ICollection<TmsObligacionCaracteristica>? obligacionCaracteristicaList,
+            FormularioObligacionResponse formularioObligacionRequest, int idFormularioObligacion)
+        {
+            if (obligacionCaracteristicaList == null)
+            {
+                return;
+            }
+            foreach (var obligacionCaracteristica in obligacionCaracteristicaList)
+            {
+                if (obligacionCaracteristica.Nombre == "tipo_generacion")
+                {
+                    formularioObligacionRequest.TipoGeneracion = obligacionCaracteristica.Valor;
+                }
+                else if (obligacionCaracteristica.Nombre == "tiene_formulario")
+                {
+                    formularioObligacionRequest.TieneFormulario = (obligacionCaracteristica.Valor == "Si");
+                }
+                else if (obligacionCaracteristica.Nombre == "permite_excepción")
+                {
+                    formularioObligacionRequest.PermiteExcepcion = (obligacionCaracteristica.Valor == "Si");
+                }
+                else if (obligacionCaracteristica.Nombre == "URL_excepcion")
+                {
+                    if (obligacionCaracteristica.Valor == null)
+                    {
+                        formularioObligacionRequest.UrlExcepcion = "";
+                    }
+                    else
+                    {
+                        formularioObligacionRequest.UrlExcepcion = obligacionCaracteristica.Valor.Replace("{id}", idFormularioObligacion.ToString());
+                    }
+                }
+                else if (obligacionCaracteristica.Nombre == "URL_ejecucion")
+                {
+                    if (obligacionCaracteristica.Valor == null)
+                    {
+                        formularioObligacionRequest.UrlEjecucion = "";
+                    }
+                    else
+                    {
+                        formularioObligacionRequest.UrlEjecucion = obligacionCaracteristica.Valor.Replace("{id}", idFormularioObligacion.ToString());
+                    }
+                }
+            }
+
+        }
+        private static void DeterminarSiSePuedenGestionarObligaciones(List<FormularioObligacionResponse> formularioObligacionResponseList, int nivel)
+        {
+            MarcarGestionPorNivel(formularioObligacionResponseList, nivel, true);
+            if (VerificarCumplimientoPorNivel(formularioObligacionResponseList, nivel))
+            {
+                DeterminarSiSePuedenGestionarObligaciones(formularioObligacionResponseList, nivel + 1);
+            } else
+            {
+                MarcarGestionDeNivelesSuperiores(formularioObligacionResponseList, nivel, false);
+            }
+        }
+
+        private static void MarcarGestionPorNivel(List<FormularioObligacionResponse> formularioObligacionResponseList, int nivel, bool marcaGestion)
+        {
+            foreach (var formularioObligacion in formularioObligacionResponseList)
+            {
+                if (formularioObligacion.Dependencia == nivel)
+                {
+                    formularioObligacion.SePuedeGestionar = marcaGestion;
+                }
+            }
+        }
+
+        private static bool VerificarCumplimientoPorNivel(List<FormularioObligacionResponse> formularioObligacionResponseList, int nivel)
+        {
+            foreach (var formularioObligacion in formularioObligacionResponseList)
+            {
+                if (formularioObligacion.Dependencia == nivel)
+                {
+                    if (formularioObligacion.Estado == EstadoObligacionEnum.NO_CUMPLE.ToString())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static void MarcarGestionDeNivelesSuperiores(List<FormularioObligacionResponse> formularioObligacionResponseList, int nivel, bool marcaGestion)
+        {
+            foreach (var formularioObligacion in formularioObligacionResponseList)
+            {
+                if (formularioObligacion.Dependencia > nivel)
+                {
+                    formularioObligacion.SePuedeGestionar = marcaGestion;
+                }
+            }
         }
 
         // POST: api/Formulario

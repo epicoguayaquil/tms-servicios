@@ -232,13 +232,17 @@ namespace ec.gob.mimg.tms.api.Controllers
             {
                 var empresaObligacionResponse = _mapper.Map<EmpresaObligacionResponse>(empresaObligacion);
                 var obligacion = await _obligacionService.GetById(empresaObligacion.ObligacionId);
-                empresaObligacionResponse.Obligacion = _mapper.Map<ObligacionResponse>(obligacion);
+                empresaObligacionResponse.NombreObligacion = obligacion.Nombre;
+                empresaObligacionResponse.OrdenEjecucion = obligacion.OrdenEjecucion;
+                empresaObligacionResponse.Dependencia = obligacion.Dependencia;
 
                 var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipo(empresaObligacion.ObligacionId, TipoCaracteristica.GESTION.ToString());
-                empresaObligacionResponse.CaracteristicasDeGestion = obligacionCaracteristicaList.Select(x => _mapper.Map<ObligacionCaracteristicaResponse>(x));
+                ProcesarCaracteristicasDeGestion(obligacionCaracteristicaList, empresaObligacionResponse, empresaObligacion.IdEmpresaObligacion);
 
                 empresaObligacionResponseListNew.Add(empresaObligacionResponse);
             }
+            DeterminarSiSePuedenGestionarObligaciones(empresaObligacionResponseListNew, 0);
+
             GenericResponse response = new()
             {
                 Cod = "200",
@@ -247,6 +251,102 @@ namespace ec.gob.mimg.tms.api.Controllers
             };
 
             return Ok(response);
+        }
+
+        private void ProcesarCaracteristicasDeGestion(ICollection<TmsObligacionCaracteristica>? obligacionCaracteristicaList,
+            EmpresaObligacionResponse empresaObligacionRequest, int idEmpresaObligacion)
+        {
+            if (obligacionCaracteristicaList == null)
+            {
+                return;
+            }
+            foreach (var obligacionCaracteristica in obligacionCaracteristicaList)
+            {
+                if (obligacionCaracteristica.Nombre == "tipo_generacion")
+                {
+                    empresaObligacionRequest.TipoGeneracion = obligacionCaracteristica.Valor;
+                }
+                else if (obligacionCaracteristica.Nombre == "tiene_formulario")
+                {
+                    empresaObligacionRequest.TieneFormulario = (obligacionCaracteristica.Valor == "Si");
+                }
+                else if (obligacionCaracteristica.Nombre == "permite_excepción")
+                {
+                    empresaObligacionRequest.PermiteExcepcion = (obligacionCaracteristica.Valor == "Si");
+                }
+                else if (obligacionCaracteristica.Nombre == "URL_excepcion")
+                {
+                    if (obligacionCaracteristica.Valor == null)
+                    {
+                        empresaObligacionRequest.UrlExcepcion = "";
+                    }
+                    else
+                    {
+                        empresaObligacionRequest.UrlExcepcion = obligacionCaracteristica.Valor.Replace("{id}", idEmpresaObligacion.ToString());
+                    }
+                }
+                else if (obligacionCaracteristica.Nombre == "URL_ejecucion")
+                {
+                    if (obligacionCaracteristica.Valor == null)
+                    {
+                        empresaObligacionRequest.UrlEjecucion = "";
+                    }
+                    else
+                    {
+                        empresaObligacionRequest.UrlEjecucion = obligacionCaracteristica.Valor.Replace("{id}", idEmpresaObligacion.ToString());
+                    }
+                }
+            }
+        }
+
+        private static void DeterminarSiSePuedenGestionarObligaciones(List<EmpresaObligacionResponse> empresaObligacionResponseList, int nivel)
+        {
+            MarcarGestionPorNivel(empresaObligacionResponseList, nivel, true);
+            if (VerificarCumplimientoPorNivel(empresaObligacionResponseList, nivel))
+            {
+                DeterminarSiSePuedenGestionarObligaciones(empresaObligacionResponseList, nivel + 1);
+            }
+            else
+            {
+                MarcarGestionDeNivelesSuperiores(empresaObligacionResponseList, nivel, false);
+            }
+        }
+
+        private static void MarcarGestionPorNivel(List<EmpresaObligacionResponse> empresaObligacionResponseList, int nivel, bool marcaGestion)
+        {
+            foreach (var empresaObligacion in empresaObligacionResponseList)
+            {
+                if (empresaObligacion.Dependencia == nivel)
+                {
+                    empresaObligacion.SePuedeGestionar = marcaGestion;
+                }
+            }
+        }
+
+        private static bool VerificarCumplimientoPorNivel(List<EmpresaObligacionResponse> empresaObligacionResponseList, int nivel)
+        {
+            foreach (var empresaObligacion in empresaObligacionResponseList)
+            {
+                if (empresaObligacion.Dependencia == nivel)
+                {
+                    if (empresaObligacion.Estado == EstadoObligacionEnum.NO_CUMPLE.ToString())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private static void MarcarGestionDeNivelesSuperiores(List<EmpresaObligacionResponse> empresaObligacionResponseList, int nivel, bool marcaGestion)
+        {
+            foreach (var empresaObligacion in empresaObligacionResponseList)
+            {
+                if (empresaObligacion.Dependencia > nivel)
+                {
+                    empresaObligacion.SePuedeGestionar = marcaGestion;
+                }
+            }
         }
 
         // POST: api/Empresa/1/obligacionesGenerales

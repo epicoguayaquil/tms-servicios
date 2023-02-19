@@ -24,9 +24,23 @@
 
         public string? UsuarioModificacion { get; set; }
 
-        public ObligacionResponse? Obligacion { get; set; }
+        public string? NombreObligacion { get; set; }
 
-        public IEnumerable<ObligacionCaracteristicaResponse>? CaracteristicasDeGestion { get; set; }
+        public int? OrdenEjecucion { get; set; }
+
+        public int? Dependencia { get; set; }
+
+        public bool? SePuedeGestionar { get; set; }
+
+        public string? TipoGeneracion { get; set; }
+
+        public bool? TieneFormulario { get; set; }
+
+        public string? UrlEjecucion { get; set; }
+
+        public bool? PermiteExcepcion { get; set; }
+
+        public string? UrlExcepcion { get; set; }
 
     }
 }

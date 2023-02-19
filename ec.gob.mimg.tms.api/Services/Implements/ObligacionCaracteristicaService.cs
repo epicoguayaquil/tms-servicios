@@ -2,6 +2,7 @@
 using ec.gob.mimg.tms.api.Repositories.Implements;
 using EF.Core.Repository.Manager;
 using ec.gob.mimg.tms.api.DTOs.Request;
+using ec.gob.mimg.tms.api.Enums;
 
 namespace ec.gob.mimg.tms.api.Services.Implements
 {
@@ -23,7 +24,7 @@ namespace ec.gob.mimg.tms.api.Services.Implements
 
         public async Task<ICollection<TmsObligacionCaracteristica>> GetListByObligacionIdAndTipo(int obligacionId, string tipo)
         {
-            return await GetAsync(x => x.ObligacionId == obligacionId && x.Tipo == tipo);
+            return await GetAsync(x => x.ObligacionId == obligacionId && x.Tipo == tipo && x.Estado == EstadoEnum.ACTIVO.ToString());
         }
 
         public async Task<ICollection<TmsObligacionCaracteristica>> GetListByObligacionIdAndTipoANdSubTipo(int obligacionId, string tipo, string subTipo)
