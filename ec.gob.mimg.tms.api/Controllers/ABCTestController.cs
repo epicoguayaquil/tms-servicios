@@ -1,8 +1,5 @@
 ﻿using AutoMapper;
 using ec.gob.mimg.tms.api.DTOs;
-using ec.gob.mimg.tms.api.DTOs.Request;
-using ec.gob.mimg.tms.api.DTOs.Response;
-using ec.gob.mimg.tms.api.Enums;
 using ec.gob.mimg.tms.api.Services;
 using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.model.Models;

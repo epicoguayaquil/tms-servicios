@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.api.Services.Implements;
 using AutoMapper;
@@ -16,8 +10,6 @@ using ec.gob.mimg.tms.api.Services;
 using Microsoft.IdentityModel.Tokens;
 using ec.gob.mimg.tms.srv.mimg.Services;
 using ec.gob.mimg.tms.srv.mimg.DTOs;
-using ec.gob.mimg.tms.srv.mimg.Services.Implements;
-using System.IO;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
