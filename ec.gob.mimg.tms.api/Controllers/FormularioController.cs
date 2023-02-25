@@ -27,10 +27,12 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IObligacionService _obligacionService;
         private readonly IApiCatastroService _apiCatastroService;
         private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
+        private readonly IFileService _fileService;
 
         private readonly IMapper _mapper;
 
-        public FormularioController(IMapper mapper, TmsDbContext dbContext, IApiCatastroService apiCatastroService)
+        public FormularioController(IMapper mapper, TmsDbContext dbContext,
+            IApiCatastroService apiCatastroService, IFileService fileService)
         {
             _mapper = mapper;
             _dbContext = dbContext;
@@ -43,6 +45,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _obligacionService = new ObligacionService(_dbContext);
             _apiCatastroService = apiCatastroService;
             _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
+            _fileService = fileService;
         }
 
         // GET: api/Formulario
@@ -400,6 +403,21 @@ namespace ec.gob.mimg.tms.api.Controllers
                             FechaRegistro = DateTime.Now,
                             UsuarioRegistro = "admin@mail.com"
                         };
+                        if (caracteristicaElement.TipoDato == "image" && caracteristicaElement.ArchivoImagen != null
+                            && formularioDetalleListRequest.RucEmpresa != null)
+                        {
+                            FileRequest fileRequest = new()
+                            {
+                                RUC = formularioDetalleListRequest.RucEmpresa,
+                                Description = "FormularioDetalle",
+                                Image = caracteristicaElement.ArchivoImagen
+                            };
+                            FileResponse fileResponse = await _fileService.SaveFIleImageAsync(fileRequest);
+                            if (fileResponse != null && fileResponse.Post != null)
+                            {
+                                formularioDetalle.Valor = fileResponse.Post.Imagepath;
+                            }
+                        }
                         bool isSaved = await _formularioDetalleService.AddAsync(formularioDetalle);
                     }
                     else
@@ -409,6 +427,21 @@ namespace ec.gob.mimg.tms.api.Controllers
                         formularioDetalleActual.ExtraInfo = caracteristicaElement.ExtraInfo;
                         formularioDetalleActual.FechaModificacion = DateTime.Now;
                         formularioDetalleActual.UsuarioModificacion = "admin@mail.com";
+                        if (caracteristicaElement.TipoDato == "image" && caracteristicaElement.ArchivoImagen != null
+                            && formularioDetalleListRequest.RucEmpresa != null)
+                        {
+                            FileRequest fileRequest = new()
+                            {
+                                RUC = formularioDetalleListRequest.RucEmpresa,
+                                Description = "FormularioDetalle",
+                                Image = caracteristicaElement.ArchivoImagen
+                            };
+                            FileResponse fileResponse = await _fileService.SaveFIleImageAsync(fileRequest);
+                            if (fileResponse != null && fileResponse.Post != null)
+                            {
+                                formularioDetalleActual.Valor = fileResponse.Post.Imagepath;
+                            }
+                        }
                         bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);
                     }
                 }

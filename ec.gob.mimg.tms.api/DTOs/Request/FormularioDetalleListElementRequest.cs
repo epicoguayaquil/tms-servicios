@@ -10,5 +10,8 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
         public string? Valor { get; set; }
 
         public string? ExtraInfo { get; set; }
+
+        public IFormFile? ArchivoImagen { get; set; }
+
     }
 }

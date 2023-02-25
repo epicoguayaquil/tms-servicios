@@ -11,5 +11,11 @@
         public string? TipoDato { get; set; }
 
         public string? Valor { get; set; }
+
+        public IFormFile? ArchivoImagen { get; set; }
+
+        public string? RucEmpresa { get; set; }
+
+
     }
 }

@@ -21,14 +21,16 @@ namespace ec.gob.mimg.tms.api.Controllers
     {
         private readonly TmsDbContext _dbContext;
         private readonly IFormularioObligacionCaracteristicaValorService _formularioObligacionCaracteristicaValorService;
+        private readonly IFileService _fileService;
 
         private readonly IMapper _mapper;
 
-        public FormularioObligacionCaracteristicaValorController(IMapper mapper, TmsDbContext dbContext)
+        public FormularioObligacionCaracteristicaValorController(IMapper mapper, TmsDbContext dbContext, IFileService fileService)
         {
             _mapper = mapper;
             _dbContext = dbContext;
             _formularioObligacionCaracteristicaValorService = new FormularioObligacionCaracteristicaValorService(_dbContext);
+            _fileService = fileService;
         }
 
         // GET: api/FormularioObligacionCaracteristicaValor
@@ -74,11 +76,27 @@ namespace ec.gob.mimg.tms.api.Controllers
         {
             try
             {
-                TmsFormularioObligacionCaracteristicaValor formularioObligacionCaracteristicaValor = new TmsFormularioObligacionCaracteristicaValor();
+                TmsFormularioObligacionCaracteristicaValor formularioObligacionCaracteristicaValor = new();
                 formularioObligacionCaracteristicaValor = _mapper.Map<TmsFormularioObligacionCaracteristicaValor>(formularioObligacionCaracteristicaValorRequest);
                 formularioObligacionCaracteristicaValor.FechaResgitro = DateTime.Now;
                 formularioObligacionCaracteristicaValor.UsuarioRegistro = "admin@mail.com";
                 formularioObligacionCaracteristicaValor.Estado = EstadoEnum.ACTIVO.ToString();
+
+                if (formularioObligacionCaracteristicaValor.TipoDato == "image" && formularioObligacionCaracteristicaValorRequest.ArchivoImagen != null
+                    && formularioObligacionCaracteristicaValorRequest.RucEmpresa != null)
+                {
+                    FileRequest fileRequest = new()
+                    {
+                        RUC = formularioObligacionCaracteristicaValorRequest.RucEmpresa,
+                        Description = "FormularioObligacionCaracteristica",
+                        Image = formularioObligacionCaracteristicaValorRequest.ArchivoImagen
+                    };
+                    FileResponse fileResponse = await _fileService.SaveFIleImageAsync(fileRequest);
+                    if (fileResponse != null && fileResponse.Post != null)
+                    {
+                        formularioObligacionCaracteristicaValor.Valor = fileResponse.Post.Imagepath;
+                    }
+                }
 
                 bool isSaved = await _formularioObligacionCaracteristicaValorService.AddAsync(formularioObligacionCaracteristicaValor);
 
@@ -117,6 +135,22 @@ namespace ec.gob.mimg.tms.api.Controllers
                     formularioObligacionCaracteristicaValor.FechaResgitro = DateTime.Now;
                     formularioObligacionCaracteristicaValor.UsuarioRegistro = "admin@mail.com";
                     formularioObligacionCaracteristicaValor.Estado = EstadoEnum.ACTIVO.ToString();
+
+                    if (formularioObligacionCaracteristicaValor.TipoDato == "image" && formularioObligacionCaracteristicaValorRequest.ArchivoImagen != null
+                        && formularioObligacionCaracteristicaValorRequest.RucEmpresa != null)
+                    {
+                        FileRequest fileRequest = new()
+                        {
+                            RUC = formularioObligacionCaracteristicaValorRequest.RucEmpresa,
+                            Description = "FormularioObligacionCaracteristica",
+                            Image = formularioObligacionCaracteristicaValorRequest.ArchivoImagen
+                        };
+                        FileResponse fileResponse = await _fileService.SaveFIleImageAsync(fileRequest);
+                        if (fileResponse != null && fileResponse.Post != null)
+                        {
+                            formularioObligacionCaracteristicaValor.Valor = fileResponse.Post.Imagepath;
+                        }
+                    }
 
                     bool isSaved = await _formularioObligacionCaracteristicaValorService.AddAsync(formularioObligacionCaracteristicaValor);
                     if (!isSaved)
@@ -179,6 +213,22 @@ namespace ec.gob.mimg.tms.api.Controllers
                 formularioObligacionCaracteristicaValor.Estado = formularioObligacionCaracteristicaValorActual.Estado;
                 formularioObligacionCaracteristicaValor.FechaModificacion = DateTime.Now;
                 formularioObligacionCaracteristicaValor.UsuarioModificacion = "admin@mail.com";
+
+                if (formularioObligacionCaracteristicaValor.TipoDato == "image" && formularioObligacionCaracteristicaValorRequest.ArchivoImagen != null
+                    && formularioObligacionCaracteristicaValorRequest.RucEmpresa != null)
+                {
+                    FileRequest fileRequest = new()
+                    {
+                        RUC = formularioObligacionCaracteristicaValorRequest.RucEmpresa,
+                        Description = "FormularioObligacionCaracteristica",
+                        Image = formularioObligacionCaracteristicaValorRequest.ArchivoImagen
+                    };
+                    FileResponse fileResponse = await _fileService.SaveFIleImageAsync(fileRequest);
+                    if (fileResponse != null && fileResponse.Post != null)
+                    {
+                        formularioObligacionCaracteristicaValor.Valor = fileResponse.Post.Imagepath;
+                    }
+                }
 
                 bool isUpdate = await _formularioObligacionCaracteristicaValorService.UpdateAsync(formularioObligacionCaracteristicaValor);
                     

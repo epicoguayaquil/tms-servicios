@@ -8,6 +8,9 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
         public int FormularioId { get; set; }
 
         public int PasoCreacion { get; set; }
+
+        public string? RucEmpresa { get; set; }
+
         public List<FormularioDetalleListElementRequest>? CaracteristicaList { get; set; } = new List<FormularioDetalleListElementRequest>();
     }
 }
