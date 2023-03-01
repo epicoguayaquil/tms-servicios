@@ -41,6 +41,10 @@ public partial class TmsDbContext : DbContext
 
     public virtual DbSet<TmsFormularioObligacionCaracteristicaValor> TmsFormularioObligacionCaracteristicaValors { get; set; }
 
+    public virtual DbSet<TmsNotificacion> TmsNotificacions { get; set; }
+
+    public virtual DbSet<TmsNotificacionMotivoFormato> TmsNotificacionMotivoFormatos { get; set; }
+
     public virtual DbSet<TmsObligacion> TmsObligacions { get; set; }
 
     public virtual DbSet<TmsObligacionCaracteristica> TmsObligacionCaracteristicas { get; set; }
@@ -472,6 +476,72 @@ public partial class TmsDbContext : DbContext
                 .HasForeignKey(d => d.ObligacionCaracteristicaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_TmsFormularioObligacionCaracteristicaValor_TmsObligacionCaracteristica");
+        });
+
+        modelBuilder.Entity<TmsNotificacion>(entity =>
+        {
+            entity.HasKey(e => e.IdNotificacion).HasName("PK__TmsNotif__F6CA0A851AEB9355");
+
+            entity.ToTable("TmsNotificacion");
+
+            entity.Property(e => e.Cuerpo)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Destinatarios)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasComment("correos");
+            entity.Property(e => e.Estado)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaEnvio).HasColumnType("datetime");
+            entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
+            entity.Property(e => e.Jerarquia)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasComment("Empresa, Establecimiento, Formulario, Obligacion");
+            entity.Property(e => e.Motivo)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasComment("Nuevo establecimiento, Caducidad Obligacion, Exigibilidad de la Obligacion, Estado Tramite");
+            entity.Property(e => e.Titulo)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioRegistro)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<TmsNotificacionMotivoFormato>(entity =>
+        {
+            entity.HasKey(e => e.IdNotificacionMotivoFormato).HasName("PK__TmsNotif__90AF373FAF7C6106");
+
+            entity.ToTable("TmsNotificacionMotivoFormato");
+
+            entity.Property(e => e.Cuerpo)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Estado)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaModificaion).HasColumnType("datetime");
+            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
+            entity.Property(e => e.Motivo)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Titulo)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioModificacion)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioRegistro)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<TmsObligacion>(entity =>
