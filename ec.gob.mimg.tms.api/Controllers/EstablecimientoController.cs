@@ -20,6 +20,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IFormularioActividadService _formularioActividadService;
         private readonly IActividadEconomicaService _actividadEconomicaService;
         private readonly IFormularioDetalleService _formularioDetalleService;
+        private readonly IRegistroNotificacionService _registroNotificacionService;
 
         private readonly IMapper _mapper;
 
@@ -32,6 +33,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _formularioActividadService = new FormularioActividadService(_dbContext);
             _actividadEconomicaService = new ActividadEconomicaService(_dbContext);
             _formularioDetalleService = new FormularioDetalleService(_dbContext);
+            _registroNotificacionService = new RegistroNotificacionService(_dbContext);
         }
 
         // GET: api/Establecimiento
@@ -406,6 +408,20 @@ namespace ec.gob.mimg.tms.api.Controllers
                 Data = formularioResponseList
             };
 
+            return Ok(response);
+        }
+
+        // GET: api/Establecimiento/5/notificaciones
+        [HttpGet("{id}/notificaciones")]
+        public async Task<ActionResult<GenericResponse>> GetNotificacionesById(int id)
+        {
+            var notificacionList = await _registroNotificacionService.GetListByJerarquiaAndObjetoId("Establecimiento", id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = notificacionList.Select(x => _mapper.Map<RegistroNotificacionResponse>(x))
+            };
             return Ok(response);
         }
 

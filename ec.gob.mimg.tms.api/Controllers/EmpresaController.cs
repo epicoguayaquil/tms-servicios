@@ -26,6 +26,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IEmpresaObligacionService _empresaObligacionService;
         private readonly IObligacionService _obligacionService;
         private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
+        private readonly IRegistroNotificacionService _registroNotificacionService;
 
         public EmpresaController(IMapper mapper, TmsDbContext dbContext,
                                 ILogger<EmpresaController> logger,
@@ -40,6 +41,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _empresaObligacionService = new EmpresaObligacionService(_dbContext);
             _obligacionService = new ObligacionService(_dbContext);
             _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
+            _registroNotificacionService = new RegistroNotificacionService(_dbContext);
         }
 
         // GET: api/Empresas
@@ -387,6 +389,20 @@ namespace ec.gob.mimg.tms.api.Controllers
                 Data = "Obligaciones generadas: " + contadorGeneradas
             };
 
+            return Ok(response);
+        }
+
+        // GET: api/Empresas/5/notificaciones
+        [HttpGet("{id}/notificaciones")]
+        public async Task<ActionResult<GenericResponse>> GetNotificacionesById(int id)
+        {
+            var notificacionList = await _registroNotificacionService.GetListByJerarquiaAndObjetoId("Empresa", id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = notificacionList.Select(x => _mapper.Map<RegistroNotificacionResponse>(x))
+            };
             return Ok(response);
         }
 

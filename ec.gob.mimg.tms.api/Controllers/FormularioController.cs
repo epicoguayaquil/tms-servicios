@@ -28,6 +28,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IApiCatastroService _apiCatastroService;
         private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
         private readonly IFileService _fileService;
+        private readonly IRegistroNotificacionService _registroNotificacionService;
 
         private readonly IMapper _mapper;
 
@@ -46,6 +47,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _apiCatastroService = apiCatastroService;
             _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
             _fileService = fileService;
+            _registroNotificacionService = new RegistroNotificacionService(_dbContext);
         }
 
         // GET: api/Formulario
@@ -596,6 +598,19 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
         }
 
+        // GET: api/Formulario/5/notificaciones
+        [HttpGet("{id}/notificaciones")]
+        public async Task<ActionResult<GenericResponse>> GetNotificacionesById(int id)
+        {
+            var notificacionList = await _registroNotificacionService.GetListByJerarquiaAndObjetoId("Formulario", id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = notificacionList.Select(x => _mapper.Map<RegistroNotificacionResponse>(x))
+            };
+            return Ok(response);
+        }
 
     }
 }
