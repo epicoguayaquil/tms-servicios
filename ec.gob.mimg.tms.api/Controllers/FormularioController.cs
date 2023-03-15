@@ -375,7 +375,8 @@ namespace ec.gob.mimg.tms.api.Controllers
 
         // POST: api/Formulario/detallesNivel
         [HttpPost("detallesNivel")]
-        public async Task<ActionResult<GenericResponse>> CreateDetallesNivel(FormularioDetalleListRequest formularioDetalleListRequest)
+        [RequestSizeLimit(5 * 1024 * 1024)]
+        public async Task<ActionResult<GenericResponse>> CreateDetallesNivel([FromForm] FormularioDetalleListRequest formularioDetalleListRequest)
         {
             try
             {
@@ -442,6 +443,10 @@ namespace ec.gob.mimg.tms.api.Controllers
                             if (fileResponse != null && fileResponse.Post != null)
                             {
                                 formularioDetalleActual.Valor = fileResponse.Post.Imagepath;
+                            }
+                            else
+                            {
+                                formularioDetalleActual.Valor = "No se guardo la imagen";
                             }
                         }
                         bool isUpdate = await _formularioDetalleService.UpdateAsync(formularioDetalleActual);

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FileUploadApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UploadFileController : ControllerBase
     {
         private readonly ILogger<UploadFileController> logger;

@@ -24,6 +24,10 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IFormularioDetalleService _formularioDetalleService;
         private readonly IFormularioActividadService _formularioActividadService;
         private readonly IApiMimgService _apiMimgService;
+        private readonly IEmpresaService _empresaService;
+        private readonly IEstablecimientoService _establecimientoService;
+        private readonly IFormularioService _formularioService;
+        private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
 
         private readonly IMapper _mapper;
 
@@ -37,6 +41,10 @@ namespace ec.gob.mimg.tms.api.Controllers
             _formularioDetalleService = new FormularioDetalleService(_dbContext);
             _formularioActividadService = new FormularioActividadService(_dbContext);
             _apiMimgService = apiMimgService;
+            _empresaService = new EmpresaService(_dbContext);
+            _establecimientoService = new EstablecimientoService(_dbContext);
+            _formularioService = new FormularioService(_dbContext);
+            _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
         }
 
         // GET: api/FormularioObligacion
@@ -52,6 +60,152 @@ namespace ec.gob.mimg.tms.api.Controllers
             };
 
             return Ok(response);
+        }
+
+        // GET: api/FormularioObligacion/porFiltro
+        [HttpGet("/porFiltro")]
+        public async Task<ActionResult<GenericResponse>> GetByFilter(FormularioObligacionFiltroRequest filtro)
+        {
+            GenericResponse responseFail, responseOk;
+            var empresa = await _empresaService.GetByRucAsync(filtro.RUC);
+            if (empresa == null)
+            {
+                responseFail = new()
+                {
+                    Cod = "400",
+                    Msg = "FAIL",
+                    Data = "Contribuyente no encontrado"
+                };
+
+                return Ok(responseFail);
+            }
+            var establecimientoList = await _establecimientoService.GetAsync(x => x.EmpresaId == empresa.IdEmpresa);
+            if (establecimientoList == null || establecimientoList.IsNullOrEmpty())
+            {
+                responseFail = new()
+                {
+                    Cod = "400",
+                    Msg = "FAIL",
+                    Data = "Contribuyente no tiene establecimientos"
+                };
+                return Ok(responseFail);
+            }
+            var formularioList = new List<TmsFormulario>();
+            foreach (TmsEstablecimiento establecimiento in establecimientoList)
+            {
+                var formularioActivoList = await _formularioService.GetListByEstablecimientoIdAndEstado(
+                    establecimiento.IdEstablecimiento, EstadoEnum.ACTIVO.ToString());
+                if (formularioActivoList != null && !formularioActivoList.IsNullOrEmpty())
+                {
+                    var formulario = formularioActivoList.First();
+                    if (filtro.EstablecimientoId == null)
+                    {
+                        formularioList.Add(formulario);
+                    }
+                    else
+                    {
+                        if (filtro.EstablecimientoId == establecimiento.IdEstablecimiento)
+                        {
+                            formularioList.Add(formulario);
+                        }
+                    }
+                }
+            }
+            if (formularioList.IsNullOrEmpty())
+            {
+                responseFail = new()
+                {
+                    Cod = "400",
+                    Msg = "FAIL",
+                    Data = "Contribuyente no posee formularios activos en el(los) establecimiento(s)"
+                };
+                return Ok(responseFail);
+            }
+            var formularioObligacionResponseList = new List<FormularioObligacionResponse>();
+            foreach (var formulario in formularioList) {
+                var formularioObligacionList = await _formularioObligacionService.GetListByFormularioId(formulario.IdFormulario);
+                foreach (var formularioObligacion in formularioObligacionList)
+                {
+                    var formularioObligacionRequest = _mapper.Map<FormularioObligacionResponse>(formularioObligacion);
+                    var obligacion = await _obligacionService.GetById(formularioObligacion.ObligacionId);
+                    formularioObligacionRequest.NombreObligacion = obligacion.Nombre;
+                    formularioObligacionRequest.OrdenEjecucion = obligacion.OrdenEjecucion;
+                    formularioObligacionRequest.Dependencia = obligacion.Dependencia;
+
+                    var obligacionCaracteristicaList = await _obligacionCaracteristicaService.GetListByObligacionIdAndTipo(formularioObligacion.ObligacionId, TipoCaracteristica.GESTION.ToString());
+                    ProcesarCaracteristicasDeGestion(obligacionCaracteristicaList, formularioObligacionRequest, formularioObligacion.IdFormularioObligacion);
+                    if (formularioObligacionRequest.TipoGeneracion == filtro.TipoGeneracion
+                        && formularioObligacionRequest.Estado == filtro.Estado)
+                    {
+                        formularioObligacionResponseList.Add(formularioObligacionRequest);
+                    }
+                }
+            }
+            if (formularioObligacionResponseList.IsNullOrEmpty())
+            {
+                responseFail = new()
+                {
+                    Cod = "400",
+                    Msg = "FAIL",
+                    Data = "Contribuyente no posee obligaciones pendientes"
+                };
+                return Ok(responseFail);
+            }
+
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioObligacionResponseList.Select(x => _mapper.Map<FormularioObligacionResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
+        private void ProcesarCaracteristicasDeGestion(ICollection<TmsObligacionCaracteristica>? obligacionCaracteristicaList,
+    FormularioObligacionResponse formularioObligacionRequest, int idFormularioObligacion)
+        {
+            if (obligacionCaracteristicaList == null)
+            {
+                return;
+            }
+            foreach (var obligacionCaracteristica in obligacionCaracteristicaList)
+            {
+                if (obligacionCaracteristica.Nombre == "tipo_generacion")
+                {
+                    formularioObligacionRequest.TipoGeneracion = obligacionCaracteristica.Valor;
+                }
+                else if (obligacionCaracteristica.Nombre == "tiene_formulario")
+                {
+                    formularioObligacionRequest.TieneFormulario = (obligacionCaracteristica.Valor == "Si");
+                }
+                else if (obligacionCaracteristica.Nombre == "permite_excepción")
+                {
+                    formularioObligacionRequest.PermiteExcepcion = (obligacionCaracteristica.Valor == "Si");
+                }
+                else if (obligacionCaracteristica.Nombre == "URL_excepcion")
+                {
+                    if (obligacionCaracteristica.Valor == null)
+                    {
+                        formularioObligacionRequest.UrlExcepcion = "";
+                    }
+                    else
+                    {
+                        formularioObligacionRequest.UrlExcepcion = obligacionCaracteristica.Valor.Replace("{id}", idFormularioObligacion.ToString());
+                    }
+                }
+                else if (obligacionCaracteristica.Nombre == "URL_ejecucion")
+                {
+                    if (obligacionCaracteristica.Valor == null)
+                    {
+                        formularioObligacionRequest.UrlEjecucion = "";
+                    }
+                    else
+                    {
+                        formularioObligacionRequest.UrlEjecucion = obligacionCaracteristica.Valor.Replace("{id}", idFormularioObligacion.ToString());
+                    }
+                }
+            }
         }
 
         // GET: api/FormularioObligacion/1
