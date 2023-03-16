@@ -62,11 +62,11 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        // GET: api/FormularioObligacion/porFiltro
-        [HttpGet("/porFiltro")]
+        // POST: api/FormularioObligacion/porFiltro
+        [HttpPost("porFiltro")]
         public async Task<ActionResult<GenericResponse>> GetByFilter(FormularioObligacionFiltroRequest filtro)
         {
-            GenericResponse responseFail, responseOk;
+            GenericResponse responseFail;
             var empresa = await _empresaService.GetByRucAsync(filtro.RUC);
             if (empresa == null)
             {
@@ -137,7 +137,17 @@ namespace ec.gob.mimg.tms.api.Controllers
                     if (formularioObligacionRequest.TipoGeneracion == filtro.TipoGeneracion
                         && formularioObligacionRequest.Estado == filtro.Estado)
                     {
-                        formularioObligacionResponseList.Add(formularioObligacionRequest);
+                        if (filtro.Anio == null || filtro.Anio <= 0)
+                        {
+                            formularioObligacionResponseList.Add(formularioObligacionRequest);
+                        }
+                        else
+                        {
+                            if (formularioObligacionRequest.FechaRegistro.Year == filtro.Anio)
+                            {
+                                formularioObligacionResponseList.Add(formularioObligacionRequest);
+                            }
+                        }
                     }
                 }
             }
@@ -162,8 +172,8 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
-        private void ProcesarCaracteristicasDeGestion(ICollection<TmsObligacionCaracteristica>? obligacionCaracteristicaList,
-    FormularioObligacionResponse formularioObligacionRequest, int idFormularioObligacion)
+        private static void ProcesarCaracteristicasDeGestion(ICollection<TmsObligacionCaracteristica>? obligacionCaracteristicaList,
+                FormularioObligacionResponse formularioObligacionRequest, int idFormularioObligacion)
         {
             if (obligacionCaracteristicaList == null)
             {
