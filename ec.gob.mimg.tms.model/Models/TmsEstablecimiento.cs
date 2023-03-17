@@ -9,6 +9,8 @@ public partial class TmsEstablecimiento
 
     public string? NombreComercial { get; set; }
 
+    public string? Industria { get; set; }
+
     public string? Direccion { get; set; }
 
     public string? Telefono { get; set; }
@@ -46,8 +48,6 @@ public partial class TmsEstablecimiento
     /// No_Registrado, En_Proceso, Registrado
     /// </summary>
     public string? EstadoRegistro { get; set; }
-
-    public string? Industria { get; set; }
 
     public virtual TmsEmpresa? Empresa { get; set; }
 

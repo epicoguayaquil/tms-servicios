@@ -59,13 +59,13 @@ public partial class TmsDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=db.cloudtek.ec;Database=TMS_DB;uid=sa;pwd=DeveloperDB1.;MultipleActiveResultSets=True;App=EntityFramework;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=SQL5105.site4now.net;Database=db_a90b97_testdbtms;uid=db_a90b97_testdbtms_admin;pwd=Datos.2023;MultipleActiveResultSets=True;App=EntityFramework;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ConfiguracionObligacion>(entity =>
         {
-            entity.HasKey(e => e.Secuencial).HasName("PK__Configur__32F8CA869FAB10B9");
+            entity.HasKey(e => e.Secuencial).HasName("PK__Configur__32F8CA86A6E51A3B");
 
             entity.ToTable("ConfiguracionObligacion");
 
@@ -85,7 +85,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<Renovacion>(entity =>
         {
-            entity.HasKey(e => e.IdRenovacion).HasName("PK__Renovaci__9F986BC75043FFD7");
+            entity.HasKey(e => e.IdRenovacion).HasName("_copy_14");
 
             entity.ToTable("Renovacion");
 
@@ -94,7 +94,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsActividadEconomica>(entity =>
         {
-            entity.HasKey(e => e.IdActividadEconomica).HasName("PK__TmsActiv__A3040710E0C907C3");
+            entity.HasKey(e => e.IdActividadEconomica).HasName("_copy_12");
 
             entity.ToTable("TmsActividadEconomica");
 
@@ -128,7 +128,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsActividadObligacion>(entity =>
         {
-            entity.HasKey(e => e.IdActividadObligacion).HasName("PK__TmsActiv__F9048FEF44D088D4");
+            entity.HasKey(e => e.IdActividadObligacion).HasName("_copy_13");
 
             entity.ToTable("TmsActividadObligacion");
 
@@ -157,7 +157,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsCatalogo>(entity =>
         {
-            entity.HasKey(e => e.IdCatalogo).HasName("PK__TmsCatal__FD0AC26CF4791D86");
+            entity.HasKey(e => e.IdCatalogo).HasName("_copy_7");
 
             entity.ToTable("TmsCatalogo");
 
@@ -192,7 +192,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsEmpresa>(entity =>
         {
-            entity.HasKey(e => e.IdEmpresa).HasName("PK__TmsEmpre__5EF4033E8512B764");
+            entity.HasKey(e => e.IdEmpresa).HasName("_copy_9");
 
             entity.ToTable("TmsEmpresa");
 
@@ -257,7 +257,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsEstablecimiento>(entity =>
         {
-            entity.HasKey(e => e.IdEstablecimiento).HasName("PK__TmsEstab__5C5599D477028094");
+            entity.HasKey(e => e.IdEstablecimiento).HasName("_copy_2");
 
             entity.ToTable("TmsEstablecimiento");
 
@@ -318,7 +318,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsFormulario>(entity =>
         {
-            entity.HasKey(e => e.IdFormulario).HasName("PK__TmsFormu__090ED3C52F06A9C2");
+            entity.HasKey(e => e.IdFormulario).HasName("_copy_10");
 
             entity.ToTable("TmsFormulario");
 
@@ -342,7 +342,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsFormularioActividad>(entity =>
         {
-            entity.HasKey(e => e.IdActividadFormulario).HasName("PK__TmsFormu__D52002B9B8A7CA42");
+            entity.HasKey(e => e.IdActividadFormulario).HasName("_copy_11");
 
             entity.ToTable("TmsFormularioActividad");
 
@@ -374,7 +374,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsFormularioDetalle>(entity =>
         {
-            entity.HasKey(e => e.IdFormularioDetalle).HasName("PK__TmsFormu__9507C3AED78433F6");
+            entity.HasKey(e => e.IdFormularioDetalle).HasName("_copy_3");
 
             entity.ToTable("TmsFormularioDetalle");
 
@@ -408,7 +408,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsFormularioObligacion>(entity =>
         {
-            entity.HasKey(e => e.IdFormularioObligacion).HasName("PK__TmsFormu__38EFB729D6A4852B");
+            entity.HasKey(e => e.IdFormularioObligacion).HasName("_copy_6");
 
             entity.ToTable("TmsFormularioObligacion");
 
@@ -480,7 +480,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsNotificacion>(entity =>
         {
-            entity.HasKey(e => e.IdNotificacion).HasName("PK__TmsNotif__F6CA0A851AEB9355");
+            entity.HasKey(e => e.IdNotificacion).HasName("PK__TmsNotif__F6CA0A859D4EE9E4");
 
             entity.ToTable("TmsNotificacion");
 
@@ -518,7 +518,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsNotificacionMotivoFormato>(entity =>
         {
-            entity.HasKey(e => e.IdNotificacionMotivoFormato).HasName("PK__TmsNotif__90AF373FAF7C6106");
+            entity.HasKey(e => e.IdNotificacionMotivoFormato).HasName("PK__TmsNotif__90AF373FDC8F633E");
 
             entity.ToTable("TmsNotificacionMotivoFormato");
 
@@ -546,7 +546,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsObligacion>(entity =>
         {
-            entity.HasKey(e => e.IdObligacion).HasName("PK__TmsOblig__AC85825E8E12D15E");
+            entity.HasKey(e => e.IdObligacion).HasName("_copy_4");
 
             entity.ToTable("TmsObligacion");
 
@@ -583,7 +583,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsObligacionCaracteristica>(entity =>
         {
-            entity.HasKey(e => e.IdObligacionCaracteristica).HasName("PK__TmsOblig__2EE62FB4A4014F5E");
+            entity.HasKey(e => e.IdObligacionCaracteristica).HasName("_copy_5");
 
             entity.ToTable("TmsObligacionCaracteristica");
 
@@ -624,7 +624,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsPermiso>(entity =>
         {
-            entity.HasKey(e => e.IdPermiso).HasName("PK__TmsPermi__0D626EC876E526E7");
+            entity.HasKey(e => e.IdPermiso).HasName("_copy_15");
 
             entity.ToTable("TmsPermiso");
 
@@ -649,7 +649,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsRol>(entity =>
         {
-            entity.HasKey(e => e.IdRol).HasName("PK__TmsRol__2A49584C0D4D30EE");
+            entity.HasKey(e => e.IdRol).HasName("_copy_17");
 
             entity.ToTable("TmsRol");
 
@@ -676,7 +676,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsTipoCatalogo>(entity =>
         {
-            entity.HasKey(e => e.IdTipoCatalogo).HasName("PK__TmsTipoC__40FEE08CEB0A9619");
+            entity.HasKey(e => e.IdTipoCatalogo).HasName("_copy_8");
 
             entity.ToTable("TmsTipoCatalogo");
 
@@ -704,7 +704,7 @@ public partial class TmsDbContext : DbContext
 
         modelBuilder.Entity<TmsUsuario>(entity =>
         {
-            entity.HasKey(e => e.IdUsuario).HasName("PK__TmsUsuar__5B65BF9763979E96");
+            entity.HasKey(e => e.IdUsuario).HasName("_copy_16");
 
             entity.ToTable("TmsUsuario");
 

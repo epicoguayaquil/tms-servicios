@@ -34,6 +34,10 @@ public partial class TmsObligacion
     /// </summary>
     public string? Jerarquia { get; set; }
 
+    public int? OrdenEjecucion { get; set; }
+
+    public int? Dependencia { get; set; }
+
     public string? Estado { get; set; }
 
     public DateTime? FechaRegistro { get; set; }
@@ -41,10 +45,6 @@ public partial class TmsObligacion
     public string? UsuarioRegistro { get; set; }
 
     public DateTime? FechaModificacion { get; set; }
-
-    public int? OrdenEjecucion { get; set; }
-
-    public int? Dependencia { get; set; }
 
     public string? UsuarioModificacion { get; set; }
 

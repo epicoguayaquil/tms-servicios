@@ -5,6 +5,8 @@ namespace ec.gob.mimg.tms.model.Models;
 
 public partial class TmsEmpresaObligacion
 {
+    public int IdEmpresaObligacion { get; set; }
+
     public int EmpresaId { get; set; }
 
     public int ObligacionId { get; set; }
@@ -24,8 +26,6 @@ public partial class TmsEmpresaObligacion
     public DateTime? FechaExigibilidad { get; set; }
 
     public DateTime? FechaRenovacion { get; set; }
-
-    public int IdEmpresaObligacion { get; set; }
 
     public virtual TmsEmpresa Empresa { get; set; } = null!;
 

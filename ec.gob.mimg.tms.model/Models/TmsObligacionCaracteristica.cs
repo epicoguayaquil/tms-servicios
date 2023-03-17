@@ -14,9 +14,18 @@ public partial class TmsObligacionCaracteristica
     /// </summary>
     public string? Tipo { get; set; }
 
+    public string? SubTipo { get; set; }
+
     public string Nombre { get; set; } = null!;
 
+    /// <summary>
+    /// String, Integer, Float
+    /// </summary>
+    public string? TipoDato { get; set; }
+
     public string? Valor { get; set; }
+
+    public int? Secuencia { get; set; }
 
     public string Estado { get; set; } = null!;
 
@@ -27,15 +36,6 @@ public partial class TmsObligacionCaracteristica
     public DateTime? FechaModificacion { get; set; }
 
     public string? UsuarioModificacion { get; set; }
-
-    /// <summary>
-    /// String, Integer, Float
-    /// </summary>
-    public string? TipoDato { get; set; }
-
-    public int? Secuencia { get; set; }
-
-    public string? SubTipo { get; set; }
 
     public virtual TmsObligacion Obligacion { get; set; } = null!;
 
