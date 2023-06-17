@@ -23,6 +23,11 @@
         NO_CUMPLE,
         EN_EXCEPCION
     }
+    enum TipoExigibilidadEnum
+    {
+        VENCIMIENTO,
+        POR_MES
+    }
     enum JerarquiaObligacion
     {
         EMPRESA,

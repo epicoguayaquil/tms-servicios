@@ -162,6 +162,11 @@ namespace ec.gob.mimg.tms.api.Controllers
                             UsuarioRegistro = "admin@mail.com",
                             Estado = EstadoObligacionEnum.NO_CUMPLE.ToString()
                         };
+                        if (obligacion.TipoExigibilidad == TipoExigibilidadEnum.VENCIMIENTO.ToString())
+                        {
+                            formularioObligacion.FechaRenovacion = DateTime.Now.AddYears(1);
+                            formularioObligacion.FechaExigibilidad = formularioObligacion.FechaRenovacion;
+                        }
 
                         bool isSaved = await _formularioObligacionService.AddAsync(formularioObligacion);
                         if (isSaved)
