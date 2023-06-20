@@ -445,7 +445,15 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 if (!responseUsoSuelo.DataResult)
                 {
-                    formularioObligacion.Estado = EstadoObligacionEnum.EN_EXCEPCION.ToString();
+                    formularioObligacion.Observacion = responseUsoSuelo.Resultado.Titulo;
+                    if (responseUsoSuelo.Resultado.StatusCode == 200)
+                    {
+                        formularioObligacion.Estado = EstadoObligacionEnum.EN_EXCEPCION.ToString();
+                    }
+                    else
+                    {
+                        formularioObligacion.Estado = EstadoObligacionEnum.NO_CUMPLE.ToString();
+                    }
 
                     response.Cod = "500";
                     response.Msg = "FAIL";
@@ -476,14 +484,20 @@ namespace ec.gob.mimg.tms.api.Controllers
                 TmsFormularioActividad formularioActividad = formularioActividadList.First();
                 request.IdActividad = formularioActividad.ActividadEconomicaId.ToString();
                 var responseDimensiones = await _apiMimgService.GetDimensionMinima(request);
-
-                response.Data = responseDimensiones;
-                /*
+                
                 formularioObligacion.FechaModificacion = DateTime.Now;
                 formularioObligacion.UsuarioModificacion = "admin@mail.com";                
-                if (!responseDimensiones.DataResult)
+                if (responseDimensiones.DataResult == null)
                 {
-                    formularioObligacion.Estado = EstadoObligacionEnum.EN_EXCEPCION.ToString();
+                    formularioObligacion.Observacion = responseDimensiones.Resultado.Titulo;
+                    if (responseDimensiones.Resultado.StatusCode == 200)
+                    {
+                        formularioObligacion.Estado = EstadoObligacionEnum.EN_EXCEPCION.ToString();
+                    }
+                    else
+                    {
+                        formularioObligacion.Estado = EstadoObligacionEnum.NO_CUMPLE.ToString();
+                    }
                     response.Cod = "500";
                     response.Msg = "FAIL";
                     response.Data = responseDimensiones.Resultado;
@@ -491,6 +505,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 else
                 {
                     formularioObligacion.Estado = EstadoObligacionEnum.CUMPLE.ToString();
+                    response.Data = "Cumplió";
                 }
                 bool isUpdate = await _formularioObligacionService.UpdateAsync(formularioObligacion);
 
@@ -498,7 +513,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 {
                     response.Msg += " No se actualizo el registro";
                 }
-                */
+                
             }
             return Ok(response);
         }
