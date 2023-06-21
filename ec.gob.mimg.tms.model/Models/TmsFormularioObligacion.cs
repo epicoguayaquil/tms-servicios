@@ -32,4 +32,6 @@ public partial class TmsFormularioObligacion
     public virtual TmsObligacion Obligacion { get; set; } = null!;
 
     public virtual ICollection<TmsFormularioObligacionCaracteristicaValor> TmsFormularioObligacionCaracteristicaValors { get; } = new List<TmsFormularioObligacionCaracteristicaValor>();
+
+    public virtual ICollection<TmsFormularioObligacionEjecucion> TmsFormularioObligacionEjecucions { get; } = new List<TmsFormularioObligacionEjecucion>();
 }

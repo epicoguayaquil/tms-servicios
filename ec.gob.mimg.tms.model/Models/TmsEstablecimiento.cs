@@ -49,7 +49,7 @@ public partial class TmsEstablecimiento
     /// </summary>
     public string? EstadoRegistro { get; set; }
 
-    public virtual TmsEmpresa? Empresa { get; set; }
+    public virtual TmsEmpresa Empresa { get; set; } = null!;
 
     public virtual ICollection<TmsFormulario> TmsFormularios { get; } = new List<TmsFormulario>();
 }
