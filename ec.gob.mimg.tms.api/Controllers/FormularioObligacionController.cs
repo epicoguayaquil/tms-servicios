@@ -10,6 +10,7 @@ using ec.gob.mimg.tms.srv.mimg.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using ec.gob.mimg.tms.srv.mimg.Services;
 using ec.gob.mimg.tms.api.Enums;
+using ec.gob.mimg.tms.srv.mimg.Models;
 
 namespace ec.gob.mimg.tms.api.Controllers
 {
@@ -28,6 +29,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IEstablecimientoService _establecimientoService;
         private readonly IFormularioService _formularioService;
         private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
+        private readonly IFormularioObligacionEjecucionService _formularioObligacionEjecucionService;
 
         private readonly IMapper _mapper;
 
@@ -45,6 +47,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _establecimientoService = new EstablecimientoService(_dbContext);
             _formularioService = new FormularioService(_dbContext);
             _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
+            _formularioObligacionEjecucionService = new FormularioObligacionEjecucionService(_dbContext);
         }
 
         // GET: api/FormularioObligacion
@@ -407,6 +410,21 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
+        // GET: api/FormularioObligacion/1/ejecutar/historico
+        [HttpGet("{id}/ejecutar/historico")]
+        public async Task<ActionResult<GenericResponse>> GetAllEjecucionesById(int id)
+        {
+            var formularioObligacionEjecucionList = await _formularioObligacionEjecucionService.GetListByFormularioObligacionId(id);
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK",
+                Data = formularioObligacionEjecucionList.Select(x => _mapper.Map<FormularioObligacionEjecucionResponse>(x))
+            };
+
+            return Ok(response);
+        }
+
         // GET: api/FormularioObligacion/1/ejecutar
         [HttpPost("{id}/ejecutar")]
         public async Task<ActionResult<GenericResponse>> EjecutarValidacion(int id)
@@ -424,6 +442,17 @@ namespace ec.gob.mimg.tms.api.Controllers
                 return Ok(response);
             }
             var obligacion = await _obligacionService.GetById(formularioObligacion.ObligacionId);
+
+            TmsFormularioObligacionEjecucion formularioObligacionEjecucion = new()
+            {
+                FormularioObligacionId = id,
+                FechaEjecucion = DateTime.Now,
+                EstadoInicial = formularioObligacion.Estado,
+                FechaRegistro = DateTime.Now,
+                UsuarioRegistro = "admin@mail.com",
+                Estado = EstadoEnum.ACTIVO.ToString()
+            
+            };
 
             if (obligacion.Nombre == "Uso de Suelo")
             {
@@ -445,7 +474,11 @@ namespace ec.gob.mimg.tms.api.Controllers
 
                 if (!responseUsoSuelo.DataResult)
                 {
-                    formularioObligacion.Observacion = responseUsoSuelo.Resultado.Titulo;
+                    ResultadoModel resultadoData = responseUsoSuelo.Resultado;
+                    formularioObligacion.Observacion = resultadoData.Titulo;
+                    formularioObligacionEjecucion.RespuestaCode = resultadoData.StatusCode;
+                    formularioObligacionEjecucion.RespuestaDetalle = resultadoData.Titulo;
+                    formularioObligacionEjecucion.RespuestaEstado = resultadoData.TipoMensaje.ToString();
                     if (responseUsoSuelo.Resultado.StatusCode == 200)
                     {
                         formularioObligacion.Estado = EstadoObligacionEnum.EN_EXCEPCION.ToString();
@@ -464,6 +497,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                     formularioObligacion.Estado = EstadoObligacionEnum.CUMPLE.ToString();
                     response.Data = "Cumplió";
                 }
+                formularioObligacionEjecucion.EstadoFinal = formularioObligacion.Estado;
+                await _formularioObligacionEjecucionService.AddAsync(formularioObligacionEjecucion);
                 bool isUpdate = await _formularioObligacionService.UpdateAsync(formularioObligacion);
 
                 if (!isUpdate)
@@ -489,7 +524,12 @@ namespace ec.gob.mimg.tms.api.Controllers
                 formularioObligacion.UsuarioModificacion = "admin@mail.com";                
                 if (responseDimensiones.DataResult == null)
                 {
+                    ResultadoModel resultadoData = responseDimensiones.Resultado;
                     formularioObligacion.Observacion = responseDimensiones.Resultado.Titulo;
+                    formularioObligacion.Observacion = resultadoData.Titulo;
+                    formularioObligacionEjecucion.RespuestaCode = resultadoData.StatusCode;
+                    formularioObligacionEjecucion.RespuestaDetalle = resultadoData.Titulo;
+                    formularioObligacionEjecucion.RespuestaEstado = resultadoData.TipoMensaje.ToString();
                     if (responseDimensiones.Resultado.StatusCode == 200)
                     {
                         formularioObligacion.Estado = EstadoObligacionEnum.EN_EXCEPCION.ToString();
@@ -507,6 +547,8 @@ namespace ec.gob.mimg.tms.api.Controllers
                     formularioObligacion.Estado = EstadoObligacionEnum.CUMPLE.ToString();
                     response.Data = "Cumplió";
                 }
+                formularioObligacionEjecucion.EstadoFinal = formularioObligacion.Estado;
+                await _formularioObligacionEjecucionService.AddAsync(formularioObligacionEjecucion);
                 bool isUpdate = await _formularioObligacionService.UpdateAsync(formularioObligacion);
 
                 if (!isUpdate)
