@@ -1,18 +1,13 @@
-﻿using ec.gob.mimg.tms.api.Services;
+﻿using ec.gob.mimg.tms.api.BackgroudServices;
+using ec.gob.mimg.tms.api.Services;
 using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.model.Models;
-using ec.gob.mimg.tms.srv.mail.Models;
 using ec.gob.mimg.tms.srv.mail.Services;
 using ec.gob.mimg.tms.srv.mail.Services.Implements;
 using ec.gob.mimg.tms.srv.mimg.Services;
 using ec.gob.mimg.tms.srv.mimg.Services.Implements;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Configuration;
-using Microsoft.Extensions.Logging.Console;
-using Newtonsoft.Json.Serialization;
 using Serilog;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +49,9 @@ builder.Services.AddScoped<IApiMimgService, ApiMimgService>();
 builder.Services.AddScoped<IApiActivoMilService, ApiActivoMilService>();
 builder.Services.AddScoped<IApiPatenteService, ApiPatenteService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IFileService, FileService>();
+
+builder.Services.AddHostedService<TaskManagerService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -73,4 +71,5 @@ app.UseCors("EnableCors");
 app.Logger.LogInformation(">>> Starting the app");
 
 app.Run();
+
 
