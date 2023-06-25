@@ -18,6 +18,11 @@ namespace ec.gob.mimg.tms.api.Services.Implements
             return await GetFirstOrDefaultAsync(x => x.IdEstablecimiento == id);
         }
 
+        public async Task<TmsEstablecimiento> GetByEmpresaIdAndNumero(int empresaId, string numeroEstablecimiento)
+        {
+            return await GetFirstOrDefaultAsync(x => x.EmpresaId == empresaId && x.NumeroEstablecimiento == numeroEstablecimiento);
+        }
+
         public async Task<bool> UpdateEstadoRegistroById(int id, string estadoRegistro)
         {
             TmsEstablecimiento establecimientoActual = await GetFirstOrDefaultAsync(x => x.IdEstablecimiento == id);

@@ -8,6 +8,9 @@ using ec.gob.mimg.tms.api.Services.Implements;
 using ec.gob.mimg.tms.model.Models;
 using ec.gob.mimg.tms.srv.mail.Models;
 using ec.gob.mimg.tms.srv.mail.Services;
+using ec.gob.mimg.tms.srv.mimg.DTOs;
+using ec.gob.mimg.tms.srv.mimg.Models;
+using ec.gob.mimg.tms.srv.mimg.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -28,10 +31,12 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IObligacionService _obligacionService;
         private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
         private readonly IRegistroNotificacionService _registroNotificacionService;
+        private readonly IApiSriService _apiSriService;
 
         public EmpresaController(IMapper mapper, TmsDbContext dbContext,
                                 ILogger<EmpresaController> logger,
-                                INotificacionService notificacionService)
+                                INotificacionService notificacionService,
+                                IApiSriService apiSriService)
         {
             _logger = logger;
             _mapper = mapper;
@@ -43,6 +48,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _obligacionService = new ObligacionService(_dbContext);
             _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
             _registroNotificacionService = new RegistroNotificacionService(_dbContext);
+            _apiSriService = apiSriService;
         }
 
         // GET: api/Empresas
@@ -120,13 +126,115 @@ namespace ec.gob.mimg.tms.api.Controllers
             return Ok(response);
         }
 
+        // POST: api/Empresas/cargarNuevosEstablecimientos/2022-12-05
+        [HttpPost("cargarNuevosEstablecimientos/{fechaBusqueda}")]
+        public async Task<ActionResult<GenericResponse>> CargarNuevosEstablecimientos(string fechaBusqueda)
+        {
+            GenericResponse response = new()
+            {
+                Cod = "200",
+                Msg = "OK"
+            };
+            EstablecimientoApiResponse establecimientoApiResponse = await _apiSriService.GetEstablecimientosNuevos(fechaBusqueda);
+            ResultadoModel resultadoApi = establecimientoApiResponse.Resultado;
+            if (!resultadoApi.Ok)
+            {
+                response = new()
+                {
+                    Cod = resultadoApi.StatusCode.ToString(),
+                    Msg = resultadoApi.Titulo,
+                    Data = resultadoApi
+                };
+                return Ok(response);
+            }
+            List<EstablecimientoModel> establecimientoModelList = establecimientoApiResponse.DataResult;
+            List<EstablecimientoModel> establecimientoModelListOpen = new();
+            foreach (EstablecimientoModel establecimientoModel in establecimientoModelList)
+            {
+                if (establecimientoModel.Estado == EstadoEstablecimientoEnum.ABIERTO.ToString())
+                {
+                    var empresa = await _empresaService.GetByRucAsync(establecimientoModel.Ruc);
+                    if (empresa == null)
+                    {
+                        ContribuyenteApiRequest contribuyenteRequest = new()
+                        {
+                            Ruc = establecimientoModel.Ruc
+                        };
+                        ContribuyenteApiResponse contribuyenteApiResponse = await _apiSriService.GetContribuyente(contribuyenteRequest);
+                        if (contribuyenteApiResponse.Resultado.Ok)
+                        {
+                            ContribuyenteModel contribuyenteModel = contribuyenteApiResponse.DataResult;
+                            empresa = new() {
+                                Ruc = contribuyenteModel.Ruc,
+                                NombreComercial = contribuyenteModel.RazonSocial,
+                                Direccion = "",
+                                Telefono = contribuyenteModel.Telefono,
+                                FechaRegistro = DateTime.Now,
+                                UsuarioRegistro = "admin@mail.com",
+                                Estado = EstadoEnum.ACTIVO.ToString()
+                            };
+                            bool isSaved = await _empresaService.AddAsync(empresa);
+                            if (isSaved)
+                            {
+                                TmsEstablecimiento establecimiento = new() {
+                                    EmpresaId = empresa.IdEmpresa,
+                                    NumeroEstablecimiento = establecimientoModel.Establecimiento,
+                                    Direccion = establecimientoModel.Direccion,
+                                    SrifechaRegistro = DateTime.Now,
+                                    FechaRegistro = DateTime.Now,
+                                    UsuarioRegistro = "admin@mail.com",
+                                    Estado = EstadoEstablecimientoEnum.INHABILITADO.ToString(),
+                                    EstadoRegistro = EstadoRegistroEnum.NO_REGISTRADO.ToString()
+                                };
+
+                                bool isSavedEstablecimeinto = await _establecimientoService.AddAsync(establecimiento);
+
+                                if (isSavedEstablecimeinto)
+                                {
+                                    //TODO: Enviar notificacion
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var establecimiento = await _establecimientoService.GetByEmpresaIdAndNumero(empresa.IdEmpresa, establecimientoModel.Establecimiento);
+                        if (establecimiento == null)
+                        {
+                            establecimiento = new()
+                            {
+                                EmpresaId = empresa.IdEmpresa,
+                                NumeroEstablecimiento = establecimientoModel.Establecimiento,
+                                Direccion = establecimientoModel.Direccion,
+                                SrifechaRegistro = DateTime.Now,
+                                FechaRegistro = DateTime.Now,
+                                UsuarioRegistro = "admin@mail.com",
+                                Estado = EstadoEstablecimientoEnum.INHABILITADO.ToString(),
+                                EstadoRegistro = EstadoRegistroEnum.NO_REGISTRADO.ToString()
+                            };
+
+                            bool isSavedEstablecimeinto = await _establecimientoService.AddAsync(establecimiento);
+
+                            if (isSavedEstablecimeinto)
+                            {
+                                //TODO: Enviar notificacion
+                            }
+                        }
+                    }
+                    establecimientoModelListOpen.Add(establecimientoModel);
+                }
+            }
+            response.Data = establecimientoModelListOpen;
+            return Ok(response);
+        }
+
         // POST: api/Empresas
         [HttpPost]
         public async Task<ActionResult<GenericResponse>> Create(EmpresaRequest empresaRequest)
         {
             try
             {
-                TmsEmpresa empresa = new TmsEmpresa();
+                TmsEmpresa empresa = new();
                 empresa = _mapper.Map<TmsEmpresa>(empresaRequest);
                 empresa.FechaRegistro = DateTime.Now;
                 empresa.UsuarioRegistro = "admin@mail.com";

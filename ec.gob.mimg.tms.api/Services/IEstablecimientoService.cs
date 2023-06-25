@@ -7,6 +7,8 @@ namespace ec.gob.mimg.tms.api.Services
     {
         Task<TmsEstablecimiento> GetById(int id);
 
+        Task<TmsEstablecimiento> GetByEmpresaIdAndNumero(int empresaId, string numeroEstablecimiento);
+
         Task<bool> UpdateEstadoRegistroById(int id, string estadoRegistro);
     }
 }

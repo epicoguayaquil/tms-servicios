@@ -9,7 +9,9 @@
     enum EstadoEstablecimientoEnum
     {
         INHABILITADO,
-        HABILITADO
+        HABILITADO,
+        ABIERTO,
+        CERRADO
     }
     enum EstadoRegistroEnum
     {
