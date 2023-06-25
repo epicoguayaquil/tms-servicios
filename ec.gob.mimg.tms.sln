@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.srv.sri", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.api", "ec.gob.mimg.tms.api\ec.gob.mimg.tms.api.csproj", "{87DEBCFD-C8FD-4300-A44A-0E2FCC4110DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ec.gob.mimg.tms.srv.mail", "ec.gob.mimg.tms.srv.mail\ec.gob.mimg.tms.srv.mail.csproj", "{05DF4917-9074-43BF-B4D3-9F58812DECF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.srv.mail", "ec.gob.mimg.tms.srv.mail\ec.gob.mimg.tms.srv.mail.csproj", "{05DF4917-9074-43BF-B4D3-9F58812DECF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ec.gob.mimg.tms.srv.mimg", "ec.gob.mimg.tms.srv.mimg\ec.gob.mimg.tms.srv.mimg.csproj", "{E44694B1-A4A7-4030-BB12-191B414BD95F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ec.gob.mimg.tms.srv.mimg", "ec.gob.mimg.tms.srv.mimg\ec.gob.mimg.tms.srv.mimg.csproj", "{E44694B1-A4A7-4030-BB12-191B414BD95F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
