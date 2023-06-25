@@ -16,6 +16,8 @@
 
         public int? MesRenovacion { get; set; }
 
+        public string? TipoExigibilidad { get; set; }
+
         public string? Origen { get; set; }
 
         public string? Jerarquia { get; set; }

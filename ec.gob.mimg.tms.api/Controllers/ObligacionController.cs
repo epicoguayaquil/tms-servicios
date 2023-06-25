@@ -165,6 +165,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 obligacionActual.Jerarquia = obligacionRequest.Jerarquia;
                 obligacionActual.OrdenEjecucion = obligacionRequest.OrdenEjecucion;
                 obligacionActual.Dependencia = obligacionRequest.Dependencia;
+                obligacionActual.TipoExigibilidad = obligacionRequest.TipoExigibilidad;
                 obligacionActual.FechaModificacion = DateTime.Now;
                 obligacionActual.UsuarioModificacion = "admin@mail.com";
 

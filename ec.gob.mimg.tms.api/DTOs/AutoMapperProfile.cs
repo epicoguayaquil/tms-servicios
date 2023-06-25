@@ -108,6 +108,12 @@ namespace ec.gob.mimg.tms.api.DTOs
             CreateMap<TmsNotificacion, RegistroNotificacionRequest>();
             CreateMap<RegistroNotificacionRequest, TmsNotificacion>();
 
+            // FormularioObligacionEjecucion
+            CreateMap<TmsFormularioObligacionEjecucion, FormularioObligacionEjecucionResponse>();
+            CreateMap<FormularioObligacionEjecucionResponse, TmsFormularioObligacionEjecucion>();
+
+            CreateMap<TmsFormularioObligacionEjecucion, FormularioObligacionEjecucionRequest>();
+            CreateMap<FormularioObligacionEjecucionRequest, TmsFormularioObligacionEjecucion>();
         }
     }
 }

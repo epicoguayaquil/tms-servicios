@@ -52,6 +52,11 @@ public partial class TmsObligacion
 
     public int? MesRenovacion { get; set; }
 
+    /// <summary>
+    /// VENCIMIENTO, POR_MES
+    /// </summary>
+    public string? TipoExigibilidad { get; set; }
+
     public virtual ICollection<TmsActividadObligacion> TmsActividadObligacions { get; } = new List<TmsActividadObligacion>();
 
     public virtual ICollection<TmsEmpresaObligacion> TmsEmpresaObligacions { get; } = new List<TmsEmpresaObligacion>();

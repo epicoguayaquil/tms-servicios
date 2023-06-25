@@ -41,6 +41,8 @@ public partial class DbA90b97TestdbtmsContext : DbContext
 
     public virtual DbSet<TmsFormularioObligacionCaracteristicaValor> TmsFormularioObligacionCaracteristicaValors { get; set; }
 
+    public virtual DbSet<TmsFormularioObligacionEjecucion> TmsFormularioObligacionEjecucions { get; set; }
+
     public virtual DbSet<TmsNotificacion> TmsNotificacions { get; set; }
 
     public virtual DbSet<TmsNotificacionMotivoFormato> TmsNotificacionMotivoFormatos { get; set; }
@@ -315,6 +317,7 @@ public partial class DbA90b97TestdbtmsContext : DbContext
 
             entity.HasOne(d => d.Empresa).WithMany(p => p.TmsEstablecimientos)
                 .HasForeignKey(d => d.EmpresaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_TmsEstablecimiento_TmsEmpresa_1");
         });
 
@@ -480,6 +483,39 @@ public partial class DbA90b97TestdbtmsContext : DbContext
                 .HasConstraintName("fk_TmsFormularioObligacionCaracteristicaValor_TmsObligacionCaracteristica");
         });
 
+        modelBuilder.Entity<TmsFormularioObligacionEjecucion>(entity =>
+        {
+            entity.HasKey(e => e.IdFormularioObligacionEjecucion).HasName("PK__TmsFormu__B923ED7B9C8C0C77");
+
+            entity.ToTable("TmsFormularioObligacionEjecucion");
+
+            entity.Property(e => e.Estado)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.EstadoFinal)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.EstadoInicial)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaEjecucion).HasColumnType("datetime");
+            entity.Property(e => e.FechaRegistro).HasColumnType("datetime");
+            entity.Property(e => e.RespuestaDetalle)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.RespuestaEstado)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.UsuarioRegistro)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.FormularioObligacion).WithMany(p => p.TmsFormularioObligacionEjecucions)
+                .HasForeignKey(d => d.FormularioObligacionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_FormularioObligacionEjecucion_FormularioObligacion");
+        });
+
         modelBuilder.Entity<TmsNotificacion>(entity =>
         {
             entity.HasKey(e => e.IdNotificacion).HasName("PK__TmsNotif__F6CA0A859D4EE9E4");
@@ -575,6 +611,10 @@ public partial class DbA90b97TestdbtmsContext : DbContext
                 .IsUnicode(false)
                 .HasComment("Municipio o SRI");
             entity.Property(e => e.TiempoVigencia).HasComment("La vigencia se maneja en meses");
+            entity.Property(e => e.TipoExigibilidad)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasComment("VENCIMIENTO, POR_MES");
             entity.Property(e => e.UsuarioModificacion)
                 .HasMaxLength(255)
                 .IsUnicode(false);
