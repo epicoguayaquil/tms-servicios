@@ -41,4 +41,12 @@
         FORMULARIO,
         GESTION
     }
+    /// Nuevo establecimiento, Caducidad Obligacion, Exigibilidad de la Obligacion, Estado Tramite
+    enum MotivoNotificacionEnum
+    {
+        NUEVO_ESTABLECIMIENTO,
+        CADUCIDAD_OBLIGACION,
+        EXIGIBILIDAD_OBLIGACION,
+        ESTADO_TRAMITE
+    }
 }
