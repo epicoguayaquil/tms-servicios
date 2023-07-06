@@ -248,8 +248,8 @@ namespace ec.gob.mimg.tms.api.Controllers
             TmsNotificacion notificacion = new()
             {
                 FechaEnvio = DateTime.Now,
-                Jerarquia = JerarquiaNotificacion.EMPRESA.ToString(),
-                JerarquiaObjetoId = empresa.IdEmpresa,
+                Jerarquia = JerarquiaNotificacion.ESTABLECIMIENTO.ToString(),
+                JerarquiaObjetoId = establecimiento.IdEstablecimiento,
                 Motivo = motivoEnum.ToString(),
                 Titulo = notificacionMotivo.Titulo,
                 Cuerpo = cuerpoNotificacion,
