@@ -49,4 +49,12 @@
         EXIGIBILIDAD_OBLIGACION,
         ESTADO_TRAMITE
     }
+    enum JerarquiaNotificacion
+    {
+        EMPRESA,
+        ESTABLECIMIENTO,
+        FORMULARIO,
+        OBLIGACION
+    }
+
 }

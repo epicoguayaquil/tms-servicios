@@ -32,6 +32,7 @@ namespace ec.gob.mimg.tms.api.Controllers
         private readonly IObligacionCaracteristicaService _obligacionCaracteristicaService;
         private readonly IRegistroNotificacionService _registroNotificacionService;
         private readonly IApiSriService _apiSriService;
+        private readonly INotificacionMotivoFormatoService _notificacionMotivoFormatoService;
 
         public EmpresaController(IMapper mapper, TmsDbContext dbContext,
                                 ILogger<EmpresaController> logger,
@@ -49,6 +50,7 @@ namespace ec.gob.mimg.tms.api.Controllers
             _obligacionCaracteristicaService = new ObligacionCaracteristicaService(_dbContext);
             _registroNotificacionService = new RegistroNotificacionService(_dbContext);
             _apiSriService = apiSriService;
+            _notificacionMotivoFormatoService = new NotificacionMotivoFormatoService(_dbContext);
         }
 
         // GET: api/Empresas
@@ -192,6 +194,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                                 if (isSavedEstablecimeinto)
                                 {
                                     //TODO: Enviar notificacion
+                                    await EnviarNotificacionAsync(empresa, establecimiento, MotivoNotificacionEnum.NUEVO_ESTABLECIMIENTO);
                                 }
                             }
                         }
@@ -218,6 +221,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                             if (isSavedEstablecimeinto)
                             {
                                 //TODO: Enviar notificacion
+                                await EnviarNotificacionAsync(empresa, establecimiento, MotivoNotificacionEnum.NUEVO_ESTABLECIMIENTO);
                             }
                         }
                     }
@@ -226,6 +230,45 @@ namespace ec.gob.mimg.tms.api.Controllers
             }
             response.Data = establecimientoModelListOpen;
             return Ok(response);
+        }
+
+        private async Task EnviarNotificacionAsync(TmsEmpresa empresa, TmsEstablecimiento establecimiento, MotivoNotificacionEnum motivoEnum)
+        {
+            var notificacionMotivo = await _notificacionMotivoFormatoService.GetByMotivo(motivoEnum.ToString());
+            if (notificacionMotivo == null)
+            {
+                return;
+            }
+            string cuerpoNotificacion = notificacionMotivo.Cuerpo;
+            cuerpoNotificacion = cuerpoNotificacion.Replace("+razon_social+", empresa.NombreComercial);
+            cuerpoNotificacion = cuerpoNotificacion.Replace("+numero_establecimiento+", establecimiento.NumeroEstablecimiento);
+            string mail = establecimiento.Email == null ? "" : establecimiento.Email;
+            TmsNotificacion notificacion = new()
+            {
+                FechaEnvio = DateTime.Now,
+                Jerarquia = JerarquiaNotificacion.EMPRESA.ToString(),
+                JerarquiaObjetoId = empresa.IdEmpresa,
+                Motivo = motivoEnum.ToString(),
+                Titulo = notificacionMotivo.Titulo,
+                Cuerpo = cuerpoNotificacion,
+                Destinatarios = mail,
+                FechaRegistro = DateTime.Now,
+                UsuarioRegistro = "admin@mail.com",
+                Estado = EstadoEnum.ACTIVO.ToString()
+            };
+            bool isSaved = await _registroNotificacionService.AddAsync(notificacion);
+            if (isSaved)
+            {
+                NotificacionRequest request = new NotificacionRequest
+                {
+                    username = empresa.NombreComercial,
+                    mail = notificacion.Destinatarios,
+                    titulo = notificacion.Titulo,
+                    contenido = notificacion.Cuerpo
+                };
+
+                await _notificacionService.EnviarNotificacion(request);
+            }
         }
 
         // POST: api/Empresas
