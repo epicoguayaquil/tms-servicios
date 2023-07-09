@@ -19,5 +19,7 @@ namespace ec.gob.mimg.tms.api.DTOs.Request
 
         public string Destinatarios { get; set; } = null!;
 
+        public string? Leido { get; set; }
+
     }
 }

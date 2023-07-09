@@ -539,6 +539,10 @@ public partial class DbA90b97TestdbtmsContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasComment("Empresa, Establecimiento, Formulario, Obligacion");
+            entity.Property(e => e.Leido)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasComment("SI o NO");
             entity.Property(e => e.Motivo)
                 .HasMaxLength(100)
                 .IsUnicode(false)

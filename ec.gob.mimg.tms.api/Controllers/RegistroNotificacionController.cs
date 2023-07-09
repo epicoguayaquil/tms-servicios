@@ -170,5 +170,43 @@ namespace ec.gob.mimg.tms.api.Controllers
                 return BadRequest();
             }
         }
+
+        // PUT: api/Notificacion/1/leido
+        [HttpPut("{id}/leido")]
+        public async Task<IActionResult> MarcarComoLeido(int id)
+        {
+            try
+            {
+                var notificacionActual = await _registroNotificacionService.GetById(id);
+                if (notificacionActual == null) { return NotFound(); }
+
+                notificacionActual.Leido = "SI";
+                notificacionActual.FechaModificacion = DateTime.Now;
+                notificacionActual.UsuarioModificacion = "admin@mail.com";
+
+                bool isSaved = await _registroNotificacionService.UpdateAsync(notificacionActual);
+
+                if (isSaved)
+                {
+                    GenericResponse response = new()
+                    {
+                        Cod = "200",
+                        Msg = "OK",
+                        Data = _mapper.Map<RegistroNotificacionResponse>(notificacionActual)
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    return BadRequest();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return BadRequest();
+            }
+        }
     }
 }

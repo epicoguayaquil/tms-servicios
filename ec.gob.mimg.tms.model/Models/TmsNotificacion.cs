@@ -39,4 +39,9 @@ public partial class TmsNotificacion
     public DateTime? FechaModificacion { get; set; }
 
     public string? UsuarioModificacion { get; set; }
+
+    /// <summary>
+    /// SI o NO
+    /// </summary>
+    public string? Leido { get; set; }
 }

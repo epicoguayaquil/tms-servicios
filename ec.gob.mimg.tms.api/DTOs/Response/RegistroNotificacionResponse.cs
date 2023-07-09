@@ -30,5 +30,7 @@ namespace ec.gob.mimg.tms.api.DTOs.Response
         public DateTime? FechaModificacion { get; set; }
 
         public string? UsuarioModificacion { get; set; }
+
+        public string? Leido { get; set; }
     }
 }

@@ -254,6 +254,7 @@ namespace ec.gob.mimg.tms.api.Controllers
                 Titulo = notificacionMotivo.Titulo,
                 Cuerpo = cuerpoNotificacion,
                 Destinatarios = mail,
+                Leido = "NO",
                 FechaRegistro = DateTime.Now,
                 UsuarioRegistro = "admin@mail.com",
                 Estado = EstadoEnum.ACTIVO.ToString()
